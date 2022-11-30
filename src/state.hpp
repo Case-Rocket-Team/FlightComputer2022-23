@@ -1,7 +1,6 @@
-#ifndef _STATE
-#define _STATE
+#pragma once
+
 #include "state.cpp"
 struct DerivedState {
     // TODO
 };
-#endif
