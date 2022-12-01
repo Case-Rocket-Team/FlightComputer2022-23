@@ -1,5 +1,4 @@
-#ifndef LOG_
-#define LOG_
+#pragma once
 
 #define LOG_NULL_PACKET_ID          0x00
 #define LOG_ANNOTATION_PACKET_ID    0x01
@@ -14,5 +13,3 @@ void log(T data);
 
 template <typename T>
 void log(T data, String* annotation);
-
-#endif

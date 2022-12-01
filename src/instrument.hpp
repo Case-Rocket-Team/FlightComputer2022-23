@@ -1,9 +1,6 @@
-#ifndef _INSTRUMENT
-#define _INSTRUMENT
+#pragma once
 
 class Instrument {
     public:
         virtual bool poll();
 };
-
-#endif
