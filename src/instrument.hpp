@@ -2,5 +2,5 @@
 
 class Instrument {
     public:
-        virtual bool poll();
+        virtual bool poll() { };
 };
