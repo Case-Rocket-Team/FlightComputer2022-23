@@ -1,12 +1,13 @@
 #pragma once
 
 #include "subsystem.hpp"
+#include "subsystems/pyro_subsystem.hpp"
 #include "state.hpp"
 
 class SubsystemManager {
     public:
         Subsystem motors;
-        Subsystem pyros;
+        PyroSubsystem pyros;
         Subsystem logger;
         bool success() {
             return motors.success()
