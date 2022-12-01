@@ -5,7 +5,7 @@
 class Subsystem {
     public:
         // whether the subsytem applied the state
-        virtual bool success();
+        virtual bool success() { };
         //acts based on the derived state
-        virtual void apply_state(DerivedState &state);
+        virtual void apply_state(DerivedState &state) { };
 };
