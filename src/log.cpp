@@ -12,17 +12,17 @@ void write_ptr(void* ptr, uint8_t length) {
 }
 
 template <typename T>
-void log(T data, String* annotation) {
+void log(T data, String* annotationPtr) {
     log(data);
-    int length = annotation.length();
+    unsigned int length = (*annotationPtr).length();
     while (length > 0) {
-        int partLength = min(length, 255);
+        uint8_t partLength = min(length, 255);
         write(LOG_ANNOTATION_PACKET_ID);
-        write_ptr(annotation, partLength);
-        annotation += partLength;
-        length -= partLength
+        write_ptr(annotationPtr, partLength);
+        annotationPtr += partLength;
+        length -= partLength;
     }
-}
+};
 
 void log(String* msg) {
     auto length = (*msg).length();

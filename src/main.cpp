@@ -2,6 +2,7 @@
 #include "SPI.h"
 #include "state.hpp"
 #include "subsystems/logger_subsystem.hpp"
+#include "subsystem_manager.hpp"
 
 // TODO: header files
 
@@ -77,24 +78,13 @@ void loop() {
     
 }*/
 
-class DriveLogger : public Subsystem {
-    public:
-        bool success() {
-            // TODO
-        }
-        void apply_state(DerivedState &state) {
-            // TODO
-        }
-};
-
-
-
 /// @brief drives the motors based on the derived state
 /// @param state , the input derived state
 /// @return true if motors were sucesfully driven, otherwise false
 boolean drive_motors(DerivedState state){
     
 }
+
 /// @brief drives the pyros based on the derived state
 /// @param state , the input derived state
 /// @return true if pyros were sucesfully driven, otherwise false
