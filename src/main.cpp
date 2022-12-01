@@ -5,8 +5,7 @@
 #include "subsystem_manager.hpp"
 #include "instrument_manager.hpp"
 
-// TODO: header files
-
+// TODO: move the following declarations to their respective files
 //contains the 3 axis acceleration
 struct ImuAcceleration {
     //this fits better with the gps, we could also pick arbitrary axises
@@ -22,24 +21,8 @@ struct ImuRotation{
     long yRot;
     long zRot;
 };
+// end TODO
 
-//create data structures to store data
-struct RawState {
-    //baro
-    long baro;
-    //imu
-    ImuAcceleration accel;
-    ImuRotation rot;
-    
-    //GPS
-    long lat;
-    long lng;
-    long vel;
-    long alt;
-};
-
-
-static RawState raw_state = RawState {};
 static DerivedState derived_state = DerivedState {};
 static SubsystemManager subsystems = SubsystemManager {};
 static InstrumentManager instruments = InstrumentManager {};
