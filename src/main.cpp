@@ -23,9 +23,9 @@ struct ImuRotation{
 };
 // end TODO
 
+static InstrumentManager instruments = InstrumentManager {};
 static DerivedState derived_state = DerivedState {};
 static SubsystemManager subsystems = SubsystemManager {};
-static InstrumentManager instruments = InstrumentManager {};
 
 void setup() {
     /*pinMode(FLASH_CS_PIN, OUTPUT);
