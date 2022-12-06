@@ -13,11 +13,4 @@ class InstrumentManager {
         void poll() {
             // TODO
         }
-
-        /// @brief WRITES data into derivedState from internal
-        /// instruments
-        /// @param derived the derived state
-        void derive_state(DerivedState& state) {
-            // TODO
-        }
 };

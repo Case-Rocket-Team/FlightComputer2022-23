@@ -38,6 +38,10 @@ void setup() {
 
 void loop() {
     instruments.poll();
-    instruments.derive_state(derived_state);
+    derive_state(instruments, derived_state);
     subsystems.apply(derived_state);
+}
+
+void derive_state(InstrumentManager &instruments, DerivedState &derived_state) {
+    // TODO
 }
