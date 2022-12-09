@@ -4,6 +4,7 @@
 #include "subsystems/logger_subsystem.hpp"
 #include "subsystem_manager.hpp"
 #include "instrument_manager.hpp"
+#include "Tranciever.hpp"
 
 // TODO: move the following declarations to their respective files
 //contains the 3 axis acceleration
@@ -26,6 +27,7 @@ struct ImuRotation{
 static InstrumentManager instruments = InstrumentManager {};
 static DerivedState derived_state = DerivedState {};
 static SubsystemManager subsystems = SubsystemManager {};
+Tranciever lora = Tranciever {};
 
 void setup() {
     /*pinMode(FLASH_CS_PIN, OUTPUT);
@@ -33,13 +35,16 @@ void setup() {
     SPI.begin();
     Serial.begin(9600);
     Serial.println("Hello world!");
-    Serial.println(manufac_and_device().manufac);*/
+    Serial.println(manufac_and_device().manufac);
+    
+    lora.setup()*/
 }
 
 void loop() {
     instruments.poll();
     derive_state(instruments, derived_state);
     subsystems.apply(derived_state);
+    lora.loop();
 }
 
 void derive_state(InstrumentManager &instruments, DerivedState &derived_state) {
