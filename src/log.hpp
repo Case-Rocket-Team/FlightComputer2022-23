@@ -6,7 +6,7 @@
 #define LOG_F32_PACKET_ID           0x03
 #define LOG_F64_PACKET_ID           0x04
 
-#include <Arduino.h>
+#include <prelude.hpp>
 
 template <typename T>
 void log(T data);

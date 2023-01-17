@@ -1,13 +1,13 @@
 #include "log.hpp"
-#include "Arduino.h"
+#include "prelude.hpp"
 
-void write(uint8_t byte) {
+void write(u8 byte) {
     // TODO
 }
 
-void write_ptr(void* ptr, uint8_t length) {
-    for (uint8_t i = 0; i < length; i++) {
-        write(*(((uint8_t*) ptr) + i));
+void write_ptr(void* ptr, u8 length) {
+    for (u8 i = 0; i < length; i++) {
+        write(*(((u8*) ptr) + i));
     }
 }
 
@@ -16,7 +16,7 @@ void log(T data, String* annotationPtr) {
     log(data);
     unsigned int length = (*annotationPtr).length();
     while (length > 0) {
-        uint8_t partLength = min(length, 255);
+        u8 partLength = min(length, 255);
         write(LOG_ANNOTATION_PACKET_ID);
         write_ptr(annotationPtr, partLength);
         annotationPtr += partLength;
