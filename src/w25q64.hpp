@@ -73,10 +73,14 @@ class W25Q64 {
     private:
 
         template <typename F>
-        constexpr auto transact(F&& f) -> std::enable_if_t<!std::is_void_v<decltype(f(new Transactor()))>, decltype(f(new Transactor()))>;
+        constexpr auto transact(F&& f) -> std::enable_if_t<
+                !std::is_void_v<decltype(f(new Transactor()))>, 
+                decltype(f(new Transactor()))>;
 
         template <typename F>
-        constexpr auto transact(F&& f) -> std::enable_if_t<std::is_void_v<decltype(f(new Transactor()))>>;
+        constexpr auto transact(F&& f) -> std::enable_if_t<
+                std::is_void_v<decltype(f(new Transactor()))>, 
+                decltype(f(new Transactor()))>;
         
         Transactor* transactor = new Transactor();
 };

@@ -16,7 +16,7 @@ constexpr auto W25Q64::transact(F&& f) -> std::enable_if_t<!std::is_void_v<declt
 };
 
 template <typename F>
-constexpr auto W25Q64::transact(F&& f) -> std::enable_if_t<std::is_void_v<decltype(f(new Transactor()))>>{
+constexpr auto W25Q64::transact(F&& f) -> std::enable_if_t<std::is_void_v<decltype(f(new Transactor()))>, decltype(f(new Transactor()))>{
     SPI.beginTransaction(SPISettings(400000, MSBFIRST, SPI_MODE0));
     digitalWrite(flash_cs_pin, LOW);
     f(transactor);
