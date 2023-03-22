@@ -1,4 +1,0 @@
-<map id="SubsystemManager::apply" name="SubsystemManager::apply">
-<area shape="rect" id="node1" title="Drives the motors, Drives the pyros, &amp; Communicates with ground." alt="" coords="100,5,277,31"/>
-<area shape="rect" id="node2" href="$main_8cpp.html#afe461d27b9c48d5921c00d521181f12f" title=" " alt="" coords="5,5,52,31"/>
-</map>

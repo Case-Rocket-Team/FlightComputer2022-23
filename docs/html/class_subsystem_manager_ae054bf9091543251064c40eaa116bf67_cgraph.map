@@ -1,5 +1,0 @@
-<map id="SubsystemManager::apply" name="SubsystemManager::apply">
-<area shape="rect" id="node1" title="Drives the motors, Drives the pyros, &amp; Communicates with ground." alt="" coords="5,35,183,60"/>
-<area shape="rect" id="node2" href="$class_subsystem.html#adb0c822cf63724397a544350119c23e2" title=" " alt="" coords="231,5,393,31"/>
-<area shape="rect" id="node3" href="$class_pyro_subsystem.html#a69acfdec15f5f0ca046d2496750c616e" title="makes the pyro take action based on the derived state passed" alt="" coords="235,55,389,95"/>
-</map>

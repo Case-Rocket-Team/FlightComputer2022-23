@@ -1,8 +1,0 @@
-<map id="loop" name="loop">
-<area shape="rect" id="node1" title=" " alt="" coords="5,83,52,108"/>
-<area shape="rect" id="node2" href="$class_subsystem_manager.html#ae054bf9091543251064c40eaa116bf67" title="Drives the motors, Drives the pyros, &amp; Communicates with ground." alt="" coords="100,33,277,59"/>
-<area shape="rect" id="node5" href="$main_8cpp.html#ae61ea306e9414cdfaaa8dd0bbecc1d5e" title=" " alt="" coords="143,83,234,108"/>
-<area shape="rect" id="node6" href="$class_instrument_manager.html#a3e862ea73f5b7a96806c7b5bc5f79554" title="polls data and saves to internal state by reading from instruments" alt="" coords="108,132,269,157"/>
-<area shape="rect" id="node3" href="$class_subsystem.html#adb0c822cf63724397a544350119c23e2" title=" " alt="" coords="325,5,488,31"/>
-<area shape="rect" id="node4" href="$class_pyro_subsystem.html#a69acfdec15f5f0ca046d2496750c616e" title="makes the pyro take action based on the derived state passed" alt="" coords="329,55,484,95"/>
-</map>
