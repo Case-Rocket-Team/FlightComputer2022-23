@@ -7,7 +7,6 @@ pub struct Busy;
 pub struct WriteEnabled;
 pub struct WriteDisabled;
 
-
 pub struct W25Q64State<TPin: OutputPin, TWritable, TReady> {
     cs: TPin,
     write_enabled: TWritable,
@@ -25,44 +24,6 @@ pub fn get_flash<P: OutputPin>(avionics: *mut Avionics, cs: P) -> W25Q64<P> {
         avionics
     }
 }
-/*
-impl<P: OutputPin> W25Q64<P> {
-
-    pub fn page_program<const TPROGRAMSIZE: usize>(&mut self, addr: u32, mut data: [u8; TPROGRAMSIZE]) {
-        let mut part_1 =  [
-            0x02_u8, 
-            ((addr >> 16) & 0xff) as u8,
-            ((addr >> 8) & 0xff) as u8,
-            (addr & 0xff) as u8
-        ];
-
-        self.write_enable();
-        self.block_until_ready();
-        self.select();
-        avionics().spi.transfer(&mut part_1).ok();
-        avionics().spi.transfer(&mut data).ok();
-        self.unselect();
-    }
-
-    pub fn read_data<const TDATALENGTH: usize>(&mut self, addr: u32) -> [u8; TDATALENGTH] {
-        let mut part_1 =  [
-            0x03_u8, 
-            ((addr >> 16) & 0xff) as u8,
-            ((addr >> 8) & 0xff) as u8,
-            (addr & 0xff) as u8
-        ];
-
-        let mut received = [0u8; TDATALENGTH];
-
-        self.block_until_ready();
-        self.select();
-        avionics().spi.transfer(&mut part_1).unwrap();
-        avionics().spi.transfer(&mut received).unwrap();
-        self.unselect();
-
-        received
-    }
-}*/
 
 macro_rules! transfer_spi {
     ($flash: expr, $($val: expr),+) => {
