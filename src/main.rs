@@ -46,7 +46,7 @@ fn main() -> ! {
         /*avionics.flash.write_enable();
         avionics.flash.is_busy();*/
 
-        let test_addr = 0x00_00_00;
+        /*let test_addr = 0x00_00_00;
 
         avionics.flash.erase_sector(test_addr);
 
@@ -58,7 +58,7 @@ fn main() -> ! {
 
         let [read_byte] = avionics.flash.read_data::<1>(test_addr);
 
-        log::info!("Wrote {:x?} and read {:x?}!", write_byte, read_byte);
+        log::info!("Wrote {:x?} and read {:x?}!", write_byte, read_byte);*/
 
         write_byte += 1;
     }

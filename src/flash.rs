@@ -42,7 +42,7 @@ impl W25Q64 {
     }
 
     pub fn read_manufacturer_and_device_id(&mut self) -> (u8, u8) {
-        self.block_until_ready();
+        //self.block_until_ready();
         let res = self.send_instr([0x90, 0x00, 0x00, 0x00, 0x00, 0x00]);
         (res[4], res[5])
     }

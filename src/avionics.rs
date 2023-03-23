@@ -1,6 +1,7 @@
 use core::ptr;
 
-use imxrt_hal::{self, spi::SPI};
+use embedded_hal::digital::v2::OutputPin;
+use imxrt_hal::{self, spi::SPI, gpio::GPIO};
 use teensy4_bsp as bsp;
 use typenum::{UTerm, UInt, B1, B0};
 
@@ -21,11 +22,17 @@ impl Avionics {
         let mut board = imxrt_hal::Peripherals::take().unwrap();
         let cortex = cortex_m::Peripherals::take().unwrap();
 
-        let pins = bsp::pins::t41::from_pads(board.iomuxc);
+        let pins = bsp::pins::t40::from_pads(board.iomuxc);
 
         let mut flash_cs_pin = bsp::hal::gpio::GPIO::new(pins.p1);
         flash_cs_pin.set_fast(true);
         let flash_cs = flash_cs_pin.output();
+
+        {
+            let mut radio_pin = GPIO::new(pins.p2);
+            radio_pin.set_fast(true);
+            radio_pin.output().set_high().ok();
+        }
 
         // See the `logging` module docs for more info.
         // (Provided by library)
