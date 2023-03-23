@@ -2,10 +2,8 @@
 #![no_main]
 
 use cortex_m_rt;
-use imxrt_hal::gpio::GPIO;
-use teensy4_bsp::pins;
 
-use crate::{avionics::{get_avionics}, flash::get_flash};
+use crate::{avionics::{get_avionics}};
 
 use teensy4_panic as _;
 

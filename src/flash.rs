@@ -1,22 +1,12 @@
-use core::marker::PhantomData;
-
 use embedded_hal::{blocking::spi::Transfer, digital::v2::OutputPin};
-use imxrt_hal::{iomuxc::{gpio::{ Pin }, Pad}, gpio::{GPIO, Input, Output}};
-use typenum::{UInt, UTerm, B0, B1};
 
 use crate::avionics::Avionics;
 
-pub struct InstructionSent;
-pub struct NoInstructionSent;
-pub struct Unknown;
 pub struct Ready;
 pub struct Busy;
 pub struct WriteEnabled;
 pub struct WriteDisabled;
 
-pub struct Selected;
-
-pub struct Deselected;
 
 pub struct W25Q64State<TPin: OutputPin, TWritable, TReady> {
     cs: TPin,
@@ -28,13 +18,11 @@ pub struct W25Q64State<TPin: OutputPin, TWritable, TReady> {
 pub type W25Q64<P> = W25Q64State<P, WriteDisabled, Ready>;
 
 pub fn get_flash<P: OutputPin>(avionics: *mut Avionics, cs: P) -> W25Q64<P> {
-    unsafe {
-        W25Q64 {
-            cs,
-            write_enabled: WriteDisabled,
-            ready: Ready,
-            avionics
-        }
+    W25Q64 {
+        cs,
+        write_enabled: WriteDisabled,
+        ready: Ready,
+        avionics
     }
 }
 /*
@@ -80,7 +68,7 @@ macro_rules! transfer_spi {
     ($flash: expr, $($val: expr),+) => {
         unsafe {
             $flash.cs.set_low().unwrap_unchecked();
-            $((*($flash.avionics)).spi.transfer($val);)+
+            $((*($flash.avionics)).spi.transfer($val).unwrap_unchecked();)+
             $flash.cs.set_high().unwrap_unchecked();
         }
     }
@@ -125,7 +113,7 @@ impl<P: OutputPin, TWritable, TBusy> W25Q64State<P, TWritable, TBusy> {
 }
 
 impl<P: OutputPin, TWritable> W25Q64State<P, TWritable, Ready> {
-    pub fn into_write_enabled(mut self) -> W25Q64State<P, WriteEnabled, Ready> {
+    pub fn into_write_enabled(self) -> W25Q64State<P, WriteEnabled, Ready> {
         self.send_instr_set_state(WriteEnabled, Ready, &mut [0x06])
     }
 
@@ -152,7 +140,7 @@ impl<P: OutputPin, TWritable> W25Q64State<P, TWritable, Ready> {
 }
 
 impl<P: OutputPin> W25Q64State<P, WriteEnabled, Ready> {
-    pub fn send_write_instr(mut self, bytes: &mut [u8])
+    pub fn send_write_instr(self, bytes: &mut [u8])
             -> W25Q64State<P, WriteDisabled, Busy> {
         self.send_instr_set_state(WriteDisabled, Busy, bytes)
     }
@@ -176,7 +164,7 @@ impl<P: OutputPin> W25Q64State<P, WriteEnabled, Ready> {
         }
     }
 
-    pub fn erase_sector (mut self, addr: u32) -> W25Q64State<P, WriteDisabled, Busy> {
+    pub fn erase_sector (self, addr: u32) -> W25Q64State<P, WriteDisabled, Busy> {
         let mut instr =  [
             0x20_u8, 
             ((addr >> 16) & 0xff) as u8,
