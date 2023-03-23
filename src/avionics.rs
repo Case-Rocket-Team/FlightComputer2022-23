@@ -31,6 +31,14 @@ pub fn get_avionics() -> Avionics {
     flash_cs_pin.set_fast(true);
     let flash_cs = flash_cs_pin.output();
 
+    let mut radio_cs_pin = {
+        let mut pin = GPIO::new(pins.p2);
+        pin.set_fast(true);
+        pin.output()
+    };
+
+    radio_cs_pin.set_high();
+
     // See the `logging` module docs for more info.
     // (Provided by library)
     assert!(logging::init().is_ok());
