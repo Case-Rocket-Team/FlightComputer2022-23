@@ -4,6 +4,8 @@ use embedded_hal::{blocking::spi::Transfer, digital::v2::OutputPin};
 use imxrt_hal::{iomuxc::{gpio::{ Pin }, Pad}, gpio::{GPIO, Input, Output}};
 use typenum::{UInt, UTerm, B0, B1};
 
+use crate::avionics::Avionics;
+
 pub struct InstructionSent;
 pub struct NoInstructionSent;
 pub struct Unknown;
@@ -20,15 +22,19 @@ pub struct W25Q64State<TPin: OutputPin, TWritable, TReady> {
     cs: TPin,
     write_enabled: TWritable,
     ready: TReady,
+    pub avionics: *mut Avionics
 }
 
 pub type W25Q64<P> = W25Q64State<P, WriteDisabled, Ready>;
 
-pub fn get_flash<P: OutputPin>(cs: P) -> W25Q64<P> {
-    W25Q64 {
-        cs,
-        write_enabled: WriteDisabled,
-        ready: Ready
+pub fn get_flash<P: OutputPin>(avionics: *mut Avionics, cs: P) -> W25Q64<P> {
+    unsafe {
+        W25Q64 {
+            cs,
+            write_enabled: WriteDisabled,
+            ready: Ready,
+            avionics
+        }
     }
 }
 /*
@@ -74,7 +80,7 @@ macro_rules! transfer_spi {
     ($flash: expr, $($val: expr),+) => {
         unsafe {
             $flash.cs.set_low().unwrap_unchecked();
-            $(avionics().spi.transfer($val);)+
+            $((*($flash.avionics)).spi.transfer($val);)+
             $flash.cs.set_high().unwrap_unchecked();
         }
     }
@@ -94,6 +100,7 @@ impl<P: OutputPin, TWritable, TBusy> W25Q64State<P, TWritable, TBusy> {
             cs: self.cs,
             write_enabled: write_enabled_after,
             ready: ready_after,
+            avionics: self.avionics
         }
     }
 
@@ -111,7 +118,8 @@ impl<P: OutputPin, TWritable, TBusy> W25Q64State<P, TWritable, TBusy> {
         W25Q64State {
             cs: self.cs,
             write_enabled: self.write_enabled,
-            ready: Ready
+            ready: Ready,
+            avionics: self.avionics
         }
     }
 }
@@ -163,7 +171,8 @@ impl<P: OutputPin> W25Q64State<P, WriteEnabled, Ready> {
         W25Q64State {
             cs: self.cs,
             write_enabled: WriteDisabled,
-            ready: Busy
+            ready: Busy,
+            avionics: self.avionics
         }
     }
 
