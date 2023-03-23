@@ -1,40 +1,34 @@
-use core::mem::{self, MaybeUninit};
+use core::{mem::{self, MaybeUninit}, ptr};
 
-use imxrt_hal::{self, spi::SPI, iomuxc::gpio::Pin};
+use bsp::t40::Pins;
+use embedded_hal::digital::v2::OutputPin;
+use imxrt_hal::{self, spi::SPI, iomuxc::gpio::Pin, gpio::{GPIO, Output}};
 use teensy4_bsp as bsp;
 use typenum::{UTerm, UInt, B1, B0};
 use teensy4_bsp::t41::P1;
 
-use crate::{flash::W25Q64, logging::logging};
+use crate::{flash::{W25Q64, get_flash}, logging::logging};
 
-pub struct AbstractAvionics<P: Pin> {
-    pub flash: W25Q64<P>,
-    pub spi: SPI<UInt<UInt<UInt<UTerm, B1>, B0>, B0>>,
+type AvionicsSPI = SPI<UInt<UInt<UInt<UTerm, B1>, B0>, B0>>;
+
+pub struct AbstractAvionics<P> {
+    pub pins: P,
+    pub spi: AvionicsSPI,
     pub delayer: cortex_m::delay::Delay
 }
 
-pub type Avionics = AbstractAvionics<P1>;
+type FlashCS = GPIO<P1, Output>;
 
-pub trait HasAvionics {
-    fn avionics(&self) -> &'static mut Avionics;
-}
+pub type Avionics = AbstractAvionics<Pins>;
 
-pub fn avionics() -> &'static mut Avionics {
-    unsafe {
-        AVIONICS.assume_init_mut()
-    }
-}
+static AVIONICS_SPI: *mut AvionicsSPI = ptr::null();
 
-pub fn init_avionics() {
+pub fn get_avionics() -> Avionics {
     unsafe {
         let mut board = imxrt_hal::Peripherals::take().unwrap();
         let cortex = cortex_m::Peripherals::take().unwrap();
     
-        let pins = bsp::pins::t41::from_pads(board.iomuxc);
-    
-        let mut flash_cs_pin = bsp::hal::gpio::GPIO::new(pins.p1);//pins.p10);
-        flash_cs_pin.set_fast(true);
-        let flash_cs = flash_cs_pin.output();
+        let pins = bsp::pins::t40::from_pads(board.iomuxc);
     
         // See the `logging` module docs for more info.
         // (Provided by library)
@@ -65,22 +59,18 @@ pub fn init_avionics() {
             pins.p13
         );
         
-        AVIONICS.write(AbstractAvionics {
-            flash: W25Q64 {
-                cs: flash_cs
-            },
+        AbstractAvionics {
+            pins,
             spi: spi4,
             delayer: cortex_m::delay::Delay::with_source(
                     cortex.SYST, 
                     teensy4_bsp::EXT_SYSTICK_HZ,
                     cortex_m::peripheral::syst::SystClkSource::External)
-        });
-    };
+        }
+    }
 }
 
-static mut AVIONICS: MaybeUninit<Avionics> = MaybeUninit::<Avionics>::uninit();
-
-impl<P: Pin> AbstractAvionics<P> {
+impl<P> AbstractAvionics<P> {
     pub fn delay(&mut self, ms: u32) {
         self.delayer.delay_ms(ms)
     }
