@@ -1,6 +1,6 @@
 use core::{mem::size_of, slice, iter};
 
-use crate::avionics::{AbstractAvionics, Avionics};
+use crate::avionics::{Avionics};
 
 use super::packet_ids::PacketIDs;
 
@@ -14,7 +14,7 @@ pub trait Loggable {
 
     fn log(&self) {
         for byte in self.log_byte_iter() {
-            Avionics::log_byte(byte)
+            //Avionics::log_byte(byte)
         }
     }
 
