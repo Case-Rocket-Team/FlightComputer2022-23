@@ -3,20 +3,22 @@
 
 use cortex_m_rt;
 
-use crate::{avionics::{get_avionics}};
+use crate::{avionics::{get_avionics}, spi::devices::flash::{WriteDisabled, Ready}};
 
 use teensy4_panic as _;
 
 mod logging;
-mod flash;
+mod spi;
 mod concurrency;
 mod avionics;
 mod util;
+mod layout;
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
     let mut avionics = get_avionics();
-    let mut flash = avionics.flash;
+    let (_spi, _flash) = avionics.spi.take_flash();
+    let mut flash = _flash.into(WriteDisabled, Ready);
 
     log::info!("Hello world!");
 
