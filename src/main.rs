@@ -3,7 +3,7 @@
 
 use cortex_m_rt;
 
-use crate::{avionics::{get_avionics}, spi::devices::{baro::Baro, flash::{WriteDisabled, Ready}}};
+use crate::{avionics::{get_avionics}, spi::devices::{baro::{Baro, BaroRegister}, flash::{WriteDisabled, Ready}}};
 
 use teensy4_panic as _;
 
@@ -17,8 +17,14 @@ mod layout;
 #[cortex_m_rt::entry]
 fn main() -> ! {
     let mut avionics = get_avionics();
-    //let (_spi, baro) = avionics.spi.take_baro();
-    let (_spi, _flash) = avionics.spi.take_flash();
+    let (_spi, mut baro) = avionics.spi.take_baro();
+
+    loop {
+        log::info!("Read ID: {:x?}", baro.read_register(BaroRegister::CHIP_ID));
+        avionics.delayer.delay_ms(500);
+    }
+
+    /*let (_spi, _flash) = avionics.spi.take_flash();
     let mut flash = _flash.into(WriteDisabled, Ready);
 
     log::info!("Hello world!");
@@ -54,5 +60,5 @@ fn main() -> ! {
         log::info!("Wrote {:x?} and read {:x?}!", write_byte, read_byte);
 
         write_byte += 1;
-    }
+    }*/
 }
