@@ -9,7 +9,7 @@ impl GPS_Info {
     
 }
 
-enum message {
+pub enum message {
     BadLen,
     NotRMC,
     NoFIX,
@@ -36,12 +36,16 @@ fn extract_rmc_fields(rmc_sentence: &str) -> message {
     }
 
     // Extract the latitude and longitude fields
-    let latitude_degrees: f64 = fields[3][0..4].parse().ok()? as f64;
-    let latitude_minutes: f64 = fields[3][4..].parse().ok()? as f64;
+    // https://cdn-shop.adafruit.com/product-files/1059/CD+PA1616D+Datasheet+v.05.pdf --> go to page 20
+    // latitude is written in ddmm.mmmm and longitude is written in dddmm.mmmm
+    // dd and ddd indicate degrees mm.mmmm indicates minutes and fractions of a minute
+
+    let latitude_degrees: f64 = fields[3][0..2].parse().ok()? as f64;
+    let latitude_minutes: f64 = fields[3][2..].parse().ok()? as f64;
     let latitude = latitude_degrees + latitude_minutes / 60.0;
     let latitude_ns = fields[4];
-    let longitude_degrees: f64 = fields[5][0..4].parse().ok()? as f64;
-    let longitude_minutes: f64 = fields[5][4..].parse().ok()? as f64;
+    let longitude_degrees: f64 = fields[5][0..3].parse().ok()? as f64;
+    let longitude_minutes: f64 = fields[5][3..].parse().ok()? as f64;
     let longitude = longitude_degrees + longitude_minutes / 60.0;
     let longitude_ew = fields[6];
     let speed_knots: f64 = fields[7].parse().ok()? as f64;
