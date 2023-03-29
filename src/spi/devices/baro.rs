@@ -31,15 +31,14 @@ impl<TInterface: SPIInterface> Baro<TInterface> {
         let id = Baro::<TInterface>::read_register(&mut bmp, Register::CHIP_ID);
         if id != 0x50 {
             log::error!("no barometer!");
-            delay(500);
             panic!("ahh");
         }
         bmp
     }
     fn read_register(&mut self, register: Register) -> u8 {
         let mut buffer = [0u8; 2];
-        buffer[0] = register as u8 | BMP388_READ_BIT;
-        spi_transfer!(self.interface, &mut buffer[..1], &mut buffer[1..]);
+        buffer[0] = register as u8;
+        spi_transfer!(self.interface, &mut buffer);
         buffer[1]
     }
 
