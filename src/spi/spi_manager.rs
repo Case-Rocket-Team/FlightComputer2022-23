@@ -1,13 +1,13 @@
 use cortex_m::prelude::_embedded_hal_blocking_spi_Transfer;
 use embedded_hal::digital::v2::OutputPin;
 use imxrt_hal::{self, spi::{SPI}, gpio::{GPIO, Output}};
-use teensy4_bsp::t40::P1;
+use teensy4_bsp::t40::*;
 use typenum::{UTerm, UInt, B1, B0};
 use paste::paste;
 
 type SPIHAL = SPI<UInt<UInt<UInt<UTerm, B1>, B0>, B0>>;
 
-use crate::{spi::{devices::flash::W25Q64}};
+use crate::{spi::{devices::{baro::Baro,flash::W25Q64}}};
 
 macro_rules! gpio_pinout {
     ($($ident: ident $io: tt $pin: ty),+) => {
@@ -31,7 +31,8 @@ macro_rules! one_gpio_pin {
 }
 
 gpio_pinout! {
-    FlashCS output P1
+    FlashCS output P1,
+    BMPCS output P0
 }
 
 pub struct SPIInterfaceActiveLow<P: OutputPin> {
@@ -173,7 +174,9 @@ macro_rules! spi_devices {
 }
 
 spi_devices! {
-    flash Flash: W25Q64::<SPIInterfaceActiveLow<FlashCSOutput>>
+    flash Flash: W25Q64::<SPIInterfaceActiveLow<FlashCSOutput>>,
+    baro BMP: Baro::<SPIInterfaceActiveLow<BMPCSOutput>>
+
 }
 
 pub struct SPIManager {
