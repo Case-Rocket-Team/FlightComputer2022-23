@@ -1,4 +1,5 @@
-use imxrt_hal;
+use embedded_hal::digital::v2::OutputPin;
+use imxrt_hal::{self, gpio::GPIO};
 use teensy4_bsp as bsp;
 
 use crate::{spi::{spi_manager::{SPIManager, SPIPins}}, logging::logging, create_spi_manager};
@@ -14,6 +15,13 @@ pub fn get_avionics() -> Avionics {
 
     let pins = bsp::pins::t40::from_pads(board.iomuxc);
 
+    {
+        let mut pin = GPIO::new(pins.p2);
+        pin.set_fast(true);
+        let mut pin_output = pin.output();
+        pin_output.set_high();
+    }
+
     // See the `logging` module docs for more info.
     // (Provided by library)
     assert!(logging::init().is_ok());
@@ -27,7 +35,8 @@ pub fn get_avionics() -> Avionics {
     );
     
     let spi_manager = create_spi_manager!(board, pins, {
-        flash: pins.p1
+        flash: pins.p1,
+        baro: pins.p0
     });
     
     Avionics {
