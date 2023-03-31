@@ -1,3 +1,8 @@
+use cortex_m::prelude::{_embedded_hal_blocking_i2c_WriteRead, _embedded_hal_blocking_i2c_Read, _embedded_hal_serial_Write, _embedded_hal_serial_Read};
+use nb::block;
+
+use crate::{i2c::i2c::I2CHAL, logging, uart::{uart::UARTHAL, self}};
+
 pub struct GPS_Info {
     pub latitude: f64,
     pub longitude: f64,
@@ -16,23 +21,54 @@ pub enum message {
     Fix(GPS_Info)
 }
 
+pub struct GPS {
+
+}
+
+impl GPS {
+    pub fn write(uart: &mut UARTHAL, str: &[u8]) {
+        for char in str {
+            block!(uart.write(*char));
+        }
+    }
+
+    pub fn read(uart: &mut UARTHAL, out: &mut [u8]) {
+        for byte in out.iter_mut() {
+            loop {
+                match uart.read() {
+                    Ok(b) => *byte = b,
+                    Err(nb::Error::WouldBlock) => continue,
+                    Err(nb::Error::Other(err)) => {
+                        log::info!("Read error! {:?}", err);
+                    }
+                };
+
+                break
+            }
+        }
+    }
+}
+
+/*
 fn extract_rmc_fields(rmc_sentence: &str) -> message {
     // Split the RMC sentence into fields
+
+    // We don't have Vec!!!!
     let fields: Vec<&str> = rmc_sentence.split(',').collect();
 
     // Check that the sentence has the correct number of fields
     if fields.len() != 13 {
-        message::BadLen
+        return message::BadLen
     }
 
     // Check that the sentence is an RMC sentence
     if fields[0] != "$GPRMC" {
-        message::NotRMC
+        return message::NotRMC
     }
 
     // Check that the GPS receiver has a valid fix
     if fields[2] != "A" {
-        message::NoFIX
+        return message::NoFIX
     }
 
     // Extract the latitude and longitude fields
@@ -58,4 +94,4 @@ fn extract_rmc_fields(rmc_sentence: &str) -> message {
         speed,
         heading_true
     })
-}
+}*/

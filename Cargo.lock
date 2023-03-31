@@ -283,6 +283,7 @@ dependencies = [
  "embedded-hal",
  "imxrt-hal",
  "log",
+ "nb 1.1.0",
  "paste",
  "teensy4-bsp",
  "teensy4-panic",
