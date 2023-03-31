@@ -25,7 +25,7 @@ fn main() -> ! {
     let mut write_byte = 0u8;
 
     loop {
-        avionics.delayer.delay_ms(500);
+        avionics.timer.block_ms(500);
 
         let (manu, id) = flash.read_manufacturer_and_device_id();
 
@@ -38,7 +38,7 @@ fn main() -> ! {
                 .erase_sector(test_addr)
                 .into_block_until_ready();
 
-        avionics.delayer.delay_ms(25);
+        avionics.timer.block_ms(25);
 
         flash = flash
                 .into_block_until_ready()
@@ -46,7 +46,7 @@ fn main() -> ! {
                 .page_program(test_addr, &mut [write_byte])
                 .into_block_until_ready();
 
-        avionics.delayer.delay_ms(25);
+        avionics.timer.block_ms(25);
 
         let [read_byte] = flash.read_data::<1>(test_addr);
 

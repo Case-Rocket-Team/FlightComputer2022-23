@@ -1,38 +1,14 @@
 use cortex_m::prelude::_embedded_hal_blocking_spi_Transfer;
 use embedded_hal::digital::v2::OutputPin;
-use imxrt_hal::{self, spi::{SPI}, gpio::{GPIO, Output}};
-use teensy4_bsp::t40::P1;
-use typenum::{UTerm, UInt, B1, B0};
+use imxrt_hal::gpio::Output;
+use teensy4_bsp::pins::t40::*;
 use paste::paste;
-
-type SPIHAL = SPI<UInt<UInt<UInt<UTerm, B1>, B0>, B0>>;
+use teensy4_bsp::ral;
+use imxrt_hal::lpspi::Lpspi;
 
 use crate::{spi::{devices::flash::W25Q64}};
 
-macro_rules! gpio_pinout {
-    ($($ident: ident $io: tt $pin: ty),+) => {
-        $(one_gpio_pin!($ident $io $pin);)+
-    }
-}
-
-macro_rules! one_gpio_pin {
-    ($ident: ident input $pin: ty) => {
-        paste! {
-            type $ident = $pin;
-            type [<$ident Input>] = GPIO<$pin, Input>;
-        }
-    };
-    ($ident: ident output $pin: ty) => {
-        paste! {
-            type $ident = $pin;
-            type [<$ident Output>] = GPIO<$pin, Output>;
-        }
-    }
-}
-
-gpio_pinout! {
-    FlashCS output P1
-}
+type SpiHal = Lpspi<(), 4>;
 
 pub struct SPIInterfaceActiveLow<P: OutputPin> {
     spi_manager: *mut SPIManager,
@@ -56,7 +32,7 @@ impl<P: OutputPin> SPIInterface for SPIInterfaceActiveLow<P> {
 
     fn transfer(&self, bytes: &mut [u8]) {
         unsafe {
-            let _ = (*self.spi_manager).hal.transfer(bytes);
+            let _ = (*self.spi_manager).spi_hal.transfer(bytes);
         }
     }
 }
@@ -76,46 +52,22 @@ macro_rules! spi_transfer {
     };
 }
 
-#[macro_export]
-macro_rules! create_spi_manager {
-    ($board: expr, $pins: expr, $spi_pins: tt) => {
-        {
-            let (_, _, _, spi4_builder) = $board.spi.clock(
-                // Handle to CCM
-                &mut $board.ccm.handle,
-                // See https://www.pjrc.com/teensy/IMXRT1060RM_rev2.pdf
-                // Clock at 582 MHz
-                imxrt_hal::ccm::spi::ClockSelect::Pll2,
-                // Divide above clock speed by 8: 582/8 = 72 Mhz
-                imxrt_hal::ccm::spi::PrescalarSelect::LPSPI_PODF_0,
-            );
-            
-            let spi4 = spi4_builder.build(
-                $pins.p11, 
-                $pins.p12,
-                $pins.p13
-            );
-
-            SPIManager::new(spi4, SPIPins $spi_pins)
-        }
-    }
-}
-
 macro_rules! spi_devices {
-    ($($device: ident $new_type: ident : $type: ty),+) => {
+    ($($device_pin: tt $device: ident $new_type: ident : $type: ty)+) => {
         paste! {
             $(type $new_type = $type;)+
+            $(type [<$new_type CS>] = Output<$device_pin>;)+
 
             pub struct SPIManagerDevices {
                 $($device: Option<$type>,)+
             }
 
             pub struct SPIPins {
-                $(pub $device: [<$new_type CS>],)+
+                $(pub $device: Output<$device_pin>,)+
             }
 
             $(pub struct [<SPIManagerUsing $new_type>] {
-                hal: SPIHAL,
+                spi_hal: SpiHal,
                 devices: SPIManagerDevices
             })+
 
@@ -125,24 +77,20 @@ macro_rules! spi_devices {
                         let device = self.devices.$device.unwrap_unchecked();
                         self.devices.$device = None;
                         ([<SPIManagerUsing $new_type>] {
-                            hal: self.hal,
+                            spi_hal: self.spi_hal,
                             devices: self.devices
                         }, device)
                     }
                 })+
 
-                pub fn new(periph: SPIHAL, pins: SPIPins) -> SPIManager {
+                pub fn new(spi_ral: ral::lpspi::LPSPI4, mut pins: SPIPins) -> SPIManager {
+                    let spi_hal = SpiHal::without_pins(spi_ral);
                     $(
-                        let mut [<$device _pin>] = {
-                            let mut pin = GPIO::new(pins.$device);
-                            pin.set_fast(true);
-                            pin.output()
-                        };
-                        let _ = [<$device _pin>].set_high();                        
+                        let _ = pins.$device.set_high();                        
                     )+
 
                     let mut manager = SPIManager {
-                        hal: periph,
+                        spi_hal,
                         devices: SPIManagerDevices {
                             $($device: None,)+
                         }
@@ -150,7 +98,7 @@ macro_rules! spi_devices {
 
                     $(
                         manager.devices.$device = Some($type::new(SPIInterfaceActiveLow {
-                            pin: [<$device _pin>],
+                            pin: pins.$device,
                             spi_manager: &mut manager
                         }));
                     )+
@@ -163,7 +111,7 @@ macro_rules! spi_devices {
                 pub fn done(mut self, device: $type) -> SPIManager {
                     self.devices.$device = Some(device);
                     SPIManager {
-                        hal: self.hal,
+                        spi_hal: self.spi_hal,
                         devices: self.devices
                     }
                 }
@@ -173,10 +121,10 @@ macro_rules! spi_devices {
 }
 
 spi_devices! {
-    flash Flash: W25Q64::<SPIInterfaceActiveLow<FlashCSOutput>>
+    P1 flash Flash: W25Q64::<SPIInterfaceActiveLow<FlashCS>>
 }
 
 pub struct SPIManager {
-    hal: SPIHAL,
+    spi_hal: SpiHal,
     devices: SPIManagerDevices
 }

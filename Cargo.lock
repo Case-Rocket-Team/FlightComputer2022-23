@@ -3,27 +3,6 @@
 version = 3
 
 [[package]]
-name = "aligned"
-version = "0.3.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a785a543aea40f5e4e2e93bb2655d31bc21bb391fff65697150973e383f16bb"
-dependencies = [
- "as-slice",
-]
-
-[[package]]
-name = "as-slice"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "45403b49e3954a4b8428a0ac21a4b7afadccf92bfd96273f1a58cd4812496ae0"
-dependencies = [
- "generic-array 0.12.4",
- "generic-array 0.13.3",
- "generic-array 0.14.6",
- "stable_deref_trait",
-]
-
-[[package]]
 name = "bare-metal"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -31,6 +10,12 @@ checksum = "5deb64efa5bd81e31fcd1938615a6d98c82eafcbcd787162b6f63b91d6bac5b3"
 dependencies = [
  "rustc_version",
 ]
+
+[[package]]
+name = "bbqueue"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd3baa8859d1a4c7411039a75c0599a4640ef1c9a8fc811e4325b00e6cfe0a55"
 
 [[package]]
 name = "bitfield"
@@ -52,25 +37,13 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "cortex-m"
-version = "0.6.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9075300b07c6a56263b9b582c214d0ff037b00d45ec9fde1cc711490c56f1bb9"
-dependencies = [
- "aligned",
- "bare-metal",
- "bitfield",
- "cortex-m 0.7.7",
- "volatile-register",
-]
-
-[[package]]
-name = "cortex-m"
 version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ec610d8f49840a5b376c69663b6369e71f4b34484b9b2eb29fb918d92516cb9"
 dependencies = [
  "bare-metal",
  "bitfield",
+ "critical-section",
  "embedded-hal",
  "volatile-register",
 ]
@@ -92,7 +65,45 @@ checksum = "f0f6f3e36f203cfedbc78b357fb28730aa2c6dc1ab060ee5c2405e843988d3c7"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn",
+ "syn 1.0.109",
+]
+
+[[package]]
+name = "critical-section"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6548a0ad5d2549e111e1f6a11a6c2e2d00ce6a3dafe22948d67c2b443f775e52"
+
+[[package]]
+name = "defmt"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d03193cde597714ff8a5005ccd61cd1b7aff5616eaca7c67905982cb6f347ff4"
+dependencies = [
+ "bitflags",
+ "defmt-macros",
+]
+
+[[package]]
+name = "defmt-macros"
+version = "0.3.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "82610855c67a4dc36299cc6bfcf140f329e4f013582531c7ba7d32512ddabc47"
+dependencies = [
+ "defmt-parser",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+]
+
+[[package]]
+name = "defmt-parser"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e15e994575e38332cf4a2dc9dc745ff6a65695d37a41e00efadd57fcd42c1ba4"
+dependencies = [
+ "thiserror",
 ]
 
 [[package]]
@@ -106,83 +117,105 @@ dependencies = [
 ]
 
 [[package]]
-name = "generic-array"
-version = "0.12.4"
+name = "fugit"
+version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ffdf9f34f1447443d37393cc6c2b8313aebddcd96906caf34e54c68d8e57d7bd"
+checksum = "7ab17bb279def6720d058cb6c052249938e7f99260ab534879281a95367a87e5"
 dependencies = [
- "typenum",
+ "gcd",
 ]
 
 [[package]]
-name = "generic-array"
-version = "0.13.3"
+name = "gcd"
+version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f797e67af32588215eaaab8327027ee8e71b9dd0b2b26996aedf20c030fce309"
-dependencies = [
- "typenum",
-]
-
-[[package]]
-name = "generic-array"
-version = "0.14.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bff49e947297f3312447abdca79f45f4738097cc82b06e72054d2223f601f1b9"
-dependencies = [
- "typenum",
- "version_check",
-]
+checksum = "1d758ba1b47b00caf47f24925c0074ecb20d6dfcffe7f6d53395c0465674841a"
 
 [[package]]
 name = "imxrt-boot-gen"
-version = "0.2.1"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d937ebb5681eef4abedd1cf75d0c9ef8736282175a2b586d627ae3ffa8827c3d"
+checksum = "e90bcb04a4619e58f8662d6d993b6318d04416936550cd3d721938d254f5fe19"
+
+[[package]]
+name = "imxrt-dma"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0be4dc99cfca9c88c3478be3cba16ca3e3b2bde180e1dd69f7d04f470d6412a4"
+dependencies = [
+ "cortex-m",
+ "ral-registers",
+]
 
 [[package]]
 name = "imxrt-hal"
-version = "0.4.5"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b8a7ddfe5bc56b00987ed9c971f0705fab1c741bf02acef83a627751c377ce0"
+checksum = "6fddda1c1e96dbcabb6a7628a7563a71cdeb0773895f4f24fa1b4f66c7716042"
 dependencies = [
- "as-slice",
  "bitflags",
- "cortex-m 0.6.7",
+ "cfg-if",
  "embedded-hal",
+ "fugit",
+ "imxrt-dma",
  "imxrt-iomuxc",
  "imxrt-ral",
- "log",
- "nb 0.1.3",
+ "imxrt-usbd",
+ "nb 1.1.0",
  "void",
 ]
 
 [[package]]
 name = "imxrt-iomuxc"
-version = "0.1.5"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f7eeaebfe7705d6b4e0af7ad940ddc918cd9960627290f2c0976bc5c93af6e01"
-dependencies = [
- "imxrt-iomuxc-build",
- "typenum",
-]
+checksum = "cf61e85a6f1e4e772a0daae81ec6124576b729b40e05a1677d150165873205ab"
 
 [[package]]
-name = "imxrt-iomuxc-build"
-version = "0.1.0"
+name = "imxrt-log"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4eccabb29df24f0d492fdd19b936b21b0a7a2a9b37c1f76d31a367193e21cd91"
+checksum = "fa66f5d6331f47afc29af176d337c5556e677549a0dc7aef5692134d81372d69"
 dependencies = [
- "quote",
+ "bbqueue",
+ "critical-section",
+ "defmt",
+ "imxrt-usbd",
+ "log",
+ "usb-device",
+ "usbd-serial",
 ]
 
 [[package]]
 name = "imxrt-ral"
-version = "0.4.4"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35f0ab12596cd339a5894c2943d1c47b987daa49946620d55bd548577126c8e1"
+checksum = "2080c9c1336141055af8cfb7b19e1b584dd52f792c2f669fa9f47ee14d15d53d"
 dependencies = [
- "bare-metal",
- "cortex-m 0.6.7",
+ "cortex-m",
+ "ral-registers",
+]
+
+[[package]]
+name = "imxrt-rt"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "29a931e8dc108a5c55c5e07ed33a8bdfd0cd5fe29a79431f70e5af1874fa4b6b"
+dependencies = [
+ "cfg-if",
+ "cortex-m-rt",
+]
+
+[[package]]
+name = "imxrt-usbd"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "31abcd97b602257ebb64a98dc5dc3fd20f200e0e76ea80f70a2a28c44f6a6405"
+dependencies = [
+ "bitflags",
+ "cortex-m",
+ "ral-registers",
+ "usb-device",
 ]
 
 [[package]]
@@ -216,10 +249,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f746c4065a8fa3fe23974dd82f15431cc8d40779821001404d10d2e79ca7d79"
 
 [[package]]
-name = "proc-macro2"
-version = "1.0.52"
+name = "proc-macro-error"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d0e1ae9e836cc3beddd63db0df682593d7e2d3d891ae8c9083d2113e1744224"
+checksum = "da25490ff9892aab3fcf7c36f08cfb902dd3e71ca0f9f9517bea02a73a5ce38c"
+dependencies = [
+ "proc-macro-error-attr",
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
+ "version_check",
+]
+
+[[package]]
+name = "proc-macro-error-attr"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1be40180e52ecc98ad80b184934baf3d0d29f979574e439af5a55274b35f869"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "version_check",
+]
+
+[[package]]
+name = "proc-macro2"
+version = "1.0.54"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e472a104799c74b514a57226160104aa483546de37e839ec50e3c2e41dd87534"
 dependencies = [
  "unicode-ident",
 ]
@@ -232,6 +289,12 @@ checksum = "4424af4bf778aae2051a77b60283332f386554255d722233d09fbfc7e30da2fc"
 dependencies = [
  "proc-macro2",
 ]
+
+[[package]]
+name = "ral-registers"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "122003d369c71bcde02e16cd3e61b2e6da7320b54dc5943e7c1a3dc913008288"
 
 [[package]]
 name = "rustc_version"
@@ -258,12 +321,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
-name = "stable_deref_trait"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
-
-[[package]]
 name = "syn"
 version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -275,10 +332,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "syn"
+version = "2.0.12"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "79d9531f94112cfc3e4c8f5f02cb2b58f72c97b7efd85f70203cc6d8efda5927"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "unicode-ident",
+]
+
+[[package]]
 name = "teensy-flash-test"
 version = "0.1.0"
 dependencies = [
- "cortex-m 0.7.7",
+ "cortex-m",
  "cortex-m-rt",
  "embedded-hal",
  "imxrt-hal",
@@ -291,23 +359,24 @@ dependencies = [
 
 [[package]]
 name = "teensy4-bsp"
-version = "0.3.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "510ebeaba77469234a10bec220676c48559c7bddea7c515ec37bf3d8b82ed0a6"
+checksum = "fab6a7b5dc408d84cdb15136fd54ca33a77c89d85a5a09e39e3ce7d6ae215d71"
 dependencies = [
- "cortex-m 0.7.7",
- "cortex-m-rt",
+ "cortex-m",
  "imxrt-hal",
- "log",
+ "imxrt-log",
+ "imxrt-ral",
+ "imxrt-rt",
  "teensy4-fcb",
  "teensy4-pins",
 ]
 
 [[package]]
 name = "teensy4-fcb"
-version = "0.3.0"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c37bbaacff32ddf052dbae9b5ea3d6cf145772bd5421874bd6fcd4dda87a0699"
+checksum = "8007b6d680b853afd7aa5a4b2be509efac0b5063698a87f274206955afbf1d0f"
 dependencies = [
  "imxrt-boot-gen",
 ]
@@ -320,11 +389,31 @@ checksum = "7240ec9c31342bf5ad2a0765efa7f96af0185003f64de33442a231bc583195e5"
 
 [[package]]
 name = "teensy4-pins"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "096fffbabf884edd517344e1e1bd15eb2cbbf9c0d9073562c4454c6ca4d5582c"
+checksum = "5a50cc992551983c0034014d58873af2153921cd22601c2194ae93f763f5ba06"
 dependencies = [
  "imxrt-iomuxc",
+]
+
+[[package]]
+name = "thiserror"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "978c9a314bd8dc99be594bc3c175faaa9794be04a5a5e153caba6915336cebac"
+dependencies = [
+ "thiserror-impl",
+]
+
+[[package]]
+name = "thiserror-impl"
+version = "1.0.40"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9456a42c5b0d803c8cd86e73dd7cc9edd429499f37a3550d286d5e86720569f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.12",
 ]
 
 [[package]]
@@ -338,6 +427,23 @@ name = "unicode-ident"
 version = "1.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5464a87b239f13a63a501f2701565754bae92d243d4bb7eb12f6d57d2269bf4"
+
+[[package]]
+name = "usb-device"
+version = "0.2.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f6cc3adc849b5292b4075fc0d5fdcf2f24866e88e336dd27a8943090a520508"
+
+[[package]]
+name = "usbd-serial"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "db75519b86287f12dcf0d171c7cf4ecc839149fe9f3b720ac4cfce52959e1dfe"
+dependencies = [
+ "embedded-hal",
+ "nb 0.1.3",
+ "usb-device",
+]
 
 [[package]]
 name = "vcell"
