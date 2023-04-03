@@ -21,8 +21,8 @@ macro_rules! spi_devices {
         type SpiHal = Lpspi<(), 4>;
 
         pub struct SPIInterfaceActiveLow<P: OutputPin> {
-            spi_manager: *mut SPIManager,
-            pin: P
+            pub spi_manager: *mut SPIManager,
+            pub pin: P
         }
 
         pub trait SPIInterface {
@@ -96,10 +96,7 @@ macro_rules! spi_devices {
                     };
 
                     $(
-                        manager.devices.$device = Some($type::new(SPIInterfaceActiveLow {
-                            pin: pins.$device,
-                            spi_manager: &mut manager
-                        }));
+                        manager.devices.$device = Some($type::create_from_pin(pins.$device, &mut manager));
                     )+
 
                     manager

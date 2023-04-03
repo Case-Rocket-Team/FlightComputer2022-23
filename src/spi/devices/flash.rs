@@ -1,4 +1,7 @@
-use crate::{spi::spi_manager::{SPIInterface, SPIDevice}, spi_transfer, util::Any};
+use cortex_m::prelude::_embedded_hal_digital_OutputPin;
+use embedded_hal::digital::v2::OutputPin;
+
+use crate::{spi::spi_manager::{SPIInterface, SPIDevice, SPIInterfaceActiveLow, SPIManager}, spi_transfer, util::Any};
 
 pub struct Ready;
 pub struct Busy;
@@ -14,8 +17,17 @@ pub struct W25Q64State<TInterface: SPIInterface, TWritable, TReady> {
 
 pub type W25Q64<TInterface> = W25Q64State<TInterface, Any, Any>;
 
+impl<P: OutputPin> W25Q64<SPIInterfaceActiveLow<P>> {
+    pub fn create_from_pin(pin: P, spi: &mut SPIManager) -> W25Q64<SPIInterfaceActiveLow<P>> {
+        Self::create_from_interface(SPIInterfaceActiveLow {
+            spi_manager: spi,
+            pin
+        })
+    }
+}
+
 impl<TInterface: SPIInterface> W25Q64<TInterface> {
-    pub fn new(interface: TInterface) -> W25Q64<TInterface> {
+    pub fn create_from_interface(interface: TInterface) -> W25Q64<TInterface> {
         W25Q64State {
             interface,
             write_enabled: Any,
