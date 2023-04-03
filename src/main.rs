@@ -9,7 +9,6 @@ use teensy4_panic as _;
 
 mod logging;
 mod spi;
-mod concurrency;
 mod avionics;
 mod util;
 mod layout;
