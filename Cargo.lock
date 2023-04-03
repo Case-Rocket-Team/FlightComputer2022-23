@@ -117,6 +117,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "flight-computer-2022-23"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embedded-hal",
+ "imxrt-hal",
+ "log",
+ "micromath",
+ "paste",
+ "teensy4-bsp",
+ "teensy4-panic",
+ "typenum",
+]
+
+[[package]]
 name = "fugit"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -346,22 +362,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
-]
-
-[[package]]
-name = "teensy-flash-test"
-version = "0.1.0"
-dependencies = [
- "cortex-m",
- "cortex-m-rt",
- "embedded-hal",
- "imxrt-hal",
- "log",
- "micromath",
- "paste",
- "teensy4-bsp",
- "teensy4-panic",
- "typenum",
 ]
 
 [[package]]

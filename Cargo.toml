@@ -1,5 +1,5 @@
 [package]
-name = "teensy-flash-test"
+name = "flight-computer-2022-23"
 version = "0.1.0"
 authors = ["Serena <sjtl2004@gmail.com>"]
 edition = "2021"
