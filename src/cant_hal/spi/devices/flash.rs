@@ -1,7 +1,7 @@
 use cortex_m::prelude::_embedded_hal_digital_OutputPin;
 use embedded_hal::digital::v2::OutputPin;
 
-use crate::{spi::spi_manager::{SPIInterface, SPIDevice, SPIInterfaceActiveLow, SPIManager}, spi_transfer, util::Any};
+use crate::{cant_hal::avionics::{SPIInterface, SPIInterfaceActiveLow, SPIManager, SPIDevice}, util::Any, spi_transfer};
 
 pub struct Ready;
 pub struct Busy;

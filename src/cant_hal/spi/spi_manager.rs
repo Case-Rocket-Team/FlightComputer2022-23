@@ -9,7 +9,7 @@ macro_rules! spi_transfer {
 
 #[macro_export]
 macro_rules! spi_devices {
-    ($($device_pin: tt $device: ident $new_type: ident : $type: ty)+) => {
+    ($($device: ident $new_type: ident : $type: ty)+) => {
         use cortex_m::prelude::_embedded_hal_blocking_spi_Transfer;
         use embedded_hal::digital::v2::OutputPin;
         use imxrt_hal::gpio::Output;
@@ -18,7 +18,7 @@ macro_rules! spi_devices {
         use teensy4_bsp::ral;
         use imxrt_hal::lpspi::Lpspi;
 
-        type SpiHal = Lpspi<(), 4>;
+        pub type SpiHal = Lpspi<(), 4>;
 
         pub struct SPIInterfaceActiveLow<P: OutputPin> {
             pub spi_manager: *mut SPIManager,
@@ -26,12 +26,14 @@ macro_rules! spi_devices {
         }
 
         pub trait SPIInterface {
+            type TCS;
             fn select(&mut self);
             fn deselect(&mut self);
             fn transfer(&self, bytes: &mut [u8]);
         }
 
         impl<P: OutputPin> SPIInterface for SPIInterfaceActiveLow<P> {
+            type TCS = P;
             fn select(&mut self) {
                 let _ = self.pin.set_low();
             }
@@ -54,15 +56,14 @@ macro_rules! spi_devices {
         }
 
         paste! {
-            $(type $new_type = $type;)+
-            $(type [<$new_type CS>] = Output<$device_pin>;)+
+            $(pub type $new_type = $type;)+
 
             pub struct SPIManagerDevices {
                 $($device: Option<$type>,)+
             }
 
             pub struct SPIPins {
-                $(pub $device: Output<$device_pin>,)+
+                $(pub $device: <<$type as SPIDevice>::TInterface as SPIInterface>::TCS,)+
             }
 
             $(pub struct [<SPIManagerUsing $new_type>] {

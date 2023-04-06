@@ -3,15 +3,13 @@
 
 use cortex_m_rt;
 
-use crate::{avionics::{get_avionics}, spi::devices::flash::{WriteDisabled, Ready}};
+use crate::{cant_hal::avionics::{get_avionics}, cant_hal::avionics::{self, devices::flash::{WriteDisabled, Ready}}};
 
 use teensy4_panic as _;
 
 mod logging;
-mod spi;
-mod avionics;
+mod cant_hal;
 mod util;
-mod layout;
 
 #[cortex_m_rt::entry]
 fn main() -> ! {

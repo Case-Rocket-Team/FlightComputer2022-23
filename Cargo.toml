@@ -16,6 +16,7 @@ log = "0.4.17"
 teensy4-panic = "0.2.2"
 paste = "1.0.12"
 micromath = "2.0.0"
+sx127x_lora = "0.3.1"
 
 [dependencies.teensy4-bsp]
 version = "0.4"
