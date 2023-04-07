@@ -1,7 +1,9 @@
+use core::marker::PhantomData;
+
 use cortex_m::prelude::_embedded_hal_digital_OutputPin;
 use embedded_hal::digital::v2::OutputPin;
 
-use crate::{cant_hal::avionics::{SPIInterface, SPIInterfaceActiveLow, SPIManager, SPIDevice}, util::Any, spi_transfer};
+use crate::{cant_hal::avionics::{SPIInterface, SPIInterfaceActiveLow, SPIManager, SPIDevice, SPIDeviceBuilder}, util::Any, spi_transfer};
 
 pub struct Ready;
 pub struct Busy;
@@ -18,10 +20,27 @@ pub struct W25Q64State<TInterface: SPIInterface, TWritable, TReady> {
 pub type W25Q64<TInterface> = W25Q64State<TInterface, Any, Any>;
 
 impl<P: OutputPin> W25Q64<SPIInterfaceActiveLow<P>> {
-    pub fn create_from_pin(pin: P, spi: &mut SPIManager) -> W25Q64<SPIInterfaceActiveLow<P>> {
-        Self::create_from_interface(SPIInterfaceActiveLow {
+    pub fn from_pin(pin: P) -> W25Q64Builder<P> {
+        W25Q64Builder { pin }
+    }
+}
+
+pub struct W25Q64Builder<P: OutputPin> {
+    pin: P
+}
+
+impl<P: OutputPin> W25Q64Builder<P> {
+    pub fn new(cs: P) -> Self {
+        W25Q64Builder { pin: cs }
+    }
+}
+
+impl<P: OutputPin> SPIDeviceBuilder for W25Q64Builder<P> {
+    type TSPIDevice = W25Q64<SPIInterfaceActiveLow<P>>;
+    fn build(self, spi: &mut SPIManager) -> Self::TSPIDevice {
+        W25Q64::create_from_interface(SPIInterfaceActiveLow {
             spi_manager: spi,
-            pin
+            pin: self.pin
         })
     }
 }
@@ -41,13 +60,8 @@ impl<I: SPIInterface> SPIDevice for W25Q64<I> {
     fn get_interface(&self) -> &Self::TInterface {
         &self.interface
     }
-
-    fn new(interface: I) -> W25Q64<I> {
-        W25Q64State {
-            interface,
-            write_enabled: Any,
-            ready: Any,
-        }
+    fn init(&mut self) {
+        self.interface.deselect();
     }
 }
 

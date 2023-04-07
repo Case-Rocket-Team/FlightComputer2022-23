@@ -1,10 +1,14 @@
 use bsp::board;
 use crate::cant_hal::spi::devices::flash::W25Q64;
+use crate::cant_hal::spi::devices::radio::Sx127xLoRa;
+use crate::cant_hal::spi::devices::radio::Sx127xLoRaBuilder;
 use imxrt_hal::{self, timer::Blocking, pit::Pit};
 use teensy4_bsp as bsp;
 use crate::{spi_devices, pin_layout};
 
 pub use crate::cant_hal::spi::devices;
+
+use self::devices::flash::W25Q64Builder;
 
 pub type Timer = Blocking<Pit<0>, { board::PERCLK_FREQUENCY }>;
 
@@ -20,7 +24,8 @@ pin_layout! {
 }
 
 spi_devices! {
-    flash Flash: W25Q64::<SPIInterfaceActiveLow<FlashCS>>
+    flash Flash: W25Q64Builder::<FlashCS>
+    //radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer>
 }
 
 pub fn get_avionics() -> Avionics {
@@ -39,10 +44,9 @@ pub fn get_avionics() -> Avionics {
     bsp::LoggingFrontend::default_log().register_usb(usb);
     let timer = Timer::from_pit(pit);
 
-    let output = gpio1.output(pins.p1);
-
-    let spi_manager = SPIManager::new(lpspi4, SPIPins {
-        flash: output
+    let spi_manager = SPIManager::new(lpspi4, SPIDeviceBuilders {
+        flash: W25Q64Builder::new(gpio1.output(pins.p1)),
+        //radio: gpio1.output(pins.p2),
     });
     
     Avionics {

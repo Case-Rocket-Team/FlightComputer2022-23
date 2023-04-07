@@ -1,3 +1,10 @@
+use cortex_m::prelude::_embedded_hal_digital_OutputPin;
+use embedded_hal::digital::v2::OutputPin;
+
+pub trait SimpleSPIDevice<P: OutputPin> {
+    fn new(cs: P) -> Self;
+}
+
 #[macro_export]
 macro_rules! spi_transfer {
     ($interface: expr, $($val: expr),+) => {
@@ -13,7 +20,6 @@ macro_rules! spi_devices {
         use cortex_m::prelude::_embedded_hal_blocking_spi_Transfer;
         use embedded_hal::digital::v2::OutputPin;
         use imxrt_hal::gpio::Output;
-        use teensy4_bsp::pins::t40::*;
         use paste::paste;
         use teensy4_bsp::ral;
         use imxrt_hal::lpspi::Lpspi;
@@ -49,21 +55,26 @@ macro_rules! spi_devices {
             }
         }
 
+        pub trait SPIDeviceBuilder {
+            type TSPIDevice: SPIDevice;
+            fn build(self, manager: &mut SPIManager) -> Self::TSPIDevice;
+        }
+
         pub trait SPIDevice {
             type TInterface: SPIInterface;
             fn get_interface(&self) -> &Self::TInterface;
-            fn new(interface: Self::TInterface) -> Self;
+            fn init(&mut self);
         }
 
         paste! {
-            $(pub type $new_type = $type;)+
+            $(pub type $new_type = <$type as SPIDeviceBuilder>::TSPIDevice;)+
 
             pub struct SPIManagerDevices {
-                $($device: Option<$type>,)+
+                $($device: Option<<$type as SPIDeviceBuilder>::TSPIDevice>,)+
             }
 
-            pub struct SPIPins {
-                $(pub $device: <<$type as SPIDevice>::TInterface as SPIInterface>::TCS,)+
+            pub struct SPIDeviceBuilders {
+                $(pub $device: $type,)+
             }
 
             $(pub struct [<SPIManagerUsing $new_type>] {
@@ -72,7 +83,7 @@ macro_rules! spi_devices {
             })+
 
             impl SPIManager {
-                $(pub fn [<take_ $device>](mut self) -> ([<SPIManagerUsing $new_type>], $type) {
+                $(pub fn [<take_ $device>](mut self) -> ([<SPIManagerUsing $new_type>], $new_type) {
                     unsafe {
                         let device = self.devices.$device.unwrap_unchecked();
                         self.devices.$device = None;
@@ -83,12 +94,8 @@ macro_rules! spi_devices {
                     }
                 })+
 
-                pub fn new(spi_ral: ral::lpspi::LPSPI4, mut pins: SPIPins) -> SPIManager {
+                pub fn new(spi_ral: ral::lpspi::LPSPI4, mut devices: SPIDeviceBuilders) -> SPIManager {
                     let spi_hal = SpiHal::without_pins(spi_ral);
-                    $(
-                        let _ = pins.$device.set_high();                        
-                    )+
-
                     let mut manager = SPIManager {
                         spi_hal,
                         devices: SPIManagerDevices {
@@ -96,16 +103,18 @@ macro_rules! spi_devices {
                         }
                     };
 
-                    $(
-                        manager.devices.$device = Some($type::create_from_pin(pins.$device, &mut manager));
-                    )+
+                    $({
+                        let mut device = devices.$device.build(&mut manager);
+                        device.init();
+                        manager.devices.$device = Some(device);
+                    })+
 
                     manager
                 }
             }
 
             $(impl [<SPIManagerUsing $new_type>] {
-                pub fn done(mut self, device: $type) -> SPIManager {
+                pub fn done(mut self, device: $new_type) -> SPIManager {
                     self.devices.$device = Some(device);
                     SPIManager {
                         spi_hal: self.spi_hal,
