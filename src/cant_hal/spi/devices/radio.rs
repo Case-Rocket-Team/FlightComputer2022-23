@@ -4,6 +4,8 @@ use sx127x_lora::LoRa;
 
 use crate::cant_hal::avionics::{SPIManager, SpiHal, Timer, SPIDevice, SPIDeviceBuilder, SPIInterface};
 
+// TODO: remove SPI interface
+
 pub struct Sx127xLoRaBuilder<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
     cs: CS,
     reset: RESET,
