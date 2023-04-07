@@ -61,8 +61,6 @@ macro_rules! spi_devices {
         }
 
         pub trait SPIDevice {
-            type TInterface: SPIInterface;
-            fn get_interface(&self) -> &Self::TInterface;
             fn init(&mut self);
         }
 

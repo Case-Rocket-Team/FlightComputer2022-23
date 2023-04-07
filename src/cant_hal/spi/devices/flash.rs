@@ -55,11 +55,13 @@ impl<TInterface: SPIInterface> W25Q64<TInterface> {
     }
 }
 
-impl<I: SPIInterface> SPIDevice for W25Q64<I> {
-    type TInterface = I;
-    fn get_interface(&self) -> &Self::TInterface {
+impl<I: SPIInterface> W25Q64<I> {
+    fn get_interface(&self) -> &I {
         &self.interface
     }
+}
+
+impl<I: SPIInterface> SPIDevice for W25Q64<I> {
     fn init(&mut self) {
         self.interface.deselect();
     }

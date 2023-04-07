@@ -3,9 +3,6 @@ use embedded_hal::digital::v2::OutputPin;
 use sx127x_lora::LoRa;
 
 use crate::cant_hal::avionics::{SPIManager, SpiHal, Timer, SPIDevice, SPIDeviceBuilder, SPIInterface};
-
-// TODO: remove SPI interface
-
 pub struct Sx127xLoRaBuilder<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
     cs: CS,
     reset: RESET,
@@ -35,12 +32,6 @@ impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, 
 
 impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDevice
         for Sx127xLoRa<CS, RESET, DELAY> {
-    type TInterface = Self;
-
-    fn get_interface(&self) ->  &Self::TInterface {
-        todo!()
-    }
-
     fn init(&mut self) {
         todo!()
     }
