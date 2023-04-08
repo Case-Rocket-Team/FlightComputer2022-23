@@ -29,6 +29,28 @@ impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, 
             lora: LoRa::new(spi_manager, cs, reset,  915, timer).ok().unwrap()
         }
     }
+
+    pub fn hello_world(&mut self) {
+        let mut bytes: [u8; 255] = [0; 255];
+        let message = b"Hello World!";
+        for (i, byte) in message.iter().enumerate() {
+            bytes[i] = *byte;
+        }
+        self.lora.transmit_payload(bytes, message.len());
+    }
+
+    pub fn read_hello_world(&mut self) {
+        let poll = self.lora.poll_irq(Some(1_000));
+        match poll {
+            Ok(size) => {
+                let result = self.lora.read_packet().ok().unwrap();
+                log::info!("{}", core::str::from_utf8(&result).unwrap());
+            }
+            Err(_) => {
+                log::info!("Poll didn't work");
+            }
+        }
+    }
 }
 
 impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDevice
