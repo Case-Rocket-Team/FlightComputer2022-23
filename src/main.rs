@@ -1,9 +1,10 @@
 #![no_std]
 #![no_main]
+#![allow(unused, dead_code)]
 
 use cortex_m_rt;
 
-use crate::{cant_hal::avionics::{get_avionics}, cant_hal::avionics::{self, devices::flash::{WriteDisabled, Ready}}};
+use crate::{cant_hal::avionics, cant_hal::avionics::{devices::flash::{WriteDisabled, Ready}, Avionics, take_avionics}};
 
 use teensy4_panic as _;
 
@@ -13,7 +14,8 @@ mod util;
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
-    let mut avionics = get_avionics();
+    let mut avionics = take_avionics();
+
     let (_spi, _flash) = avionics.spi.take_flash();
     let mut flash = _flash.into(WriteDisabled, Ready);
 

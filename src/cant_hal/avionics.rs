@@ -1,6 +1,7 @@
+use core::mem::MaybeUninit;
+
 use bsp::board;
-use crate::cant_hal::spi::devices::flash::W25Q64;
-use crate::cant_hal::spi::devices::radio::Sx127xLoRa;
+use imxrt_hal::iomuxc::lpspi;
 use crate::cant_hal::spi::devices::radio::Sx127xLoRaBuilder;
 use imxrt_hal::{self, timer::Blocking, pit::Pit};
 use teensy4_bsp as bsp;
@@ -17,6 +18,9 @@ pub struct Avionics {
     pub timer: Timer,
 }
 
+// Not actually safe to share between threads
+unsafe impl Sync for Avionics {}
+
 pin_layout! {
     P1 FlashCS 
     P2 RadioCS
@@ -25,13 +29,17 @@ pin_layout! {
 
 spi_devices! {
     flash Flash: W25Q64Builder::<FlashCS>
-    //radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer>
+    radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer>
 }
 
-pub fn get_avionics() -> Avionics {
+static mut SPI_HAL: MaybeUninit<SpiHal> = MaybeUninit::uninit();
+
+#[allow(unused_variables)]
+#[allow(unused_mut)]
+pub fn take_avionics() -> Avionics {
     let board::Resources {
         lpspi4,
-        pins,
+        mut pins,
         pit: (pit, _, _, _),
         usb,
         mut gpio1,
@@ -42,15 +50,21 @@ pub fn get_avionics() -> Avionics {
     } = board::t40(board::instances());
 
     bsp::LoggingFrontend::default_log().register_usb(usb);
-    let timer = Timer::from_pit(pit);
 
-    let spi_manager = SPIManager::new(lpspi4, SPIDeviceBuilders {
-        flash: W25Q64Builder::new(gpio1.output(pins.p1)),
-        //radio: gpio1.output(pins.p2),
-    });
-    
+    let spi_hal =  unsafe {
+        SPI_HAL = MaybeUninit::new(Lpspi::without_pins(lpspi4));
+        SPI_HAL.assume_init_mut()
+    };
+
+    lpspi::prepare(&mut pins.p11);
+    lpspi::prepare(&mut pins.p12);
+    lpspi::prepare(&mut pins.p13);
+
+    let spi_manager = SPIManager::new(spi_hal);
+
     Avionics {
         spi: spi_manager,
-        timer,
+        timer: Timer::from_pit(pit),
     }
 }
+    

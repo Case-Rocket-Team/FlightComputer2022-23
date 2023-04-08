@@ -132,6 +132,7 @@ dependencies = [
  "imxrt-hal",
  "log",
  "micromath",
+ "nb 1.1.0",
  "paste",
  "sx127x_lora",
  "teensy4-bsp",

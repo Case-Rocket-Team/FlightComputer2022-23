@@ -1,6 +1,4 @@
 use core::marker::PhantomData;
-
-use cortex_m::prelude::_embedded_hal_digital_OutputPin;
 use embedded_hal::digital::v2::OutputPin;
 
 use crate::{cant_hal::avionics::{SPIInterface, SPIInterfaceActiveLow, SPIManager, SPIDevice, SPIDeviceBuilder}, util::Any, spi_transfer};

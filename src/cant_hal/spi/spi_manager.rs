@@ -1,4 +1,3 @@
-use cortex_m::prelude::_embedded_hal_digital_OutputPin;
 use embedded_hal::digital::v2::OutputPin;
 
 pub trait SimpleSPIDevice<P: OutputPin> {
@@ -21,7 +20,6 @@ macro_rules! spi_devices {
         use embedded_hal::digital::v2::OutputPin;
         use imxrt_hal::gpio::Output;
         use paste::paste;
-        use teensy4_bsp::ral;
         use imxrt_hal::lpspi::Lpspi;
 
         pub type SpiHal = Lpspi<(), 4>;
@@ -50,14 +48,14 @@ macro_rules! spi_devices {
 
             fn transfer(&self, bytes: &mut [u8]) {
                 unsafe {
-                    let _ = (*self.spi_manager).spi_hal.transfer(bytes);
+                    let _ = (*self.spi_manager).get_spi_hal().transfer(bytes);
                 }
             }
         }
 
         pub trait SPIDeviceBuilder {
             type TSPIDevice: SPIDevice;
-            fn build(self, manager: &mut SPIManager) -> Self::TSPIDevice;
+            fn build(self, manager: &'static mut SPIManager) -> Self::TSPIDevice;
         }
 
         pub trait SPIDevice {
@@ -75,39 +73,47 @@ macro_rules! spi_devices {
                 $(pub $device: $type,)+
             }
 
-            $(pub struct [<SPIManagerUsing $new_type>] {
-                spi_hal: SpiHal,
-                devices: SPIManagerDevices
-            })+
+            $(
+                #[repr(C)]
+                pub struct [<SPIManagerUsing $new_type>] {
+                    spi_hal: &'static mut SpiHal,
+                    devices: SPIManagerDevices
+                }
+            )+
 
-            impl SPIManager {
+            impl<'a> SPIManager {
                 $(pub fn [<take_ $device>](mut self) -> ([<SPIManagerUsing $new_type>], $new_type) {
                     unsafe {
                         let device = self.devices.$device.unwrap_unchecked();
                         self.devices.$device = None;
-                        ([<SPIManagerUsing $new_type>] {
-                            spi_hal: self.spi_hal,
-                            devices: self.devices
-                        }, device)
+                        // Transmute here to avoid move
+                        (core::mem::transmute(self), device)
                     }
                 })+
 
-                pub fn new(spi_ral: ral::lpspi::LPSPI4, mut devices: SPIDeviceBuilders) -> SPIManager {
-                    let spi_hal = SpiHal::without_pins(spi_ral);
-                    let mut manager = SPIManager {
+                pub fn get_spi_hal(&mut self) -> &mut SpiHal {
+                    self.spi_hal
+                }
+
+                pub fn new(spi_hal: &'static mut SpiHal) -> SPIManager {
+                    SPIManager {
                         spi_hal,
                         devices: SPIManagerDevices {
                             $($device: None,)+
                         }
-                    };
+                    }
+                }
 
+                pub fn init(&'static mut self, devices: SPIDeviceBuilders) {
                     $({
-                        let mut device = devices.$device.build(&mut manager);
+                        let self_ptr: *mut Self = self;
+                        let self_ref_clone: &'static mut Self = unsafe {
+                            self_ptr.as_mut().unwrap()
+                        };
+                        let mut device = devices.$device.build(self_ref_clone);
                         device.init();
-                        manager.devices.$device = Some(device);
+                        self.devices.$device = Some(device);
                     })+
-
-                    manager
                 }
             }
 
@@ -121,9 +127,26 @@ macro_rules! spi_devices {
                 }
             })+
 
+            #[repr(C)]
             pub struct SPIManager {
-                spi_hal: SpiHal,
-                devices: SPIManagerDevices
+                pub spi_hal: &'static mut SpiHal,
+                pub devices: SPIManagerDevices
+            }
+
+            impl<'a> embedded_hal::blocking::spi::Transfer<u8> for &'a mut SPIManager {
+                type Error = imxrt_hal::lpspi::LpspiError;
+
+                fn transfer<'w>(&mut self, words: &'w mut [u8]) -> Result<&'w [u8], Self::Error> {
+                    self.get_spi_hal().transfer(words)
+                }
+            }
+
+            impl<'a> embedded_hal::blocking::spi::Write<u8> for &'a mut SPIManager {
+                type Error = imxrt_hal::lpspi::LpspiError;
+
+                fn write<'w>(&mut self, words: &'w [u8]) -> Result<(), Self::Error> {
+                    self.get_spi_hal().write(words)
+                }
             }
         }
     }

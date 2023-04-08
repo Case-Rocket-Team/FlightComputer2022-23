@@ -4,6 +4,7 @@ use embedded_hal::digital::v2::OutputPin;
 
 pub struct DummyPin {}
 
+#[allow(unused)]
 impl DummyPin {
     pub fn new() -> DummyPin {
         DummyPin {}
