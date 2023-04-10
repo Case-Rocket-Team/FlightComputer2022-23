@@ -10,14 +10,15 @@ cortex-m-rt = "0.7"
 embedded-hal = "0.2.7"
 imxrt-hal = "0.5.1"
 typenum = "1.16.0"
-
-# Remove me if you don't want logging
 log = "0.4.17"
-teensy4-panic = "0.2.2"
 paste = "1.0.12"
 micromath = "2.0.0"
 sx127x_lora = "0.3.1"
 nb = "1.1.0"
+
+[dependencies.teensy4-panic]
+version = "0.2.2"
+features = ["log"]
 
 [dependencies.teensy4-bsp]
 version = "0.4"

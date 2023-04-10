@@ -2,32 +2,50 @@ use embedded_hal::blocking::delay::DelayMs;
 use embedded_hal::digital::v2::OutputPin;
 use sx127x_lora::LoRa;
 
-use crate::cant_hal::avionics::{SPIManager, SPIDevice, SPIDeviceBuilder, SPIInterface};
+use crate::cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder, SPIInterface, SpiHal}, spi::spi_proxy::SpiProxy};
 pub struct Sx127xLoRaBuilder<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
-    cs: CS,
-    reset: RESET,
-    delay: DELAY,
+    pub cs: CS,
+    pub reset: RESET,
+    pub delay: DELAY,
 }
 
 impl< CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDeviceBuilder
         for Sx127xLoRaBuilder<CS, RESET, DELAY> {
     type TSPIDevice = Sx127xLoRa<CS, RESET, DELAY>;
 
-    fn build(self, manager: &'static mut SPIManager) -> Self::TSPIDevice {
+    fn build(self, manager: *mut SPIManager) -> Self::TSPIDevice {
         Sx127xLoRa::new(self.cs, self.reset, self.delay, manager)
     }
 }
 
 #[allow(unused)]
 pub struct Sx127xLoRa<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
-    lora: LoRa<&'static mut SPIManager, CS, RESET, DELAY>,
+    lora: LoRa<SpiProxy, CS, RESET, DELAY>,
 }
 
 impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, Delay> {
-    fn new(cs: CS, reset: Reset, timer: Delay, spi_manager: &'static mut SPIManager) -> Self {
-        Sx127xLoRa {
-            lora: LoRa::new(spi_manager, cs, reset,  915, timer).ok().unwrap()
+    fn new(cs: CS, reset: Reset, timer: Delay, spi_manager: *mut SPIManager) -> Self {
+        let lora_res = LoRa::new(SpiProxy::new(spi_manager), cs, reset,  915, timer);
+
+        match lora_res {
+            Ok(lora) => Sx127xLoRa {
+                lora
+            },
+            Err(e) => {
+                match e {
+                    sx127x_lora::Error::Reset(ref e) => log::info!("Reset error"),
+                    sx127x_lora::Error::CS(ref e) => log::info!("CS error"),
+                    sx127x_lora::Error::SPI(ref e) => log::info!("SPI error"),
+                    sx127x_lora::Error::Uninformative => log::info!("Uninformative error"),
+                    sx127x_lora::Error::Reset(ref e) => log::info!("Reset error"),
+                    sx127x_lora::Error::VersionMismatch(ref e) => log::info!("Version error: {}", e),
+                    sx127x_lora::Error::Transmitting => log::info!("Transmit error")
+                }
+
+                panic!();
+            }
         }
+        
     }
 
     pub fn hello_world(&mut self) {

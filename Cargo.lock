@@ -411,6 +411,9 @@ name = "teensy4-panic"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7240ec9c31342bf5ad2a0765efa7f96af0185003f64de33442a231bc583195e5"
+dependencies = [
+ "log",
+]
 
 [[package]]
 name = "teensy4-pins"

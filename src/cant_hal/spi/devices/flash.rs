@@ -35,7 +35,7 @@ impl<P: OutputPin> W25Q64Builder<P> {
 
 impl<P: OutputPin> SPIDeviceBuilder for W25Q64Builder<P> {
     type TSPIDevice = W25Q64<SPIInterfaceActiveLow<P>>;
-    fn build(self, spi: &mut SPIManager) -> Self::TSPIDevice {
+    fn build(self, spi: *mut SPIManager) -> Self::TSPIDevice {
         W25Q64::create_from_interface(SPIInterfaceActiveLow {
             spi_manager: spi,
             pin: self.pin

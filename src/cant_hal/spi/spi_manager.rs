@@ -21,8 +21,9 @@ macro_rules! spi_devices {
         use imxrt_hal::gpio::Output;
         use paste::paste;
         use imxrt_hal::lpspi::Lpspi;
+        use imxrt_hal::iomuxc::Pad;
 
-        pub type SpiHal = Lpspi<(), 4>;
+        pub type SpiHal = Lpspi<LpspiPins<Pad<1075806532, 1075807028>, Pad<1075806528, 1075807024>, Pad<1075806536, 1075807032>, Pad<1075806524, 1075807020>>, 4>;
 
         pub struct SPIInterfaceActiveLow<P: OutputPin> {
             pub spi_manager: *mut SPIManager,
@@ -55,7 +56,7 @@ macro_rules! spi_devices {
 
         pub trait SPIDeviceBuilder {
             type TSPIDevice: SPIDevice;
-            fn build(self, manager: &'static mut SPIManager) -> Self::TSPIDevice;
+            fn build(self, manager: *mut SPIManager) -> Self::TSPIDevice;
         }
 
         pub trait SPIDevice {
@@ -66,7 +67,7 @@ macro_rules! spi_devices {
             $(pub type $new_type = <$type as SPIDeviceBuilder>::TSPIDevice;)+
 
             pub struct SPIManagerDevices {
-                $($device: Option<<$type as SPIDeviceBuilder>::TSPIDevice>,)+
+                $(pub $device: Option<<$type as SPIDeviceBuilder>::TSPIDevice>,)+
             }
 
             pub struct SPIDeviceBuilders {
@@ -76,7 +77,7 @@ macro_rules! spi_devices {
             $(
                 #[repr(C)]
                 pub struct [<SPIManagerUsing $new_type>] {
-                    spi_hal: &'static mut SpiHal,
+                    spi_hal: SpiHal,
                     devices: SPIManagerDevices
                 }
             )+
@@ -92,10 +93,10 @@ macro_rules! spi_devices {
                 })+
 
                 pub fn get_spi_hal(&mut self) -> &mut SpiHal {
-                    self.spi_hal
+                    &mut self.spi_hal
                 }
 
-                pub fn new(spi_hal: &'static mut SpiHal) -> SPIManager {
+                pub fn new(spi_hal: SpiHal) -> SPIManager {
                     SPIManager {
                         spi_hal,
                         devices: SPIManagerDevices {
@@ -104,15 +105,11 @@ macro_rules! spi_devices {
                     }
                 }
 
-                pub fn init(&'static mut self, devices: SPIDeviceBuilders) {
-                    $({
-                        let self_ptr: *mut Self = self;
-                        let self_ref_clone: &'static mut Self = unsafe {
-                            self_ptr.as_mut().unwrap()
-                        };
-                        let mut device = devices.$device.build(self_ref_clone);
+                pub fn init(manager: *mut Self, devices: SPIDeviceBuilders) {
+                    $(unsafe {
+                        let mut device = devices.$device.build(manager);
                         device.init();
-                        self.devices.$device = Some(device);
+                        (*manager).devices.$device = Some(device);
                     })+
                 }
             }
@@ -129,24 +126,8 @@ macro_rules! spi_devices {
 
             #[repr(C)]
             pub struct SPIManager {
-                pub spi_hal: &'static mut SpiHal,
+                pub spi_hal: SpiHal,
                 pub devices: SPIManagerDevices
-            }
-
-            impl<'a> embedded_hal::blocking::spi::Transfer<u8> for &'a mut SPIManager {
-                type Error = imxrt_hal::lpspi::LpspiError;
-
-                fn transfer<'w>(&mut self, words: &'w mut [u8]) -> Result<&'w [u8], Self::Error> {
-                    self.get_spi_hal().transfer(words)
-                }
-            }
-
-            impl<'a> embedded_hal::blocking::spi::Write<u8> for &'a mut SPIManager {
-                type Error = imxrt_hal::lpspi::LpspiError;
-
-                fn write<'w>(&mut self, words: &'w [u8]) -> Result<(), Self::Error> {
-                    self.get_spi_hal().write(words)
-                }
             }
         }
     }
