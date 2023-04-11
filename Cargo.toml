@@ -8,7 +8,6 @@ edition = "2021"
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 embedded-hal = "0.2.7"
-imxrt-hal = "0.5.1"
 typenum = "1.16.0"
 log = "0.4.17"
 paste = "1.0.12"
@@ -23,6 +22,10 @@ features = ["log"]
 [dependencies.teensy4-bsp]
 version = "0.4"
 features = ["rt", "usb-logging"]
+
+[dependencies.imxrt-hal]
+version = "0.5.1"
+features = ["imxrt1060"]
 
 # Don't optimize build dependencies, like proc macros.
 # Helps with build times.
