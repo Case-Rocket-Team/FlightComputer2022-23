@@ -12,6 +12,8 @@ mod spi;
 mod avionics;
 mod util;
 mod layout;
+mod devices;
+mod gps;
 
 #[cortex_m_rt::entry]
 fn main() -> ! {
