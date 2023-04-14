@@ -1,7 +1,7 @@
 use core::mem::MaybeUninit;
 use nb::block;
 use teensy4_bsp::board::LpspiPins;
-use bsp::board;
+use bsp::board::{self, LPSPI_FREQUENCY};
 use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
 use crate::cant_hal::spi::devices::radio::Sx127xLoRaBuilder;
 use imxrt_hal::{self, timer::Blocking, pit::Pit, iomuxc::lpspi, lpspi::Pins};
@@ -32,7 +32,7 @@ pin_layout! {
 
 spi_devices! {
     flash Flash: W25Q64Builder::<FlashCS>
-    radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer<1>>
+    //radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer<1>>
 }
 
 static mut SPI_MANAGER: MaybeUninit<SPIManager> = MaybeUninit::uninit();
@@ -62,9 +62,12 @@ pub fn take_avionics() -> Avionics {
         sdo: pins.p11,
         sdi: pins.p12,
         sck: pins.p13
-    }, 1_000_000);
+    }, LPSPI_FREQUENCY / 16);
 
-    for i in 0..64 {
+    let mut radio_cs = gpio4.output(pins.p2);
+    radio_cs.set_high();
+
+    /*for i in 0..64 {
         loop {
             let mut bytes = [0b01010011u8];
             let res = spi_hal.transfer(&mut bytes);
@@ -73,7 +76,7 @@ pub fn take_avionics() -> Avionics {
                 Err(_) => continue
             }
         }
-    }
+    }*/
 
     timer.block_ms(500);
     
@@ -86,25 +89,18 @@ pub fn take_avionics() -> Avionics {
     let spi_manager = unsafe {
         SPI_MANAGER = MaybeUninit::new(SPIManager::new(spi_hal));
 
-        unsafe {
-            log::info!("SPI ref addr: {:#?}", SPI_MANAGER);
-            log::info!("SPI ptr addr: {:#?}", SPI_MANAGER.as_mut_ptr());
-        }
-
         SPIManager::init(SPI_MANAGER.as_mut_ptr(), SPIDeviceBuilders {
             flash: W25Q64Builder::new(gpio1.output(pins.p1)), 
-            radio: Sx127xLoRaBuilder {
+            /*radio: Sx127xLoRaBuilder {
                 cs: gpio4.output(pins.p2),
                 reset: gpio1.output(pins.p22),
                 delay: Timer::<1>::from_pit(pit2)
-            }
+            }*/
         });
 
         SPI_MANAGER.assume_init_mut() 
     };
 
-    
-    
     Avionics {
         spi: spi_manager,
         timer,

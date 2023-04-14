@@ -27,6 +27,9 @@ features = ["rt", "usb-logging"]
 version = "0.5.1"
 features = ["imxrt1060"]
 
+[patch.crates-io]
+imxrt-hal = { git = "https://github.com/Case-Rocket-Team/imxrt-hal.git" }
+
 # Don't optimize build dependencies, like proc macros.
 # Helps with build times.
 [profile.release.build-override]

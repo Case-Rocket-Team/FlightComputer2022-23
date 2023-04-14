@@ -8,7 +8,7 @@ pub trait SimpleSPIDevice<P: OutputPin> {
 macro_rules! spi_transfer {
     ($interface: expr, $($val: expr),+) => {
         $interface.select();
-        $($interface.transfer($val);)+
+        $(let res = $interface.transfer($val);)+
         $interface.deselect();
     };
 }
@@ -22,37 +22,9 @@ macro_rules! spi_devices {
         use paste::paste;
         use imxrt_hal::lpspi::Lpspi;
         use imxrt_hal::iomuxc::Pad;
+        use crate::cant_hal::spi::spi_proxy::SpiProxy;
 
         pub type SpiHal = Lpspi<LpspiPins<Pad<1075806532, 1075807028>, Pad<1075806528, 1075807024>, Pad<1075806536, 1075807032>, Pad<1075806524, 1075807020>>, 4>;
-
-        pub struct SPIInterfaceActiveLow<P: OutputPin> {
-            pub spi_manager: *mut SPIManager,
-            pub pin: P
-        }
-
-        pub trait SPIInterface {
-            type TCS;
-            fn select(&mut self);
-            fn deselect(&mut self);
-            fn transfer(&self, bytes: &mut [u8]);
-        }
-
-        impl<P: OutputPin> SPIInterface for SPIInterfaceActiveLow<P> {
-            type TCS = P;
-            fn select(&mut self) {
-                let _ = self.pin.set_low();
-            }
-
-            fn deselect(&mut self) {
-                let _ = self.pin.set_high();
-            }
-
-            fn transfer(&self, bytes: &mut [u8]) {
-                unsafe {
-                    let _ = (*self.spi_manager).get_spi_hal().transfer(bytes);
-                }
-            }
-        }
 
         pub trait SPIDeviceBuilder {
             type TSPIDevice: SPIDevice;

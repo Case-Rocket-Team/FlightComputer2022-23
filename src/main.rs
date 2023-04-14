@@ -17,22 +17,45 @@ mod util;
 fn main() -> ! {
     let mut avionics = take_avionics();
 
-    let mut radio = match avionics.spi.devices.radio.as_mut() {
+    /*let mut radio = match avionics.spi.devices.radio.as_mut() {
         Some(r) => r,
         None => loop {
             log::info!("There is no radio!");
             avionics.timer.block_ms(500);
         }
-    };
+    };*/
 
+    let mut flash = avionics.spi.devices.flash.as_mut().unwrap();
     log::info!("Hello world!");
 
+    let mut write_byte = 0u8;
+
     loop {
-        log::info!("Ran loop!");
+        avionics.timer.block_ms(500);
 
-        //radio.hello_world();
-        //radio.read_hello_world();
+        let (manu, id) = flash.read_manufacturer_and_device_id();
 
-        avionics.timer.delay_ms(500u16);
+        log::info!("Found manufacturer {:x?} and device ID {:x?}", manu, id);
+
+        let test_addr = 0x00_00_00;
+
+        flash.set_write_enabled();
+        flash.erase_sector(test_addr);
+        flash.block_until_ready();
+
+        avionics.timer.block_ms(25);
+
+        flash.block_until_ready();
+        flash.set_write_enabled();
+        flash.page_program(test_addr, &mut [write_byte]);
+        flash.block_until_ready();
+
+        avionics.timer.block_ms(25);
+
+        let [read_byte] = flash.read_data::<1>(test_addr);
+
+        log::info!("Wrote {:x?} and read {:x?}!", write_byte, read_byte);
+
+        write_byte += 1;
     }
 }

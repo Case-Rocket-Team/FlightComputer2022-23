@@ -1,8 +1,10 @@
+use core::convert::Infallible;
+
 use embedded_hal::blocking::delay::DelayMs;
 use embedded_hal::digital::v2::OutputPin;
 use sx127x_lora::LoRa;
 
-use crate::cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder, SPIInterface, SpiHal}, spi::spi_proxy::SpiProxy};
+use crate::cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder, SpiHal}, spi::{spi_proxy::SpiProxy, spi_interface::SpiInterface}};
 pub struct Sx127xLoRaBuilder<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
     pub cs: CS,
     pub reset: RESET,
@@ -78,9 +80,10 @@ impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDevice
     }
 }
 
-impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIInterface
+/*impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SpiInterface
         for Sx127xLoRa<CS, RESET, DELAY> {
     type TCS = CS;
+    type TError = Infallible;
 
     fn select(&mut self) {
         todo!()
@@ -90,7 +93,7 @@ impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIInterface
         todo!()
     }
 
-    fn transfer(&self, _bytes: &mut[u8]) {
+    fn transfer(&mut self, _bytes: &mut[u8]) -> Result<&[u8], Self::TError> {
         todo!()
     }
-}
+}*/

@@ -174,8 +174,7 @@ dependencies = [
 [[package]]
 name = "imxrt-hal"
 version = "0.5.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fddda1c1e96dbcabb6a7628a7563a71cdeb0773895f4f24fa1b4f66c7716042"
+source = "git+https://github.com/Case-Rocket-Team/imxrt-hal.git#ca7a7bcdbad51c3f73ec2c666b00e513640bf36c"
 dependencies = [
  "bitflags",
  "cfg-if",
