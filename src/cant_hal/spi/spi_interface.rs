@@ -20,6 +20,13 @@ pub struct SpiInterfaceActiveLow<P: OutputPin> {
     pub pin: P
 }
 
+impl<P: OutputPin> SpiInterfaceActiveLow<P> {
+    pub fn new(mut pin: P, proxy: SpiProxy) -> SpiInterfaceActiveLow<P> {
+        pin.set_low();
+        SpiInterfaceActiveLow { spi: proxy, pin }
+    }
+}
+
 impl<P: OutputPin> Transfer<u8> for SpiInterfaceActiveLow<P> {
     type Error = LpspiError;
     fn transfer<'a>(&mut self, bytes: &'a mut [u8]) -> Result<&'a [u8], <Self as Transfer<u8>>::Error> {

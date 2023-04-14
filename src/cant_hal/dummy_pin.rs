@@ -15,10 +15,10 @@ impl OutputPin for DummyPin {
     type Error = Infallible;
 
     fn set_low(&mut self) -> Result<(), Self::Error> {
-        todo!()
+        Ok(())
     }
 
     fn set_high(&mut self) -> Result<(), Self::Error> {
-        todo!()
+        Ok(())
     }
 }

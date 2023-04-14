@@ -32,7 +32,7 @@ pin_layout! {
 
 spi_devices! {
     flash Flash: W25Q64Builder::<FlashCS>
-    //radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer<1>>
+    radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer<1>>
 }
 
 static mut SPI_MANAGER: MaybeUninit<SPIManager> = MaybeUninit::uninit();
@@ -64,20 +64,6 @@ pub fn take_avionics() -> Avionics {
         sck: pins.p13
     }, LPSPI_FREQUENCY / 16);
 
-    let mut radio_cs = gpio4.output(pins.p2);
-    radio_cs.set_high();
-
-    /*for i in 0..64 {
-        loop {
-            let mut bytes = [0b01010011u8];
-            let res = spi_hal.transfer(&mut bytes);
-            match res {
-                Ok(_) => break,
-                Err(_) => continue
-            }
-        }
-    }*/
-
     timer.block_ms(500);
     
     //spi_hal.disabled(|spi| spi.set_clock_hz(board::LPSPI_FREQUENCY, 1_000_000));
@@ -91,11 +77,11 @@ pub fn take_avionics() -> Avionics {
 
         SPIManager::init(SPI_MANAGER.as_mut_ptr(), SPIDeviceBuilders {
             flash: W25Q64Builder::new(gpio1.output(pins.p1)), 
-            /*radio: Sx127xLoRaBuilder {
+            radio: Sx127xLoRaBuilder {
                 cs: gpio4.output(pins.p2),
                 reset: gpio1.output(pins.p22),
                 delay: Timer::<1>::from_pit(pit2)
-            }*/
+            }
         });
 
         SPI_MANAGER.assume_init_mut() 

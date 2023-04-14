@@ -26,7 +26,9 @@ pub struct Sx127xLoRa<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
 }
 
 impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, Delay> {
-    fn new(cs: CS, reset: Reset, timer: Delay, spi_manager: *mut SPIManager) -> Self {
+    fn new(mut cs: CS, reset: Reset, timer: Delay, spi_manager: *mut SPIManager) -> Self {
+        cs.set_low();
+
         let lora_res = LoRa::new(SpiProxy::new(spi_manager), cs, reset,  915, timer);
 
         match lora_res {
@@ -76,7 +78,7 @@ impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, 
 impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDevice
         for Sx127xLoRa<CS, RESET, DELAY> {
     fn init(&mut self) {
-        todo!()
+        ;
     }
 }
 
