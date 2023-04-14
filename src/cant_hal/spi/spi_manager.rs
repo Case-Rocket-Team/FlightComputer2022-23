@@ -39,62 +39,33 @@ macro_rules! spi_devices {
             $(pub type $new_type = <$type as SPIDeviceBuilder>::TSPIDevice;)+
 
             pub struct SPIManagerDevices {
-                $(pub $device: Option<<$type as SPIDeviceBuilder>::TSPIDevice>,)+
+                $(pub $device: <$type as SPIDeviceBuilder>::TSPIDevice,)+
             }
 
             pub struct SPIDeviceBuilders {
                 $(pub $device: $type,)+
             }
 
-            $(
-                #[repr(C)]
-                pub struct [<SPIManagerUsing $new_type>] {
-                    spi_hal: SpiHal,
-                    devices: SPIManagerDevices
-                }
-            )+
-
             impl<'a> SPIManager {
-                $(pub fn [<take_ $device>](mut self) -> ([<SPIManagerUsing $new_type>], $new_type) {
-                    unsafe {
-                        let device = self.devices.$device.unwrap_unchecked();
-                        self.devices.$device = None;
-                        // Transmute here to avoid move
-                        (core::mem::transmute(self), device)
-                    }
-                })+
-
                 pub fn get_spi_hal(&mut self) -> &mut SpiHal {
                     &mut self.spi_hal
                 }
 
-                pub fn new(spi_hal: SpiHal) -> SPIManager {
-                    SPIManager {
-                        spi_hal,
-                        devices: SPIManagerDevices {
-                            $($device: None,)+
+                pub fn new(manager: *mut Self, spi_hal: SpiHal,  devices: SPIDeviceBuilders) {
+                    unsafe {
+                        *manager = SPIManager {
+                            spi_hal,
+                            devices: SPIManagerDevices {
+                                $($device: {
+                                    let mut device = devices.$device.build(manager);
+                                    device.init();
+                                    device
+                                },)+
+                            }
                         }
                     }
                 }
-
-                pub fn init(manager: *mut Self, devices: SPIDeviceBuilders) {
-                    $(unsafe {
-                        let mut device = devices.$device.build(manager);
-                        device.init();
-                        (*manager).devices.$device = Some(device);
-                    })+
-                }
             }
-
-            $(impl [<SPIManagerUsing $new_type>] {
-                pub fn done(mut self, device: $new_type) -> SPIManager {
-                    self.devices.$device = Some(device);
-                    SPIManager {
-                        spi_hal: self.spi_hal,
-                        devices: self.devices
-                    }
-                }
-            })+
 
             #[repr(C)]
             pub struct SPIManager {

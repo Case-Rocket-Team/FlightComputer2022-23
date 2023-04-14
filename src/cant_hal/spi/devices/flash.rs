@@ -1,7 +1,7 @@
 use core::marker::PhantomData;
 use embedded_hal::digital::v2::OutputPin;
 
-use crate::{cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder}, spi::{spi_proxy::SpiProxy, spi_interface::{SpiInterface, SpiInterfaceActiveLow}}}, util::{Any}, spi_transfer};
+use crate::{cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder}, spi::{spi_proxy::SpiProxy, spi_interface::{SpiInterface, SpiInterfaceActiveLow}}}, util::{Any}, spi_transfer, test::TestResult};
 
 pub struct Ready;
 pub struct Busy;
@@ -112,6 +112,42 @@ impl<TInterface: SpiInterface> W25Q64<TInterface> {
         ];
 
         self.send_write_instr(&mut instr)
+    }
+
+    // -- Tests --
+
+    pub fn test_manufac_and_device_id(&mut self) -> TestResult {
+        let (manu, id) = self.read_manufacturer_and_device_id();
+
+        if manu == 0xEF && id == 0x15 {
+            TestResult::Pass
+        } else {
+            log::info!("Found wrong manufacturer and device id: {:x}, {:x}", manu, id);
+            TestResult::Fail
+        }
+    }
+
+    pub fn test_read_write(&mut self) -> TestResult {
+        let test_addr = 0x00_00_00;
+
+        self.set_write_enabled();
+        self.erase_sector(test_addr);
+        self.block_until_ready();
+
+        let write_byte = 0x30;
+
+        self.set_write_enabled();
+        self.page_program(test_addr, &mut [write_byte]);
+        self.block_until_ready();
+
+        let [read_byte] = self.read_data::<1>(test_addr);
+        
+        if (write_byte == read_byte) {
+            TestResult::Pass
+        } else {
+            log::info!("Wrong byte read! {:x} vs {:x} expected", read_byte, write_byte);
+            TestResult::Fail
+        }
     }
 }
 

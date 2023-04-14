@@ -21,8 +21,13 @@ pub struct Avionics {
     pub timer: Timer<0>,
 }
 
-// Not actually safe to share between threads
-unsafe impl Sync for Avionics {}
+macro_rules! gpio_cs {
+    ($gpio: expr, $pin: expr) => {{
+        let mut output = $gpio.output($pin);
+        output.set_high();
+        output
+    }};
+}
 
 pin_layout! {
     P1 FlashCS 
@@ -72,13 +77,15 @@ pub fn take_avionics() -> Avionics {
     lpspi::prepare(&mut pins.p12);
     lpspi::prepare(&mut pins.p13);*/
 
-    let spi_manager = unsafe {
-        SPI_MANAGER = MaybeUninit::new(SPIManager::new(spi_hal));
+    let mut flash_cs = gpio_cs!(gpio1, pins.p1);
+    let mut radio_cs = gpio_cs!(gpio4, pins.p2);
 
-        SPIManager::init(SPI_MANAGER.as_mut_ptr(), SPIDeviceBuilders {
-            flash: W25Q64Builder::new(gpio1.output(pins.p1)), 
+    let spi_manager = unsafe {
+        let ptr = SPI_MANAGER.as_mut_ptr();
+        SPIManager::new(ptr, spi_hal, SPIDeviceBuilders {
+            flash: W25Q64Builder::new(flash_cs), 
             radio: Sx127xLoRaBuilder {
-                cs: gpio4.output(pins.p2),
+                cs: radio_cs,
                 reset: gpio1.output(pins.p22),
                 delay: Timer::<1>::from_pit(pit2)
             }

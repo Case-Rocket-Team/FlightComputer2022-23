@@ -14,9 +14,11 @@ impl SpiProxy {
     }
 
     pub fn block_until_ready(&mut self) {
+        log::info!("Starting block until ready...");
         unsafe {
             while (*self.spi_manager).spi_hal.status().intersects(lpspi::Status::BUSY) {}
         }
+        log::info!("Block finished");
     }
 }
 
@@ -25,13 +27,7 @@ impl Transfer<u8> for SpiProxy {
 
     fn transfer<'w>(&mut self, words: &'w mut [u8]) -> Result<&'w [u8], Self::Error> {
         unsafe {
-            /*for i in 0..words.len() {
-                self.block_until_ready();
-                let mut msg = [words[i]];
-                (*self.spi_manager).spi_hal.transfer(&mut msg);
-                words[i] = msg[0];
-            }*/
-            
+            self.block_until_ready();
             (*self.spi_manager).spi_hal.transfer(words);
 
             Ok(words)
