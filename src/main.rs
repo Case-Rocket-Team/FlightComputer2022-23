@@ -18,39 +18,21 @@ mod test;
 fn main() -> ! {
     let mut avionics = take_avionics();
 
-    let mut flash = unsafe {
-        &mut (*avionics.spi).devices.flash
-    };
-    let mut radio = unsafe {
-        &mut (*avionics.spi).devices.radio
-    };
-
     avionics.timer.block_ms(100);
 
     log::info!("Hello world!");
-
-    test_all!{
-        flash.test_manufac_and_device_id(),
-        flash.test_read_write()
-    }
-
-    radio.init_radio();
+    
+    // Set servos: 0 = 0%, 10_000 = 100%
+    // Ex: avionics.servo_output_1.set_turn_off(&avionics.sm, 5_000);
+    //     avionics.servo_output_1.set_turn_off(&avionics.sm, 5_000);
 
     loop {
-        //log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
-        log::info!("Sending hello world...");
-        radio.transmit(b"Hello world!".iter());
+        // Poll Raven charges
+        if !avionics.fire_1.is_set() || !avionics.fire_2.is_set() {
+            // Charge has gone off!
+            log::info!("Fire!")
+        }
 
-        /*log::info!("Receiving...");
-        let mut res = ArrayWriterator::<255, u8>::new();
-        radio.read_next_received(&mut res);
-        let res_bytes = &res.as_array();
-        let str_res = core::str::from_utf8(res_bytes);
-        match str_res {
-            Ok(str) => log::info!("Received: {}", str),
-            Err(_) => {}
-        }*/
-
-        avionics.timer.block_ms(500);
+        avionics.timer.block_ms(100);
     }
 }
