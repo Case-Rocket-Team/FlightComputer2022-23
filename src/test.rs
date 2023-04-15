@@ -17,7 +17,7 @@ macro_rules! test_all {
             
             match $test {
                 $crate::test::TestResult::Pass => {
-                    log::info!("{} {}", "[✔ Passed]".fg(green()), test_name);
+                    log::info!("{} {}", "[Passed]".fg(green()), test_name);
                     passed += 1;
                 },
                 $crate::test::TestResult::Fail => log::info!("{} {}", "[Failed]".fg(magenta_pink()), test_name)

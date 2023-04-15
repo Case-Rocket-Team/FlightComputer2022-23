@@ -1,7 +1,7 @@
 use core::marker::PhantomData;
 use embedded_hal::digital::v2::OutputPin;
 
-use crate::{cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder}, spi::{spi_proxy::SpiProxy, spi_interface::{SpiInterface, SpiInterfaceActiveLow}}}, util::{Any}, spi_transfer, test::TestResult};
+use crate::{cant_hal::{avionics::{SpiManager, SpiDevice, SpiDeviceBuilder}, spi::{spi_proxy::SpiProxy, spi_interface::{SpiInterface, SpiInterfaceActiveLow}}}, util::{Any}, spi_transfer, test::TestResult};
 
 pub struct Ready;
 pub struct Busy;
@@ -29,9 +29,9 @@ impl<P: OutputPin> W25Q64Builder<P> {
     }
 }
 
-impl<P: OutputPin> SPIDeviceBuilder for W25Q64Builder<P> {
-    type TSPIDevice = W25Q64<SpiInterfaceActiveLow<P>>;
-    fn build(self, spi_manager: *mut SPIManager) -> Self::TSPIDevice {
+impl<P: OutputPin> SpiDeviceBuilder for W25Q64Builder<P> {
+    type TSpiDevice = W25Q64<SpiInterfaceActiveLow<P>>;
+    fn build(self, spi_manager: *mut SpiManager) -> Self::TSpiDevice {
         W25Q64::new(SpiInterfaceActiveLow {
             spi: SpiProxy::new(spi_manager),
             pin: self.pin
@@ -39,7 +39,7 @@ impl<P: OutputPin> SPIDeviceBuilder for W25Q64Builder<P> {
     }
 }
 
-impl<I: SpiInterface> SPIDevice for W25Q64<I> {
+impl<I: SpiInterface> SpiDevice for W25Q64<I> {
     fn init(&mut self) {
         self.interface.deselect();
     }

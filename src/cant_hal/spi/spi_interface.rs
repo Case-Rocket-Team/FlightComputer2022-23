@@ -1,7 +1,11 @@
+use core::marker::PhantomData;
+
 use embedded_hal::{blocking::spi::{Transfer, Write}, digital::v2::OutputPin};
 use imxrt_hal::{iomuxc::flexpwm::Output, lpspi::LpspiError};
 
-use super::spi_proxy::SpiProxy;
+use crate::cant_hal::avionics::{SpiDevice, SpiDeviceBuilder, SpiManager};
+
+use super::{spi_proxy::SpiProxy, spi_manager::SimpleSpiDevice};
 
 pub trait Selectable {
     type Error;
@@ -54,4 +58,41 @@ impl<P: OutputPin> Selectable for SpiInterfaceActiveLow<P> {
     fn deselect(&mut self) -> Result<(), Self::Error> {
         self.pin.set_high()
     }
+}
+
+pub trait SpiInterfaceDevice<T: SpiInterface>
+where Self: SpiDevice {
+    fn new(interface: T) -> Self;
+}
+
+pub struct DefaultSpiInterfaceBuilder<D: SpiInterfaceDevice<SpiInterfaceActiveLow<CS>>, CS: OutputPin> {
+    cs: CS,
+    _device: PhantomData<D>
+}
+
+impl<D: SpiInterfaceDevice<SpiInterfaceActiveLow<CS>>, CS: OutputPin> DefaultSpiInterfaceBuilder<D, CS> {
+    pub fn new(cs: CS) -> Self {
+        DefaultSpiInterfaceBuilder {
+            cs,
+            _device: PhantomData
+        }
+    }
+}
+
+impl<D: SpiInterfaceDevice<SpiInterfaceActiveLow<CS>>, CS: OutputPin> SpiDeviceBuilder
+        for DefaultSpiInterfaceBuilder<D, CS> {
+    type TSpiDevice = D;
+
+    fn build(self, manager: *mut SpiManager) -> Self::TSpiDevice {
+        D::new(SpiInterfaceActiveLow {
+            spi: SpiProxy::new(manager),
+            pin: self.cs
+        })
+    }
+}
+
+macro_rules! default_spi_builder {
+    () => {
+        
+    };
 }

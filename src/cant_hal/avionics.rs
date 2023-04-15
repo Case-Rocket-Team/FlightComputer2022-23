@@ -3,21 +3,20 @@ use nb::block;
 use teensy4_bsp::board::LpspiPins;
 use bsp::board::{self, LPSPI_FREQUENCY};
 use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
-use crate::cant_hal::spi::devices::radio::Sx127xLoRaBuilder;
 use imxrt_hal::{self, timer::Blocking, pit::Pit, iomuxc::lpspi, lpspi::Pins};
 use teensy4_bsp as bsp;
 use crate::{spi_devices, pin_layout};
 
 pub use crate::cant_hal::spi::devices;
 
-use self::devices::flash::W25Q64Builder;
+use self::devices::{flash::W25Q64Builder, radio::{radio::LoRa, builder::LoRaBuilder}};
 
-use super::dummy_pin::DummyPin;
+use super::{dummy_pin::DummyPin, spi::spi_interface::{DefaultSpiInterfaceBuilder, SpiInterfaceActiveLow}};
 
 pub type Timer<const CHAN: u8> = Blocking<Pit<CHAN>, { board::PERCLK_FREQUENCY }>;
 
 pub struct Avionics {
-    pub spi: &'static mut SPIManager,
+    pub spi: *mut SpiManager,
     pub timer: Timer<0>,
 }
 
@@ -37,10 +36,10 @@ pin_layout! {
 
 spi_devices! {
     flash Flash: W25Q64Builder::<FlashCS>
-    radio Radio: Sx127xLoRaBuilder::<RadioCS, RadioReset, Timer<1>>
+    radio Radio: LoRaBuilder::<RadioCS>
 }
 
-static mut SPI_MANAGER: MaybeUninit<SPIManager> = MaybeUninit::uninit();
+static mut SPI_MANAGER: MaybeUninit<SpiManager> = MaybeUninit::uninit();
 
 #[allow(unused_variables)]
 #[allow(unused_mut)]
@@ -70,32 +69,21 @@ pub fn take_avionics() -> Avionics {
     }, LPSPI_FREQUENCY / 16);
 
     timer.block_ms(500);
-    
-    //spi_hal.disabled(|spi| spi.set_clock_hz(board::LPSPI_FREQUENCY, 1_000_000));
-
-    /*lpspi::prepare(&mut pins.p11);
-    lpspi::prepare(&mut pins.p12);
-    lpspi::prepare(&mut pins.p13);*/
 
     let mut flash_cs = gpio_cs!(gpio1, pins.p1);
     let mut radio_cs = gpio_cs!(gpio4, pins.p2);
 
-    let spi_manager = unsafe {
-        let ptr = SPI_MANAGER.as_mut_ptr();
-        SPIManager::new(ptr, spi_hal, SPIDeviceBuilders {
+    let spi_ptr = unsafe {
+        SpiManager::new(SPI_MANAGER.as_mut_ptr(), spi_hal, SpiDeviceBuilders {
             flash: W25Q64Builder::new(flash_cs), 
-            radio: Sx127xLoRaBuilder {
-                cs: radio_cs,
-                reset: gpio1.output(pins.p22),
-                delay: Timer::<1>::from_pit(pit2)
-            }
+            radio: LoRaBuilder::new(radio_cs)
         });
 
-        SPI_MANAGER.assume_init_mut() 
+        SPI_MANAGER.as_mut_ptr()
     };
 
     Avionics {
-        spi: spi_manager,
+        spi: spi_ptr,
         timer,
     }
 }

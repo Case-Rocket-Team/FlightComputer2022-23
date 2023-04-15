@@ -1,6 +1,9 @@
 use embedded_hal::digital::v2::OutputPin;
 
-pub trait SimpleSPIDevice<P: OutputPin> {
+use crate::cant_hal::avionics::SpiDevice;
+
+pub trait SimpleSpiDevice<P: OutputPin>
+where Self: SpiDevice {
     fn new(cs: P) -> Self;
 }
 
@@ -8,7 +11,7 @@ pub trait SimpleSPIDevice<P: OutputPin> {
 macro_rules! spi_transfer {
     ($interface: expr, $($val: expr),+) => {
         $interface.select();
-        $(let res = $interface.transfer($val);)+
+        $($interface.transfer($val);)+
         $interface.deselect();
     };
 }
@@ -26,51 +29,51 @@ macro_rules! spi_devices {
 
         pub type SpiHal = Lpspi<LpspiPins<Pad<1075806532, 1075807028>, Pad<1075806528, 1075807024>, Pad<1075806536, 1075807032>, Pad<1075806524, 1075807020>>, 4>;
 
-        pub trait SPIDeviceBuilder {
-            type TSPIDevice: SPIDevice;
-            fn build(self, manager: *mut SPIManager) -> Self::TSPIDevice;
+        pub trait SpiDeviceBuilder {
+            type TSpiDevice: SpiDevice;
+            fn build(self, manager: *mut SpiManager) -> Self::TSpiDevice;
         }
 
-        pub trait SPIDevice {
-            fn init(&mut self);
+        pub trait SpiDevice {
+            fn init(&mut self) {}
         }
 
         paste! {
-            $(pub type $new_type = <$type as SPIDeviceBuilder>::TSPIDevice;)+
+            $(pub type $new_type = <$type as SpiDeviceBuilder>::TSpiDevice;)+
 
-            pub struct SPIManagerDevices {
-                $(pub $device: <$type as SPIDeviceBuilder>::TSPIDevice,)+
+            pub struct SpiManagerDevices {
+                $(pub $device: <$type as SpiDeviceBuilder>::TSpiDevice,)+
             }
 
-            pub struct SPIDeviceBuilders {
+            pub struct SpiDeviceBuilders {
                 $(pub $device: $type,)+
             }
 
-            impl<'a> SPIManager {
+            impl<'a> SpiManager {
                 pub fn get_spi_hal(&mut self) -> &mut SpiHal {
                     &mut self.spi_hal
                 }
 
-                pub fn new(manager: *mut Self, spi_hal: SpiHal,  devices: SPIDeviceBuilders) {
+                pub fn new(manager: *mut SpiManager, spi_hal: SpiHal, devices: SpiDeviceBuilders) {
                     unsafe {
-                        *manager = SPIManager {
+                        *manager = SpiManager {
                             spi_hal,
-                            devices: SPIManagerDevices {
+                            devices: SpiManagerDevices {
                                 $($device: {
                                     let mut device = devices.$device.build(manager);
                                     device.init();
                                     device
                                 },)+
                             }
-                        }
+                        };
                     }
                 }
             }
 
             #[repr(C)]
-            pub struct SPIManager {
+            pub struct SpiManager {
                 pub spi_hal: SpiHal,
-                pub devices: SPIManagerDevices
+                pub devices: SpiManagerDevices
             }
         }
     }

@@ -4,18 +4,18 @@ use embedded_hal::blocking::delay::DelayMs;
 use embedded_hal::digital::v2::OutputPin;
 use sx127x_lora::LoRa;
 
-use crate::cant_hal::{avionics::{SPIManager, SPIDevice, SPIDeviceBuilder, SpiHal}, spi::{spi_proxy::SpiProxy, spi_interface::SpiInterface}};
+use crate::cant_hal::{avionics::{SpiManager, SpiDevice, SpiDeviceBuilder, SpiHal}, spi::{spi_proxy::SpiProxy, spi_interface::SpiInterface}};
 pub struct Sx127xLoRaBuilder<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
     pub cs: CS,
     pub reset: RESET,
     pub delay: DELAY,
 }
 
-impl< CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDeviceBuilder
+impl< CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SpiDeviceBuilder
         for Sx127xLoRaBuilder<CS, RESET, DELAY> {
-    type TSPIDevice = Sx127xLoRa<CS, RESET, DELAY>;
+    type TSpiDevice = Sx127xLoRa<CS, RESET, DELAY>;
 
-    fn build(self, manager: *mut SPIManager) -> Self::TSPIDevice {
+    fn build(self, manager: *mut SpiManager) -> Self::TSpiDevice {
         Sx127xLoRa::new(self.cs, self.reset, self.delay, manager)
     }
 }
@@ -26,7 +26,7 @@ pub struct Sx127xLoRa<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> {
 }
 
 impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, Delay> {
-    fn new(mut cs: CS, reset: Reset, timer: Delay, spi_manager: *mut SPIManager) -> Self {
+    fn new(mut cs: CS, reset: Reset, timer: Delay, spi_manager: *mut SpiManager) -> Self {
         let lora_res = LoRa::new(SpiProxy::new(spi_manager), cs, reset,  915, timer);
 
         match lora_res {
@@ -73,7 +73,7 @@ impl<CS: OutputPin, Reset: OutputPin, Delay: DelayMs<u8>> Sx127xLoRa<CS, Reset, 
     }
 }
 
-impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SPIDevice
+impl<CS: OutputPin, RESET: OutputPin, DELAY: DelayMs<u8>> SpiDevice
         for Sx127xLoRa<CS, RESET, DELAY> {
     fn init(&mut self) {
         ;
