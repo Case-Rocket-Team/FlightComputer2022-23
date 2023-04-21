@@ -116,7 +116,7 @@ impl<I: SpiInterface> LoRa<I> {
     /// with `Some(timeout_in_mill_seconds)`
     pub fn block_until_received_packet(&mut self) -> Result<(), LoRaError<I>> {
         self.set_mode(RadioMode::RxContinuous)?;
-        while !self.read_register(Register::RegIrqFlags.addr())?.get_bit(6) {}
+        while !self.has_received_packet()? {}
         Ok(())
     }
 
