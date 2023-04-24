@@ -28,11 +28,22 @@ fn main() -> ! {
 
     loop {
         // Poll Raven charges
-        if !avionics.fire_1.is_set() || !avionics.fire_2.is_set() {
+        /*if !avionics.fire_1.is_set() || !avionics.fire_2.is_set() {
             // Charge has gone off!
             log::info!("Fire!")
-        }
+        }*/
 
-        avionics.timer.block_ms(100);
+        avionics.servo_output_1.set_turn_off(&avionics.sm, 700);
+        avionics.servo_output_2.set_turn_off(&avionics.sm, 700);
+        avionics.sm.set_load_ok(&mut avionics.pwm);
+        avionics.sm.set_running(&mut avionics.pwm, true);
+        avionics.timer.block_ms(2_000);
+
+        avionics.servo_output_1.set_turn_off(&avionics.sm, 1600);
+        avionics.servo_output_2.set_turn_off(&avionics.sm, 1600);
+        avionics.sm.set_load_ok(&mut avionics.pwm);
+        avionics.sm.set_running(&mut avionics.pwm, true);
+        avionics.timer.block_ms(2_000);
+
     }
 }

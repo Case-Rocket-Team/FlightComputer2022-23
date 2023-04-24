@@ -22,7 +22,8 @@ pub struct Avionics {
     pub servo_output_2: flexpwm::Output<t40::P8>,
     pub fire_1: gpio::Input<t40::P3>,
     pub fire_2: gpio::Input<t40::P4>,
-    pub sm: flexpwm::Submodule<1, 3>
+    pub sm: flexpwm::Submodule<1, 3>,
+    pub pwm: flexpwm::Pwm<1>,
 }
 
 macro_rules! gpio_cs {
@@ -102,7 +103,7 @@ pub fn take_avionics() -> Avionics {
     submod3.set_wait_enable(true);
     submod3.set_clock_select(flexpwm::ClockSelect::Ipg);
     submod3.set_pair_operation(flexpwm::PairOperation::Independent);
-    submod3.set_prescaler(flexpwm::Prescaler::Prescaler4);
+    submod3.set_prescaler(flexpwm::Prescaler::Prescaler128);
     submod3.set_load_frequency(1);
     submod3.set_load_mode(flexpwm::LoadMode::reload_full());
     submod3.set_value(
@@ -112,10 +113,10 @@ pub fn take_avionics() -> Avionics {
     submod3.set_initial_count(&pwm, -PWM_DUTY);
 
     servo_output_2.set_turn_on(&submod3, 0);
-    servo_output_2.set_turn_off(&submod3, 500);
+    servo_output_2.set_turn_off(&submod3, 1600);
     servo_output_2.set_output_enable(&mut pwm, true);
     servo_output_1.set_turn_on(&submod3, 0);
-    servo_output_1.set_turn_off(&submod3, 500);
+    servo_output_1.set_turn_off(&submod3, 1600);
     servo_output_1.set_output_enable(&mut pwm, true);
     submod3.set_load_ok(&mut pwm);
     submod3.set_running(&mut pwm, true);
@@ -135,7 +136,8 @@ pub fn take_avionics() -> Avionics {
         servo_output_2,
         fire_1,
         fire_2,
-        sm: submod3
+        sm: submod3,
+        pwm
     }
 }
     
