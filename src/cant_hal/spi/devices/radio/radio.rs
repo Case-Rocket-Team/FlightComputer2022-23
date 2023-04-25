@@ -50,6 +50,7 @@ impl<I: SpiInterface> LoRa<I> {
         self.write_register(Register::RegLna.addr(), lna | 0x03)?;
         self.write_register(Register::RegModemConfig3.addr(), 0x04)?;
         self.set_mode(RadioMode::Stdby)?;
+        self.set_tx_power(20, 1);
         Ok(())
     }
 

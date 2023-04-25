@@ -38,19 +38,24 @@ fn main() -> ! {
 
     loop {
         //log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
-        log::info!("Sending hello world...");
-        radio.transmit(b"Hello world!".iter());
+        //log::info!("Sending hello world...");
+        //radio.transmit(b"Hello world!".iter());
 
-        /*log::info!("Receiving...");
+        log::info!("Receiving...");
         let mut res = ArrayWriterator::<255, u8>::new();
-        radio.read_next_received(&mut res);
+        unsafe {
+            while !radio.has_received_packet().unwrap_unchecked() {
+                avionics.timer.block_ms(500);
+            }
+        }
+        //radio.read_next_received(&mut res);
         let res_bytes = &res.as_array();
         let str_res = core::str::from_utf8(res_bytes);
         match str_res {
             Ok(str) => log::info!("Received: {}", str),
             Err(_) => {}
-        }*/
+        }
 
-        avionics.timer.block_ms(500);
+        //avionics.timer.block_ms(500);
     }
 }

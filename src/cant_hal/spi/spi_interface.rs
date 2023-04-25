@@ -90,9 +90,3 @@ impl<D: SpiInterfaceDevice<SpiInterfaceActiveLow<CS>>, CS: OutputPin> SpiDeviceB
         })
     }
 }
-
-macro_rules! default_spi_builder {
-    () => {
-        
-    };
-}
