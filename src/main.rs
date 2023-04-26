@@ -1,57 +1,61 @@
 #![no_std]
 #![no_main]
+#![allow(unused, dead_code)]
 
-use cortex_m_rt;
+use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
 
-use crate::{avionics::{get_avionics}, spi::devices::flash::{WriteDisabled, Ready}};
+use crate::{cant_hal::avionics, cant_hal::avionics::{devices::flash::{WriteDisabled, Ready}, Avionics, take_avionics}, util::ArrayWriterator};
 
 use teensy4_panic as _;
+use teensy4_bsp::rt::entry;
 
 mod logging;
-mod spi;
-mod concurrency;
-mod avionics;
+mod cant_hal;
 mod util;
-mod layout;
+mod test;
 
-#[cortex_m_rt::entry]
+#[entry]
 fn main() -> ! {
-    let mut avionics = get_avionics();
-    let (_spi, _flash) = avionics.spi.take_flash();
-    let mut flash = _flash.into(WriteDisabled, Ready);
+    let mut avionics = take_avionics();
+
+    let mut flash = unsafe {
+        &mut (*avionics.spi).devices.flash
+    };
+    let mut radio = unsafe {
+        &mut (*avionics.spi).devices.radio
+    };
+
+    avionics.timer.block_ms(100);
 
     log::info!("Hello world!");
 
-    let mut write_byte = 0u8;
+    test_all!{
+        flash.test_manufac_and_device_id(),
+        flash.test_read_write()
+    }
+
+    radio.init_radio();
 
     loop {
-        avionics.delayer.delay_ms(500);
+        //log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
+        //log::info!("Sending hello world...");
+        //radio.transmit(b"Hello world!".iter());
 
-        let (manu, id) = flash.read_manufacturer_and_device_id();
+        log::info!("Receiving...");
+        let mut res = ArrayWriterator::<255, u8>::new();
+        unsafe {
+            while !radio.has_received_packet().unwrap_unchecked() {
+                avionics.timer.block_ms(500);
+            }
+        }
+        //radio.read_next_received(&mut res);
+        let res_bytes = &res.as_array();
+        let str_res = core::str::from_utf8(res_bytes);
+        match str_res {
+            Ok(str) => log::info!("Received: {}", str),
+            Err(_) => {}
+        }
 
-        log::info!("Found manufacturer {:x?} and device ID {:x?}", manu, id);
-
-        let test_addr = 0x00_00_00;
-
-        flash = flash
-                .into_write_enabled()
-                .erase_sector(test_addr)
-                .into_block_until_ready();
-
-        avionics.delayer.delay_ms(25);
-
-        flash = flash
-                .into_block_until_ready()
-                .into_write_enabled()
-                .page_program(test_addr, &mut [write_byte])
-                .into_block_until_ready();
-
-        avionics.delayer.delay_ms(25);
-
-        let [read_byte] = flash.read_data::<1>(test_addr);
-
-        log::info!("Wrote {:x?} and read {:x?}!", write_byte, read_byte);
-
-        write_byte += 1;
+        //avionics.timer.block_ms(500);
     }
 }
