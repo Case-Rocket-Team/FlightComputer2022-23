@@ -5,7 +5,7 @@ use bsp::board::{self, LPSPI_FREQUENCY};
 use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
 use imxrt_hal::{self, timer::Blocking, pit::Pit, iomuxc::lpspi, lpspi::Pins};
 use teensy4_bsp as bsp;
-use crate::{spi_devices, pin_layout};
+use crate::{spi_devices, pin_layout, cant_hal::gps::GPS};
 
 pub use crate::cant_hal::spi::devices;
 
@@ -53,6 +53,7 @@ pub fn take_avionics() -> Avionics {
         mut gpio2,
         mut gpio3,
         mut gpio4,
+        lpuart2,
         ..
     } = board::t40(board::instances());
 
@@ -68,6 +69,8 @@ pub fn take_avionics() -> Avionics {
         sck: pins.p13
     }, LPSPI_FREQUENCY / 16);
 
+    let mut uart2_hal = board::lpuart(lpuart2, pins.p14, pins.p15, board::UART_FREQUENCY / 2);
+
     timer.block_ms(500);
 
     let mut flash_cs = gpio_cs!(gpio1, pins.p1);
@@ -81,6 +84,12 @@ pub fn take_avionics() -> Avionics {
 
         SPI_MANAGER.as_mut_ptr()
     };
+
+    let mut str: [u8; 64] = [0u8; 64];
+
+    GPS::read(uart2_hal, str);
+
+    log::info!("GPS: {}", str);
 
     Avionics {
         spi: spi_ptr,

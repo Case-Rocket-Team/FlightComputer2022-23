@@ -1,6 +1,5 @@
 use cortex_m::prelude::{_embedded_hal_blocking_i2c_WriteRead, _embedded_hal_blocking_i2c_Read, _embedded_hal_serial_Write, _embedded_hal_serial_Read};
 use nb::block;
-use ndarray::arr2;
 
 use crate::{i2c::i2c::I2CHAL, logging, uart::{uart::UARTHAL, self}};
 
