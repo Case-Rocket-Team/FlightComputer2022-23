@@ -1,7 +1,7 @@
 use core::mem::MaybeUninit;
 use nb::block;
 use teensy4_bsp::board::LpspiPins;
-use bsp::board::{self, LPSPI_FREQUENCY};
+use bsp::board::{self, LPSPI_FREQUENCY, UART_FREQUENCY, Lpuart2};
 use cortex_m::prelude::_embedded_hal_blocking_delay_DelayMs;
 use imxrt_hal::{self, timer::Blocking, pit::Pit, iomuxc::lpspi, lpspi::Pins};
 use teensy4_bsp as bsp;
@@ -11,13 +11,14 @@ pub use crate::cant_hal::spi::devices;
 
 use self::devices::{flash::W25Q64Builder, radio::{radio::LoRa, builder::LoRaBuilder}};
 
-use super::{dummy_pin::DummyPin, spi::spi_interface::{DefaultSpiInterfaceBuilder, SpiInterfaceActiveLow}};
+use super::{dummy_pin::DummyPin, spi::spi_interface::{DefaultSpiInterfaceBuilder, SpiInterfaceActiveLow}, gps::GPS};
 
 pub type Timer<const CHAN: u8> = Blocking<Pit<CHAN>, { board::PERCLK_FREQUENCY }>;
 
 pub struct Avionics {
     pub spi: *mut SpiManager,
     pub timer: Timer<0>,
+    pub gps: GPS<Lpuart2>,
 }
 
 macro_rules! gpio_cs {
@@ -53,6 +54,7 @@ pub fn take_avionics() -> Avionics {
         mut gpio2,
         mut gpio3,
         mut gpio4,
+        mut lpuart2,
         ..
     } = board::t40(board::instances());
 
@@ -82,9 +84,14 @@ pub fn take_avionics() -> Avionics {
         SPI_MANAGER.as_mut_ptr()
     };
 
+    let mut uart2 = board::lpuart(lpuart2, pins.p14, pins.p15, 9600);
+
+    let mut gps = GPS::new(uart2);
+
     Avionics {
         spi: spi_ptr,
         timer,
+        gps
     }
 }
     

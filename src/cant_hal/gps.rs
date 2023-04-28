@@ -1,29 +1,29 @@
 use cortex_m::prelude::{_embedded_hal_blocking_i2c_WriteRead, _embedded_hal_blocking_i2c_Read, _embedded_hal_serial_Write, _embedded_hal_serial_Read};
 use nb::block;
-use ndarray::arr2;
 
-use crate::{i2c::i2c::I2CHAL, logging, uart::{uart::UARTHAL, self}};
+use super::uart::UartInterface;
 
-pub struct GPS_Info {
+pub struct GpsInfo {
     pub latitude: f64,
     pub longitude: f64,
     pub heading: f64,
     pub velocity: f64,
 }
 
-impl GPS_Info {
+impl GpsInfo {
     
 }
 
-pub enum message {
+pub enum GpsMessage {
     BadLen,
     NotRMC,
     NoFIX,
-    Fix(GPS_Info)
+    Fix(GpsInfo)
 }
 
-pub struct GPS {
-    info: GPS_Info,
+pub struct GPS<I: UartInterface> {
+    info: Option<GpsInfo>,
+    interface: I,
 }
 
 struct CartesianPoint {
@@ -38,21 +38,28 @@ struct SphericalPoint {
     longitude: f64 // phi
 }
 
-impl GPS {
-    pub fn write(uart: &mut UARTHAL, str: &[u8]) {
-        for char in str {
-            block!(uart.write(*char));
+impl<I: UartInterface> GPS<I> {
+    pub fn new(interface: I) -> Self {
+        GPS {
+            info: None,
+            interface
         }
     }
 
-    pub fn read(uart: &mut UARTHAL, out: &mut [u8]) {
+    pub fn write(&mut self, str: &[u8]) {
+        for char in str {
+            block!(self.interface.write(*char));
+        }
+    }
+
+    pub fn read(&mut self, out: &mut [u8]) {
         for byte in out.iter_mut() {
             loop {
-                match uart.read() {
+                match self.interface.read() {
                     Ok(b) => *byte = b,
                     Err(nb::Error::WouldBlock) => continue,
                     Err(nb::Error::Other(err)) => {
-                        log::info!("Read error! {:?}", err);
+                        log::info!("Read error!");
                     }
                 };
 
@@ -62,11 +69,13 @@ impl GPS {
     }
 }
 
-struct GPS_Math {
+struct GpsMath {
 
 }
 
-impl GPS_Math {
+/*
+
+impl GpsMath {
     fn findRadius(height: f64, latitude: f64, longitude: f64) -> f64 {
         // information from source below
         const EQUATORIAL_RADIUS: f64 = 20925646.3255; // a ft
@@ -86,11 +95,11 @@ impl GPS_Math {
     }
 
     fn addCoreHeight(height: f64, latitude: f64, longitude: f64) -> f64 {
-        height + GPS_Math::findRadius(height, latitude, longitude)
+        height + GpsMath::findRadius(height, latitude, longitude)
     } 
 
     fn toCartesian(position: SphericalPoint) -> CartesianPoint {
-        const PI: f64 = std::f64::consts::PI;
+        const PI: f64 = core::f64::consts::PI;
         let longPrime = position.longitude + PI;
         let latPrime = -position.latitude + PI / 2.0;
 
@@ -112,7 +121,7 @@ impl GPS_Math {
     }
 
     fn getCartesianCoefficients(point: SphericalPoint) -> (f64, f64, f64) {
-        const PI: f64 = std::f64::consts::PI;
+        const PI: f64 = core::f64::consts::PI;
 
         let longPrime = point.longitude + PI;
         let latPrime = -point.latitude + PI / 2.0;
@@ -137,9 +146,9 @@ impl GPS_Math {
         // RotMatrix1 = [[np.cos(long), -np.sin(long), 0],
         //             [np.sin(long),np.cos(long)  , 0],
         //             [0           ,0             , 1]]
-        let rotMatrix1 = arr2(&[[longitude.cos(), -longitude.sin(), 0.0],
+        /*let rotMatrix1 = arr2(&[[longitude.cos(), -longitude.sin(), 0.0],
                                 [longitude.sin(), longitude.cos(),  0.0],
-                                [0.0,             0.0,              1.0]]);
+                                [0.0,             0.0,              1.0]]);*/
         // let longRotated = rotMatrix1.dot(&point);
         
         // longRotated = np.matmul(RotMatrix1,arr)
@@ -192,7 +201,7 @@ impl GPS_Math {
         // #print(sum)
         // return sum
     }
-}
+}*/
 
 /*
 fn extract_rmc_fields(rmc_sentence: &str) -> message {

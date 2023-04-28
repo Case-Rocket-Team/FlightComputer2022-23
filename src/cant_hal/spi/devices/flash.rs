@@ -49,6 +49,7 @@ impl<TInterface: SpiInterface> W25Q64<TInterface> {
     pub fn new(interface: TInterface) -> Self {
         W25Q64 { interface }
     }
+    
     pub fn send_instr(&mut self, bytes: &mut [u8]) {
         spi_transfer!(self.interface, bytes);
     }
