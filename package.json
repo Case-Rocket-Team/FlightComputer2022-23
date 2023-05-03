@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@types/deasync": "^0.1.2",
+    "@types/node": "^18.16.3",
+    "@types/recursive-readdir": "^2.2.1",
+    "csv-parser": "^3.0.0",
+    "deasync": "^0.1.28",
+    "recursive-readdir": "^2.2.3",
+    "recursive-readdir-files": "^2.3.0",
+    "ts-node": "^10.9.1"
+  }
+}
