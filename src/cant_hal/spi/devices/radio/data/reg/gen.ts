@@ -33,7 +33,7 @@ interface Reg {
 
 const data = _data as unknown as RegSection[];
 
-const toComment = (string: string) => (string ?? '').split('\n').map(val => '///' + val).join('\n');
+const toComment = (string: string) => (string ?? '').split('\n').map(val => '/// ' + val).join('\n///\n');
 
 const toCamelCase = (string: string) => {
     if (string.match(/^\d/)) {
