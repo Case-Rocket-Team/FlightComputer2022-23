@@ -11,7 +11,6 @@ impl RadioReg for RegFifo {
 }
 // Register part
 /// LoRa base-band FIFO data input/output. FIFO is cleared an not
-///
 /// accessible when device is in SLEEPmode
 pub struct RegFifoFifo;
 
@@ -35,12 +34,11 @@ impl RadioReg for RegOpMode {
     const ADDR: u8 = 0x01;
 }
 // Register part
+///
 /// 0 --> FSK/OOK Mode
 ///
 /// 1 --> LoRa Mode
-///
 /// This bit can be modified only in Sleep mode. A write operation on
-///
 /// other device modes is ignored.
 pub struct RegOpModeLongRangeMode;
 
@@ -76,9 +74,7 @@ impl RadioRegPartValue for LongRangeModeValue {
 }
 // Register part
 /// This bit operates when device is in Lora mode; if set it allows
-///
 /// access to FSK registers page located in address space
-///
 /// (0x0D:0x3F) while in LoRa mode
 ///
 /// 0 --> Access LoRa registers page 0x0D: 0x3F
@@ -259,7 +255,6 @@ impl RadioReg for RegFrMid {
 }
 // Register part
 /// MSB of RF carrier frequency
-///
 /// 
 pub struct RegFrMidFrf;
 
@@ -284,13 +279,9 @@ impl RadioReg for RegFrLsb {
 }
 // Register part
 /// NEEDS FIX LSB of RF carrier frequency
-///
 /// Resolution is 61.035 Hz if F(XOSC) = 32 MHz. Default value is
-///
 /// 0x6c8000 = 434 MHz. Register values must be modified only when
-///
 /// device is in SLEEP or STAND-BY mode.
-///
 /// for RF blocks
 pub struct RegFrLsbFrf;
 
@@ -370,7 +361,6 @@ impl RadioRegPart for RegPaConfigMaxPower {
 
 // Register part
 /// Pout=Pmax-(15-OutputPower) if PaSelect = 0 (RFO pin)
-///
 /// Pout=17-(15-OutputPower) if PaSelect = 1 (PA_BOOST pin)
 pub struct RegPaConfigOutputPower;
 
@@ -561,15 +551,10 @@ impl RadioRegPartValue for OcpOnValue {
 }
 // Register part
 /// Trimming of OCP current:
-///
 /// I max = 45+5*OcpTrim [mA] if OcpTrim &lt;= 15 (120 mA) /
-///
 /// I max = -30+10*OcpTrim [mA] if 15 &lt; OcpTrim &lt;= 27 (130 to
-///
 /// 240 mA)
-///
 /// I max = 240mA for higher settings
-///
 /// Default I max = 100mA
 pub struct RegOcpOcpTrim;
 
@@ -668,7 +653,6 @@ impl RadioRegPartValue for LnaGainValue {
 /// 00 --> Default LNA current
 ///
 /// 11 --> Boost on, 150% LNA current
-///
 /// registers
 pub struct RegLnaLnaBoostHf;
 
@@ -710,9 +694,7 @@ impl RadioReg for RegFifoAddrPtr {
 }
 // Register part
 /// SPI interface address pointer in FIFO data buffer.
-///
 /// 
-///
 /// 
 pub struct RegFifoAddrPtrFifoAddrPtr;
 
@@ -737,9 +719,7 @@ impl RadioReg for RegFifoTxBaseAddr {
 }
 // Register part
 /// write base address in FIFO data buffer for TX modulator
-///
 /// 
-///
 /// 
 pub struct RegFifoTxBaseAddrFifoTxBaseAddr;
 
@@ -764,9 +744,7 @@ impl RadioReg for RegFifoRxBaseAddr {
 }
 // Register part
 /// read base address in FIFO data buffer for RX demodulator
-///
 /// 
-///
 /// 
 pub struct RegFifoRxBaseAddrFifoRxBaseAddr;
 
@@ -791,9 +769,7 @@ impl RadioReg for RegFifoRxCurrentAddr {
 }
 // Register part
 /// Start address (in data buffer) of last packet received
-///
 /// 
-///
 /// 
 pub struct RegFifoRxCurrentAddrFifoRxCurrentAddr;
 
@@ -818,7 +794,6 @@ impl RadioReg for RegIrqFlagsMask {
 }
 // Register part
 /// Timeout interrupt mask: setting this bit masks the corresponding
-///
 /// IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskRxTimeoutMask;
 
@@ -837,7 +812,6 @@ impl RadioRegPart for RegIrqFlagsMaskRxTimeoutMask {
 
 // Register part
 /// Packet reception complete interrupt mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskRxDoneMask;
 
@@ -856,7 +830,6 @@ impl RadioRegPart for RegIrqFlagsMaskRxDoneMask {
 
 // Register part
 /// Payload CRC error interrupt mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskPayloadCrcErrorMask;
 
@@ -875,7 +848,6 @@ impl RadioRegPart for RegIrqFlagsMaskPayloadCrcErrorMask {
 
 // Register part
 /// Valid header received in Rx mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskValidHeaderMask;
 
@@ -894,7 +866,6 @@ impl RadioRegPart for RegIrqFlagsMaskValidHeaderMask {
 
 // Register part
 /// FIFO Payload transmission complete interrupt mask: setting this bit
-///
 /// masks the corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskTxDoneMask;
 
@@ -913,7 +884,6 @@ impl RadioRegPart for RegIrqFlagsMaskTxDoneMask {
 
 // Register part
 /// CAD complete interrupt mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskCadDoneMask;
 
@@ -932,7 +902,6 @@ impl RadioRegPart for RegIrqFlagsMaskCadDoneMask {
 
 // Register part
 /// FHSS change channel interrupt mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskFhssChangeChannelMask;
 
@@ -951,7 +920,6 @@ impl RadioRegPart for RegIrqFlagsMaskFhssChangeChannelMask {
 
 // Register part
 /// Cad Detected Interrupt Mask: setting this bit masks the
-///
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskCadDetectedMask;
 
@@ -1044,7 +1012,6 @@ impl RadioRegPart for RegIrqFlagsValidHeader {
 
 // Register part
 /// FIFO Payload transmission complete interrupt: writing a 1 clears
-///
 /// the IRQ
 pub struct RegIrqFlagsTxDone;
 
@@ -1097,7 +1064,6 @@ impl RadioRegPart for RegIrqFlagsFhssChangeChannel {
 
 // Register part
 /// Valid Lora signal detected during CAD operation: writing a 1clears
-///
 /// the IRQ
 pub struct RegIrqFlagsCadDetected;
 
@@ -1122,9 +1088,7 @@ impl RadioReg for RegRxNbBytes {
 }
 // Register part
 /// Number of payload bytes of latest packetreceived
-///
 /// 
-///
 /// 
 pub struct RegRxNbBytesFifoRxBytesNb;
 
@@ -1149,11 +1113,8 @@ impl RadioReg for RegRxHeaderCntValueMsb {
 }
 // Register part
 /// Number of valid headers received since last transition into Rx
-///
 /// mode, MSB(15:8). Header and packet counters are reseted in
-///
 /// Sleep mode.
-///
 /// 
 pub struct RegRxHeaderCntValueMsbValidHeaderCntMsb;
 
@@ -1178,9 +1139,7 @@ impl RadioReg for RegRxHeaderCntValueLsb {
 }
 // Register part
 /// Number of valid headers received since last transition into Rx
-///
 /// mode, LSB(7:0). Header and packet counters are reseted in Sleep
-///
 /// mode.
 pub struct RegRxHeaderCntValueLsbValidHeaderCntLsb;
 
@@ -1205,9 +1164,7 @@ impl RadioReg for RegRxPacketCntValueMsb {
 }
 // Register part
 /// Number of valid packets received since last transition into Rx
-///
 /// mode, MSB(15:8). Header and packet counters are reseted in
-///
 /// Sleep mode.
 pub struct RegRxPacketCntValueMsbValidPacketCntMsb;
 
@@ -1232,9 +1189,7 @@ impl RadioReg for RegRxPacketCntValueLsb {
 }
 // Register part
 /// Number of valid packets received since last transition into Rx
-///
 /// mode, LSB(7:0). Header and packet counters are reseted in Sleep
-///
 /// mode.
 pub struct RegRxPacketCntValueLsbValidPacketCntLsb;
 
@@ -1293,7 +1248,6 @@ impl RadioRegPart for RegModemStatModemClear {
 
 // Register part
 /// Header info valid
-///
 /// 
 pub struct RegModemStatHeaderInfoValid;
 
@@ -1369,9 +1323,7 @@ impl RadioReg for RegPktSnrValue {
 }
 // Register part
 /// Estimation of SNR on last packet received.In two’s compliment
-///
 /// format mutiplied by 4.
-///
 /// NEEDS FIXING
 pub struct RegPktSnrValuePacketSnr;
 
@@ -1396,13 +1348,9 @@ impl RadioReg for RegPktRssiValue {
 }
 // Register part
 /// RSSI of the latest packet received (dBm):
-///
 /// RSSI[dBm] = -157 + Rssi (using HF output port, SNR &gt;= 0)
-///
 /// or
-///
 /// RSSI[dBm] = -164 + Rssi (using LF output port, SNR &gt;= 0)
-///
 /// (see section 5.5.5 for details)
 pub struct RegPktRssiValuePacketRssi;
 
@@ -1427,13 +1375,9 @@ impl RadioReg for RegRssiValue {
 }
 // Register part
 /// Current RSSI value (dBm)
-///
 /// RSSI[dBm] = -157 + Rssi (using HF output port)
-///
 /// or
-///
 /// RSSI[dBm] = -164 + Rssi (using LF output port)
-///
 /// (see section 5.5.5 for details)
 pub struct RegRssiValueRssi;
 
@@ -1496,7 +1440,6 @@ impl RadioRegPartValue for PllTimeoutValue {
 }
 // Register part
 /// CRC Information extracted from the received packet header
-///
 /// (Explicit header mode only)
 ///
 /// 0 --> Header indicates CRC off
@@ -1558,6 +1501,7 @@ impl RadioReg for RegModemConfig1 {
     const ADDR: u8 = 0x1D;
 }
 // Register part
+///
 /// 0 --> Explicit Header mode
 ///
 /// 1 --> Implicit Header mode
@@ -1600,10 +1544,10 @@ impl RadioReg for RegModemConfig2 {
     const ADDR: u8 = 0x1E;
 }
 // Register part
+///
 /// 0 --> normal mode, a single packet is sent
 ///
 /// 1 --> continuous mode, send multiple packets across the FIFO
-///
 /// (used for spectral analysis)
 pub struct RegModemConfig2TxContinuousMode;
 
@@ -1643,13 +1587,9 @@ impl RadioRegPartValue for TxContinuousModeValue {
 /// 0 --> CRC disable
 ///
 /// 1 --> CRC enable
-///
 /// If CRC is needed, RxPayloadCrcOn should beset:
-///
 /// - in Implicit header mode: on Tx and Rx side
-///
 /// - in Explicit header mode: on the Tx side alone (recovered from the
-///
 /// header in Rx side)
 pub struct RegModemConfig2RxPayloadCrcOn;
 
@@ -1708,9 +1648,7 @@ impl RadioReg for RegSymbTimeoutLsb {
 }
 // Register part
 /// RX Time-Out LSB
-///
 /// RX operation time-out value expressed as number of symbols:
-///
 /// TimeOut = SymbTimeout  Ts
 pub struct RegSymbTimeoutLsbSymbTimeout;
 
@@ -1735,9 +1673,7 @@ impl RadioReg for RegPreambleMsb {
 }
 // Register part
 /// Preamble length MSB, = PreambleLength + 4.25Symbols
-///
 /// See 4.1.1 for more details.
-///
 /// 
 pub struct RegPreambleMsbPreambleLength;
 
@@ -1762,9 +1698,7 @@ impl RadioReg for RegPreambleLsb {
 }
 // Register part
 /// Preamble Length LSB
-///
 /// 
-///
 /// 
 pub struct RegPreambleLsbPreambleLength;
 
@@ -1789,9 +1723,7 @@ impl RadioReg for RegPayloadLength {
 }
 // Register part
 /// Payload length in bytes. The register needs to be set in implicit
-///
 /// header mode for the expected packet length. A 0 value is not
-///
 /// permitted
 pub struct RegPayloadLengthPayloadLength;
 
@@ -1816,9 +1748,7 @@ impl RadioReg for RegMaxPayloadLength {
 }
 // Register part
 /// Maximum payload length; if header payload length exceeds value a
-///
 /// header CRC error is generated. Allows filtering of packet with a bad
-///
 /// size.
 pub struct RegMaxPayloadLengthPayloadMaxLength;
 
@@ -1843,9 +1773,7 @@ impl RadioReg for RegHopPeriod {
 }
 // Register part
 /// Symbol periods between frequency hops. (0 = disabled). 1st hop
-///
 /// always happen after the 1st header symbol
-///
 /// 
 pub struct RegHopPeriodFreqHoppingPeriod;
 
@@ -1870,9 +1798,7 @@ impl RadioReg for RegFifoRxByteAddr {
 }
 // Register part
 /// Current value of RX databuffer pointer (address of last byte written
-///
 /// by Lora receiver)
-///
 /// 
 pub struct RegFifoRxByteAddrFifoRxByteAddrPtr;
 
@@ -1913,6 +1839,7 @@ impl RadioRegPart for RegModemConfig3Unused {
 
 
 // Register part
+///
 /// 0 --> Disabled
 ///
 /// 1 --> Enabled; mandated for when the symbol length exceeds 16ms
@@ -1949,6 +1876,7 @@ impl RadioRegPartValue for LowDataRateOptimizeValue {
     }
 }
 // Register part
+///
 /// 0 --> LNA gain set by register LnaGain
 ///
 /// 1 --> LNA gain set by the internal AGC loop
@@ -2015,15 +1943,10 @@ impl RadioReg for RegFeiMsb {
 }
 // Register part
 /// Estimated frequency error from modem
-///
 /// MSB of RF Frequency Error
-///
 /// F Error = - ---- -- --- --- ---- --- -- ---- ---- --- --2--- -- --   ----- -- --- ---- --- -------
-///
 /// F r e q E r r o r   B W  k H z 
-///
 /// 2 4
-///
 /// F xtal 500
 pub struct RegFeiMsbFreqError;
 
@@ -2048,7 +1971,6 @@ impl RadioReg for RegFeiMid {
 }
 // Register part
 /// Middle byte of RF Frequency Error
-///
 /// 
 pub struct RegFeiMidFreqError;
 
@@ -2073,7 +1995,6 @@ impl RadioReg for RegFeiLsb {
 }
 // Register part
 /// LSB of RF Frequency Error
-///
 /// 
 pub struct RegFeiLsbFreqError;
 
@@ -2098,9 +2019,7 @@ impl RadioReg for RegRssiWideband {
 }
 // Register part
 /// Wideband RSSI measurement used to locally generate a random
-///
 /// number
-///
 /// 
 pub struct RegRssiWidebandRssiWideband;
 
