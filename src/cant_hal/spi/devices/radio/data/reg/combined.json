@@ -1,0 +1,1270 @@
+[
+    {
+        "name": "RegFifo",
+        "addr": "0x00",
+        "sections": [
+            {
+                "name": "RegFifo (0x00)",
+                "bits": "7-0",
+                "varName": "Fifo",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "LoRa base-band FIFO data input/output. FIFO is cleared an not\naccessible when device is in SLEEPmode",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegOpMode",
+        "addr": "0x01",
+        "sections": [
+            {
+                "name": "",
+                "bits": "7",
+                "varName": "LongRangeMode",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "0 --> FSK/OOK Mode\n1 --> LoRa Mode\nThis bit can be modified only in Sleep mode. A write operation on\nother device modes is ignored.",
+                "": "",
+                "values": {
+                    "name": "LongRangeModeValue",
+                    "values": {
+                        "FskOrOokMode": {
+                            "desc": "FSK/OOK Mode",
+                            "name": "FskOrOokMode",
+                            "value": "0b0"
+                        },
+                        "LoRaMode": {
+                            "desc": "LoRa Mode",
+                            "name": "LoRaMode",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "6",
+                "varName": "AccessSharedReg",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "This bit operates when device is in Lora mode; if set it allows\naccess to FSK registers page located in address space\n(0x0D:0x3F) while in LoRa mode\n0 --> Access LoRa registers page 0x0D: 0x3F\n1 --> Access FSK registers page (in mode LoRa) 0x0D: 0x3F",
+                "": "",
+                "values": {
+                    "name": "AccessSharedRegValue",
+                    "values": {
+                        "AccessLoRaRegistersPage0x0D_0x3F": {
+                            "desc": "Access LoRa registers page 0x0D: 0x3F",
+                            "name": "AccessLoRaRegistersPage0x0D_0x3F",
+                            "value": "0b0"
+                        },
+                        "AccessFskRegistersPage0x0D_0x3F": {
+                            "desc": "Access FSK registers page (in mode LoRa) 0x0D: 0x3F",
+                            "name": "AccessFskRegistersPage0x0D_0x3F",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "3",
+                "varName": "LowFrequencyModeOn",
+                "mode": "rw",
+                "reset": "0x01",
+                "loraDesc": "Access Low Frequency Mode registers\n0 --> High Frequency Mode (access to HF test registers)\n1 --> Low Frequency Mode (access to LF test registers)",
+                "": "",
+                "values": {
+                    "name": "LowFrequencyModeOnValue",
+                    "values": {
+                        "HighFrequencyMode": {
+                            "desc": "High Frequency Mode (access to HF test registers)",
+                            "name": "HighFrequencyMode",
+                            "value": "0b0"
+                        },
+                        "LowFrequencyMode": {
+                            "desc": "Low Frequency Mode (access to LF test registers)",
+                            "name": "LowFrequencyMode",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "2-0",
+                "varName": "Mode",
+                "mode": "rwt",
+                "reset": "0x01",
+                "loraDesc": "Device modes\n000 --> SLEEP\n001 --> STDBY\n010 --> Frequency synthesis TX (FSTX)\n011 --> Transmit (TX)\n100 --> Frequency synthesis RX (FSRX)\n101 --> Receive continuous (RXCONTINUOUS)\n110 --> receive single (RXSINGLE)\n111 --> Channel activity detection (CAD)",
+                "": "",
+                "values": {
+                    "name": "ModeValue",
+                    "values": {
+                        "Sleep": {
+                            "desc": "SLEEP",
+                            "name": "Sleep",
+                            "value": "0b000"
+                        },
+                        "Stdby": {
+                            "desc": "STDBY",
+                            "name": "Stdby",
+                            "value": "0b001"
+                        },
+                        "FsTx": {
+                            "desc": "Frequency synthesis TX (FSTX)",
+                            "name": "FsTx",
+                            "value": "0b010"
+                        },
+                        "Tx": {
+                            "desc": "Transmit (TX)",
+                            "name": "Tx",
+                            "value": "0b011"
+                        },
+                        "FsRx": {
+                            "desc": "Frequency synthesis RX (FSRX)",
+                            "name": "FsRx",
+                            "value": "0b100"
+                        },
+                        "RxContinuous": {
+                            "desc": "Receive continuous (RXCONTINUOUS)",
+                            "name": "RxContinuous",
+                            "value": "0b101"
+                        },
+                        "RxSingle": {
+                            "desc": "receive single (RXSINGLE)",
+                            "name": "RxSingle",
+                            "value": "0b110"
+                        },
+                        "Cad": {
+                            "desc": "Channel activity detection (CAD)",
+                            "name": "Cad",
+                            "value": "0b111"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegFrMsb",
+        "addr": "0x06",
+        "sections": [
+            {
+                "name": "RegFrMsb (0x06)",
+                "bits": "7-0",
+                "varName": "Frf",
+                "mode": "rw",
+                "reset": "0x6c",
+                "loraDesc": "MSB of RF carrier frequency",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFrMid",
+        "addr": "0x07",
+        "sections": [
+            {
+                "name": "RegFrMid (0x07)",
+                "bits": "7-0",
+                "varName": "Frf",
+                "mode": "rw",
+                "reset": "0x80",
+                "loraDesc": "MSB of RF carrier frequency\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFrLsb",
+        "addr": "0x08",
+        "sections": [
+            {
+                "name": "RegFrLsb (0x08)",
+                "bits": "7-0",
+                "varName": "Frf",
+                "mode": "rwt",
+                "reset": "0x00",
+                "loraDesc": "NEEDS FIX LSB of RF carrier frequency\nResolution is 61.035 Hz if F(XOSC) = 32 MHz. Default value is\n0x6c8000 = 434 MHz. Register values must be modified only when\ndevice is in SLEEP or STAND-BY mode.\nfor RF blocks",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPaConfig",
+        "addr": "0x09",
+        "sections": [
+            {
+                "name": "RegPaConfig (0x09)",
+                "bits": "7",
+                "varName": "PaSelect",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Selects PA output pin\n0 --> RFO pin. Output power is limited to +14 dBm.\n1 --> PA_BOOST pin. Output power is limited to +20 dBm",
+                "": "",
+                "values": {
+                    "name": "PaSelectValue",
+                    "values": {
+                        "RfoPin": {
+                            "desc": "RFO pin. Output power is limited to +14 dBm.",
+                            "name": "RfoPin",
+                            "value": "0b0"
+                        },
+                        "PaBoostPin": {
+                            "desc": "PA_BOOST pin. Output power is limited to +20 dBm",
+                            "name": "PaBoostPin",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "6-4",
+                "varName": "MaxPower",
+                "mode": "rw",
+                "reset": "0x04",
+                "loraDesc": "Select max output power: Pmax=10.8+0.6*MaxPower[dBm]",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "3-0",
+                "varName": "OutputPower",
+                "mode": "rw",
+                "reset": "0x0f",
+                "loraDesc": "Pout=Pmax-(15-OutputPower) if PaSelect = 0 (RFO pin)\nPout=17-(15-OutputPower) if PaSelect = 1 (PA_BOOST pin)",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPaRamp",
+        "addr": "0x0A",
+        "sections": [
+            {
+                "name": "RegPaRamp",
+                "bits": "3-0",
+                "varName": "PaRamp",
+                "mode": "rw",
+                "reset": "0x09",
+                "loraDesc": "Rise/Fall time of ramp up/down in FSK\n0000 --> 3.4 ms\n0001 --> 2 ms\n0010 --> 1 ms\n0011 --> 500 us\n0100 --> 250 us\n0101 --> 125 us\n0110 --> 100 us\n0111 --> 62 us\n1000 --> 50 us\n1001 --> 40 us\n1010 --> 31 us\n1011 --> 25 us\n1100 --> 20 us\n1101 --> 15 us\n1110 --> 12 us\n1111 --> 10 us",
+                "": "",
+                "values": {
+                    "name": "PaRampValue",
+                    "values": {
+                        "V3_4ms": {
+                            "desc": "3.4 ms",
+                            "name": "V3_4ms",
+                            "value": "0b0000"
+                        },
+                        "V2ms": {
+                            "desc": "2 ms",
+                            "name": "V2ms",
+                            "value": "0b0001"
+                        },
+                        "V1ms": {
+                            "desc": "1 ms",
+                            "name": "V1ms",
+                            "value": "0b0010"
+                        },
+                        "V500us": {
+                            "desc": "500 us",
+                            "name": "V500us",
+                            "value": "0b0011"
+                        },
+                        "V250us": {
+                            "desc": "250 us",
+                            "name": "V250us",
+                            "value": "0b0100"
+                        },
+                        "V125us": {
+                            "desc": "125 us",
+                            "name": "V125us",
+                            "value": "0b0101"
+                        },
+                        "V100us": {
+                            "desc": "100 us",
+                            "name": "V100us",
+                            "value": "0b0110"
+                        },
+                        "V62us": {
+                            "desc": "62 us",
+                            "name": "V62us",
+                            "value": "0b0111"
+                        },
+                        "V50us": {
+                            "desc": "50 us",
+                            "name": "V50us",
+                            "value": "0b1000"
+                        },
+                        "V40us": {
+                            "desc": "40 us",
+                            "name": "V40us",
+                            "value": "0b1001"
+                        },
+                        "V31us": {
+                            "desc": "31 us",
+                            "name": "V31us",
+                            "value": "0b1010"
+                        },
+                        "V25us": {
+                            "desc": "25 us",
+                            "name": "V25us",
+                            "value": "0b1011"
+                        },
+                        "V20us": {
+                            "desc": "20 us",
+                            "name": "V20us",
+                            "value": "0b1100"
+                        },
+                        "V15us": {
+                            "desc": "15 us",
+                            "name": "V15us",
+                            "value": "0b1101"
+                        },
+                        "V12us": {
+                            "desc": "12 us",
+                            "name": "V12us",
+                            "value": "0b1110"
+                        },
+                        "V10us": {
+                            "desc": "10 us",
+                            "name": "V10us",
+                            "value": "0b1111"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegOcp",
+        "addr": "0x0B",
+        "sections": [
+            {
+                "name": "",
+                "bits": "5",
+                "varName": "OcpOn",
+                "mode": "rw",
+                "reset": "0x01",
+                "loraDesc": "Enables overload current protection (OCP) for PA:\n0 --> OCP disabled\n1 --> OCP enabled",
+                "": "",
+                "values": {
+                    "name": "OcpOnValue",
+                    "values": {
+                        "OcpDisabled": {
+                            "desc": "OCP disabled",
+                            "name": "OcpDisabled",
+                            "value": "0b0"
+                        },
+                        "OcpEnabled": {
+                            "desc": "OCP enabled",
+                            "name": "OcpEnabled",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "RegOcp",
+                "bits": "4-0",
+                "varName": "OcpTrim",
+                "mode": "rw",
+                "reset": "0x0b",
+                "loraDesc": "Trimming of OCP current:\nI max = 45+5*OcpTrim [mA] if OcpTrim &lt;= 15 (120 mA) /\nI max = -30+10*OcpTrim [mA] if 15 &lt; OcpTrim &lt;= 27 (130 to\n240 mA)\nI max = 240mA for higher settings\nDefault I max = 100mA",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegLna",
+        "addr": "0x0C",
+        "sections": [
+            {
+                "name": "RegLna",
+                "bits": "7-5",
+                "varName": "LnaGain",
+                "mode": "rwx",
+                "reset": "0x01",
+                "loraDesc": "LNA gain setting:\n000 --> not used\n001 --> G1 = maximum gain\n010 --> G2\n011 --> G3\n100 --> G4\n101 --> G5\n110 --> G6 = minimum gain\n111 --> not used",
+                "": "",
+                "values": {
+                    "name": "LnaGainValue",
+                    "values": {
+                        "NotUsed": {
+                            "desc": "not used",
+                            "name": "NotUsed",
+                            "value": "0b111"
+                        },
+                        "G1": {
+                            "desc": "G1 = maximum gain",
+                            "name": "G1",
+                            "value": "0b001"
+                        },
+                        "G2": {
+                            "desc": "G2",
+                            "name": "G2",
+                            "value": "0b010"
+                        },
+                        "G3": {
+                            "desc": "G3",
+                            "name": "G3",
+                            "value": "0b011"
+                        },
+                        "G4": {
+                            "desc": "G4",
+                            "name": "G4",
+                            "value": "0b100"
+                        },
+                        "G5": {
+                            "desc": "G5",
+                            "name": "G5",
+                            "value": "0b101"
+                        },
+                        "G6": {
+                            "desc": "G6 = minimum gain",
+                            "name": "G6",
+                            "value": "0b110"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "1-0",
+                "varName": "LnaBoostHf",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "High Frequency (RFI_HF) LNA currentadjustment\n00 --> Default LNA current\n11 --> Boost on, 150% LNA current\nregisters",
+                "": "",
+                "values": {
+                    "name": "LnaBoostHfValue",
+                    "values": {
+                        "DefaultLnaCurrent": {
+                            "desc": "Default LNA current",
+                            "name": "DefaultLnaCurrent",
+                            "value": "0b00"
+                        },
+                        "BoostOn": {
+                            "desc": "Boost on, 150% LNA current",
+                            "name": "BoostOn",
+                            "value": "0b11"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegFifoAddrPtr",
+        "addr": "0x0D",
+        "sections": [
+            {
+                "name": "RegFifoAddrPtr (0x0D)",
+                "bits": "7-0",
+                "varName": "FifoAddrPtr",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "SPI interface address pointer in FIFO data buffer.\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFifoTxBaseAddr",
+        "addr": "0x0E",
+        "sections": [
+            {
+                "name": "RegFifoTxB",
+                "bits": "7-0",
+                "varName": "FifoTxBaseAddr",
+                "mode": "rw",
+                "reset": "0x80",
+                "loraDesc": "write base address in FIFO data buffer for TX modulator\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFifoRxBaseAddr",
+        "addr": "0x0F",
+        "sections": [
+            {
+                "name": "RegFifoRxB",
+                "bits": "7-0",
+                "varName": "FifoRxBaseAddr",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "read base address in FIFO data buffer for RX demodulator\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFifoRxCurrentAddr",
+        "addr": "0x10",
+        "sections": [
+            {
+                "name": "RegFifoRxC",
+                "bits": "7-0",
+                "varName": "FifoRxCurrentAddr",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Start address (in data buffer) of last packet received\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegIrqFlagsMask",
+        "addr": "0x11",
+        "sections": [
+            {
+                "name": "",
+                "bits": "7",
+                "varName": "RxTimeoutMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Timeout interrupt mask: setting this bit masks the corresponding\nIRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "6",
+                "varName": "RxDoneMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Packet reception complete interrupt mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "5",
+                "varName": "PayloadCrcErrorMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Payload CRC error interrupt mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "RegIrqFlag",
+                "bits": "4",
+                "varName": "ValidHeaderMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Valid header received in Rx mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "s Mask",
+                "bits": "3",
+                "varName": "TxDoneMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "FIFO Payload transmission complete interrupt mask: setting this bit\nmasks the corresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "2",
+                "varName": "CadDoneMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "CAD complete interrupt mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "1",
+                "varName": "FhssChangeChannelMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "FHSS change channel interrupt mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "0",
+                "varName": "CadDetectedMask",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Cad Detected Interrupt Mask: setting this bit masks the\ncorresponding IRQ in RegIrqFlags",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegIrqFlags",
+        "addr": "0x12",
+        "sections": [
+            {
+                "name": "",
+                "bits": "7",
+                "varName": "RxTimeout",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "Timeout interrupt: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "6",
+                "varName": "RxDone",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "Packet reception complete interrupt: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "5",
+                "varName": "PayloadCrcError",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "Payload CRC error interrupt: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "RegIrqFlag",
+                "bits": "4",
+                "varName": "ValidHeader",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "Valid header received in Rx: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "s (0x12)",
+                "bits": "3",
+                "varName": "TxDone",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "FIFO Payload transmission complete interrupt: writing a 1 clears\nthe IRQ",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "2",
+                "varName": "CadDone",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "CAD complete: write to clear: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "1",
+                "varName": "FhssChangeChannel",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "FHSS change channel interrupt: writing a 1 clears the IRQ",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "0",
+                "varName": "CadDetected",
+                "mode": "rc",
+                "reset": "0x00",
+                "loraDesc": "Valid Lora signal detected during CAD operation: writing a 1clears\nthe IRQ",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRxNbBytes",
+        "addr": "0x13",
+        "sections": [
+            {
+                "name": "RegRxNbByt",
+                "bits": "7-0",
+                "varName": "FifoRxBytesNb",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Number of payload bytes of latest packetreceived\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRxHeaderCntValueMsb",
+        "addr": "0x14",
+        "sections": [
+            {
+                "name": "RegRxHead",
+                "bits": "7-0",
+                "varName": "ValidHeaderCntMsb",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Number of valid headers received since last transition into Rx\nmode, MSB(15:8). Header and packet counters are reseted in\nSleep mode.\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRxHeaderCntValueLsb",
+        "addr": "0x15",
+        "sections": [
+            {
+                "name": "RegRxHead",
+                "bits": "7-0",
+                "varName": "ValidHeaderCntLsb",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Number of valid headers received since last transition into Rx\nmode, LSB(7:0). Header and packet counters are reseted in Sleep\nmode.",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRxPacketCntValueMsb",
+        "addr": "0x16",
+        "sections": [
+            {
+                "name": "RegRxPacket",
+                "bits": "7-0",
+                "varName": "ValidPacketCntMsb",
+                "mode": "rc",
+                "reset": "n/a",
+                "loraDesc": "Number of valid packets received since last transition into Rx\nmode, MSB(15:8). Header and packet counters are reseted in\nSleep mode.",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRxPacketCntValueLsb",
+        "addr": "0x17",
+        "sections": [
+            {
+                "name": "RegRxPacket",
+                "bits": "7-0",
+                "varName": "ValidPacketCntLsb",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Number of valid packets received since last transition into Rx\nmode, LSB(7:0). Header and packet counters are reseted in Sleep\nmode.",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegModemStat",
+        "addr": "0x18",
+        "sections": [
+            {
+                "name": "",
+                "bits": "7-5",
+                "varName": "RxCodingRate",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Coding rate of last header received",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "4",
+                "varName": "ModemClear",
+                "mode": "r",
+                "reset": "‘1’",
+                "loraDesc": "Modem clear",
+                "": ""
+            },
+            {
+                "name": "RegModemSt",
+                "bits": "3",
+                "varName": "HeaderInfoValid",
+                "mode": "r",
+                "reset": "‘0’",
+                "loraDesc": "Header info valid\n",
+                "": ""
+            },
+            {
+                "name": "(0x18)",
+                "bits": "2",
+                "varName": "RxOngoing",
+                "mode": "r",
+                "reset": "‘0’",
+                "loraDesc": "RX on-going",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "1",
+                "varName": "SignalSynchronized",
+                "mode": "r",
+                "reset": "‘0’",
+                "loraDesc": "Signal synchronized",
+                "": ""
+            },
+            {
+                "name": "",
+                "bits": "0",
+                "varName": "SignalDetected",
+                "mode": "r",
+                "reset": "‘0’",
+                "loraDesc": "Signal detected",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPktSnrValue",
+        "addr": "0x19",
+        "sections": [
+            {
+                "name": "RegPktSnrVal",
+                "bits": "7-0",
+                "varName": "PacketSnr",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Estimation of SNR on last packet received.In two’s compliment\nformat mutiplied by 4.\nNEEDS FIXING",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPktRssiValue",
+        "addr": "0x1A",
+        "sections": [
+            {
+                "name": "RegPktRssiV",
+                "bits": "7-0",
+                "varName": "PacketRssi",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "RSSI of the latest packet received (dBm):\nRSSI[dBm] = -157 + Rssi (using HF output port, SNR &gt;= 0)\nor\nRSSI[dBm] = -164 + Rssi (using LF output port, SNR &gt;= 0)\n(see section 5.5.5 for details)",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRssiValue",
+        "addr": "0x1B",
+        "sections": [
+            {
+                "name": "RegRssiValu",
+                "bits": "7-0",
+                "varName": "Rssi",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Current RSSI value (dBm)\nRSSI[dBm] = -157 + Rssi (using HF output port)\nor\nRSSI[dBm] = -164 + Rssi (using LF output port)\n(see section 5.5.5 for details)",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegHopChannel",
+        "addr": "0x1C",
+        "sections": [
+            {
+                "name": "",
+                "bits": "7",
+                "varName": "PllTimeout",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "PLL failed to lock while attempting a TX/RX/CAD operation\n1 --> PLL did not lock\n0 --> PLL did lock",
+                "": "",
+                "values": {
+                    "name": "PllTimeoutValue",
+                    "values": {
+                        "PllDidNotLock": {
+                            "desc": "PLL did not lock",
+                            "name": "PllDidNotLock",
+                            "value": "0b1"
+                        },
+                        "PllDidLock": {
+                            "desc": "PLL did lock",
+                            "name": "PllDidLock",
+                            "value": "0b0"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "RegHopChan",
+                "bits": "6",
+                "varName": "CrcOnPayload",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "CRC Information extracted from the received packet header\n(Explicit header mode only)\n0 --> Header indicates CRC off\n1 --> Header indicates CRC on",
+                "": "",
+                "values": {
+                    "name": "CrcOnPayloadValue",
+                    "values": {
+                        "HeaderIndicatesCrcOff": {
+                            "desc": "Header indicates CRC off",
+                            "name": "HeaderIndicatesCrcOff",
+                            "value": "0b0"
+                        },
+                        "HeaderIndicatesCrcOn": {
+                            "desc": "Header indicates CRC on",
+                            "name": "HeaderIndicatesCrcOn",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "5-0",
+                "varName": "FhssPresentChannel",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Current value of frequency hopping channel inuse.",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegModemConfig1",
+        "addr": "0x1D",
+        "sections": [
+            {
+                "name": "",
+                "bits": "0",
+                "varName": "ImplicitHeaderModeOn",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "0 --> Explicit Header mode\n1 --> Implicit Header mode",
+                "": "",
+                "values": {
+                    "name": "ImplicitHeaderModeOnValue",
+                    "values": {
+                        "ExplicitHeaderMode": {
+                            "desc": "Explicit Header mode",
+                            "name": "ExplicitHeaderMode",
+                            "value": "0b0"
+                        },
+                        "ImplicitHeaderMode": {
+                            "desc": "Implicit Header mode",
+                            "name": "ImplicitHeaderMode",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegModemConfig2",
+        "addr": "0x1E",
+        "sections": [
+            {
+                "name": "RegModemC",
+                "bits": "3",
+                "varName": "TxContinuousMode",
+                "mode": "rw",
+                "reset": "0",
+                "loraDesc": "0 --> normal mode, a single packet is sent\n1 --> continuous mode, send multiple packets across the FIFO\n(used for spectral analysis)",
+                "": "",
+                "values": {
+                    "name": "TxContinuousModeValue",
+                    "values": {
+                        "NormalMode": {
+                            "desc": "normal mode, a single packet is sent",
+                            "name": "NormalMode",
+                            "value": "0b0"
+                        },
+                        "ContinuousMode": {
+                            "desc": "continuous mode, send multiple packets across the FIFO",
+                            "name": "ContinuousMode",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "2",
+                "varName": "RxPayloadCrcOn",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Enable CRC generation and check on payload:\n0 --> CRC disable\n1 --> CRC enable\nIf CRC is needed, RxPayloadCrcOn should beset:\n- in Implicit header mode: on Tx and Rx side\n- in Explicit header mode: on the Tx side alone (recovered from the\nheader in Rx side)",
+                "": "",
+                "values": {
+                    "name": "RxPayloadCrcOnValue",
+                    "values": {
+                        "CrcDisable": {
+                            "desc": "CRC disable",
+                            "name": "CrcDisable",
+                            "value": "0b0"
+                        },
+                        "CrcEnable": {
+                            "desc": "CRC enable",
+                            "name": "CrcEnable",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "1-0",
+                "varName": "SymbTimeout",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "RX Time-Out MSB",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegSymbTimeoutLsb",
+        "addr": "0x1F",
+        "sections": [
+            {
+                "name": "RegSymbTim",
+                "bits": "7-0",
+                "varName": "SymbTimeout",
+                "mode": "rw",
+                "reset": "0x64",
+                "loraDesc": "RX Time-Out LSB\nRX operation time-out value expressed as number of symbols:\nTimeOut = SymbTimeout  Ts",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPreambleMsb",
+        "addr": "0x20",
+        "sections": [
+            {
+                "name": "RegPreamble",
+                "bits": "7-0",
+                "varName": "PreambleLength",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "Preamble length MSB, = PreambleLength + 4.25Symbols\nSee 4.1.1 for more details.\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPreambleLsb",
+        "addr": "0x21",
+        "sections": [
+            {
+                "name": "RegPreamble",
+                "bits": "7-0",
+                "varName": "PreambleLength",
+                "mode": "rw",
+                "reset": "0x8",
+                "loraDesc": "Preamble Length LSB\n\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegPayloadLength",
+        "addr": "0x22",
+        "sections": [
+            {
+                "name": "RegPayloadL",
+                "bits": "7-0",
+                "varName": "PayloadLength",
+                "mode": "rw",
+                "reset": "0x1",
+                "loraDesc": "Payload length in bytes. The register needs to be set in implicit\nheader mode for the expected packet length. A 0 value is not\npermitted",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegMaxPayloadLength",
+        "addr": "0x23",
+        "sections": [
+            {
+                "name": "RegMaxPayl",
+                "bits": "7-0",
+                "varName": "PayloadMaxLength",
+                "mode": "rw",
+                "reset": "0xff",
+                "loraDesc": "Maximum payload length; if header payload length exceeds value a\nheader CRC error is generated. Allows filtering of packet with a bad\nsize.",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegHopPeriod",
+        "addr": "0x24",
+        "sections": [
+            {
+                "name": "RegHopPeri",
+                "bits": "7-0",
+                "varName": "FreqHoppingPeriod",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "Symbol periods between frequency hops. (0 = disabled). 1st hop\nalways happen after the 1st header symbol\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFifoRxByteAddr",
+        "addr": "0x25",
+        "sections": [
+            {
+                "name": "RegFifoRxByt",
+                "bits": "7-0",
+                "varName": "FifoRxByteAddrPtr",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Current value of RX databuffer pointer (address of last byte written\nby Lora receiver)\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegModemConfig3",
+        "addr": "0x26",
+        "sections": [
+            {
+                "name": "RegModemC",
+                "bits": "7-4",
+                "varName": "Unused",
+                "mode": "r",
+                "reset": "0x00",
+                "loraDesc": "",
+                "": ""
+            },
+            {
+                "name": "onfig3",
+                "bits": "3",
+                "varName": "LowDataRateOptimize",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "0 --> Disabled\n1 --> Enabled; mandated for when the symbol length exceeds 16ms",
+                "": "",
+                "values": {
+                    "name": "LowDataRateOptimizeValue",
+                    "values": {
+                        "Disabled": {
+                            "desc": "Disabled",
+                            "name": "Disabled",
+                            "value": "0b0"
+                        },
+                        "Enabled": {
+                            "desc": "Enabled; mandated for when the symbol length exceeds 16ms",
+                            "name": "Enabled",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "",
+                "bits": "2",
+                "varName": "AgcAutoOn",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "0 --> LNA gain set by register LnaGain\n1 --> LNA gain set by the internal AGC loop",
+                "": "",
+                "values": {
+                    "name": "AgcAutoOnValue",
+                    "values": {
+                        "LnaGainSetByRegisterLnaGain": {
+                            "desc": "LNA gain set by register LnaGain",
+                            "name": "LnaGainSetByRegisterLnaGain",
+                            "value": "0b0"
+                        },
+                        "LnaGainSetByTheInternalAgcLoop": {
+                            "desc": "LNA gain set by the internal AGC loop",
+                            "name": "LnaGainSetByTheInternalAgcLoop",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "Reg0x27",
+        "addr": "0x27",
+        "sections": [
+            {
+                "name": "(0x27)",
+                "bits": "7-0",
+                "varName": "PpmCorrection",
+                "mode": "rw",
+                "reset": "0x00",
+                "loraDesc": "Data rate offset value, used in conjunction with AFC",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFeiMsb",
+        "addr": "0x28",
+        "sections": [
+            {
+                "name": "RegFeiMs",
+                "bits": "3-0",
+                "varName": "FreqError",
+                "mode": "r",
+                "reset": "0x0",
+                "loraDesc": "Estimated frequency error from modem\nMSB of RF Frequency Error\nF Error = - ---- -- --- --- ---- --- -- ---- ---- --- --2--- -- --   ----- -- --- ---- --- -------\nF r e q E r r o r   B W  k H z \n2 4\nF xtal 500",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFeiMid",
+        "addr": "0x29",
+        "sections": [
+            {
+                "name": "RegFeiMi",
+                "bits": "7-0",
+                "varName": "FreqError",
+                "mode": "r",
+                "reset": "0x0",
+                "loraDesc": "Middle byte of RF Frequency Error\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegFeiLsb",
+        "addr": "0x2A",
+        "sections": [
+            {
+                "name": "RegFeiLsb",
+                "bits": "7-0",
+                "varName": "FreqError",
+                "mode": "r",
+                "reset": "0x0",
+                "loraDesc": "LSB of RF Frequency Error\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegRssiWideband",
+        "addr": "0x2C",
+        "sections": [
+            {
+                "name": "RegRssiWid",
+                "bits": "7-0",
+                "varName": "RssiWideband",
+                "mode": "r",
+                "reset": "n/a",
+                "loraDesc": "Wideband RSSI measurement used to locally generate a random\nnumber\n",
+                "": ""
+            }
+        ]
+    },
+    {
+        "name": "Reg0x2F",
+        "addr": "0x2F",
+        "sections": [
+            {
+                "name": "(0x2F)",
+                "bits": "7-0",
+                "varName": "IfFreq2",
+                "mode": "rw",
+                "reset": "0x20",
+                "loraDesc": "See errata note",
+                "": ""
+            }
+        ]
+    }
+]
