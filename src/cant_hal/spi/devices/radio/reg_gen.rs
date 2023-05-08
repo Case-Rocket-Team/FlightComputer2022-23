@@ -23,6 +23,7 @@ impl RadioRegPart for RegFifoFifo {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -51,6 +52,7 @@ impl RadioRegPart for RegOpModeLongRangeMode {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 7;
+    const PART_MASK: u8 = 0b10000000;
 }
 
 
@@ -91,6 +93,7 @@ impl RadioRegPart for RegOpModeAccessSharedReg {
     const CLEARABLE: bool = false;
     const START: u8 = 6;
     const END: u8 = 6;
+    const PART_MASK: u8 = 0b1000000;
 }
 
 
@@ -129,6 +132,7 @@ impl RadioRegPart for RegOpModeLowFrequencyModeOn {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -179,6 +183,7 @@ impl RadioRegPart for RegOpModeMode {
     const CLEARABLE: bool = false;
     const START: u8 = 2;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b111;
 }
 
 
@@ -243,6 +248,7 @@ impl RadioRegPart for RegFrMsbFrf {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -267,6 +273,7 @@ impl RadioRegPart for RegFrMidFrf {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -294,6 +301,7 @@ impl RadioRegPart for RegFrLsbFrf {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -321,6 +329,7 @@ impl RadioRegPart for RegPaConfigPaSelect {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 7;
+    const PART_MASK: u8 = 0b10000000;
 }
 
 
@@ -355,6 +364,7 @@ impl RadioRegPart for RegPaConfigMaxPower {
     const CLEARABLE: bool = false;
     const START: u8 = 6;
     const END: u8 = 4;
+    const PART_MASK: u8 = 0b1110000;
 }
 
 
@@ -373,6 +383,7 @@ impl RadioRegPart for RegPaConfigOutputPower {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1111;
 }
 
 
@@ -428,6 +439,7 @@ impl RadioRegPart for RegPaRampPaRamp {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1111;
 }
 
 
@@ -528,6 +540,7 @@ impl RadioRegPart for RegOcpOcpOn {
     const CLEARABLE: bool = false;
     const START: u8 = 5;
     const END: u8 = 5;
+    const PART_MASK: u8 = 0b100000;
 }
 
 
@@ -567,6 +580,7 @@ impl RadioRegPart for RegOcpOcpTrim {
     const CLEARABLE: bool = false;
     const START: u8 = 4;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111;
 }
 
 
@@ -606,6 +620,7 @@ impl RadioRegPart for RegLnaLnaGain {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 5;
+    const PART_MASK: u8 = 0b11100000;
 }
 
 
@@ -665,6 +680,7 @@ impl RadioRegPart for RegLnaLnaBoostHf {
     const CLEARABLE: bool = false;
     const START: u8 = 1;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11;
 }
 
 
@@ -707,6 +723,7 @@ impl RadioRegPart for RegFifoAddrPtrFifoAddrPtr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -732,6 +749,7 @@ impl RadioRegPart for RegFifoTxBaseAddrFifoTxBaseAddr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -757,6 +775,7 @@ impl RadioRegPart for RegFifoRxBaseAddrFifoRxBaseAddr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -782,6 +801,7 @@ impl RadioRegPart for RegFifoRxCurrentAddrFifoRxCurrentAddr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -806,6 +826,7 @@ impl RadioRegPart for RegIrqFlagsMaskRxTimeoutMask {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 7;
+    const PART_MASK: u8 = 0b10000000;
 }
 
 
@@ -824,6 +845,7 @@ impl RadioRegPart for RegIrqFlagsMaskRxDoneMask {
     const CLEARABLE: bool = false;
     const START: u8 = 6;
     const END: u8 = 6;
+    const PART_MASK: u8 = 0b1000000;
 }
 
 
@@ -842,6 +864,7 @@ impl RadioRegPart for RegIrqFlagsMaskPayloadCrcErrorMask {
     const CLEARABLE: bool = false;
     const START: u8 = 5;
     const END: u8 = 5;
+    const PART_MASK: u8 = 0b100000;
 }
 
 
@@ -860,6 +883,7 @@ impl RadioRegPart for RegIrqFlagsMaskValidHeaderMask {
     const CLEARABLE: bool = false;
     const START: u8 = 4;
     const END: u8 = 4;
+    const PART_MASK: u8 = 0b10000;
 }
 
 
@@ -878,6 +902,7 @@ impl RadioRegPart for RegIrqFlagsMaskTxDoneMask {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -896,6 +921,7 @@ impl RadioRegPart for RegIrqFlagsMaskCadDoneMask {
     const CLEARABLE: bool = false;
     const START: u8 = 2;
     const END: u8 = 2;
+    const PART_MASK: u8 = 0b100;
 }
 
 
@@ -914,6 +940,7 @@ impl RadioRegPart for RegIrqFlagsMaskFhssChangeChannelMask {
     const CLEARABLE: bool = false;
     const START: u8 = 1;
     const END: u8 = 1;
+    const PART_MASK: u8 = 0b10;
 }
 
 
@@ -932,6 +959,7 @@ impl RadioRegPart for RegIrqFlagsMaskCadDetectedMask {
     const CLEARABLE: bool = false;
     const START: u8 = 0;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1;
 }
 
 
@@ -955,6 +983,7 @@ impl RadioRegPart for RegIrqFlagsRxTimeout {
     const CLEARABLE: bool = true;
     const START: u8 = 7;
     const END: u8 = 7;
+    const PART_MASK: u8 = 0b10000000;
 }
 
 
@@ -972,6 +1001,7 @@ impl RadioRegPart for RegIrqFlagsRxDone {
     const CLEARABLE: bool = true;
     const START: u8 = 6;
     const END: u8 = 6;
+    const PART_MASK: u8 = 0b1000000;
 }
 
 
@@ -989,6 +1019,7 @@ impl RadioRegPart for RegIrqFlagsPayloadCrcError {
     const CLEARABLE: bool = true;
     const START: u8 = 5;
     const END: u8 = 5;
+    const PART_MASK: u8 = 0b100000;
 }
 
 
@@ -1006,6 +1037,7 @@ impl RadioRegPart for RegIrqFlagsValidHeader {
     const CLEARABLE: bool = true;
     const START: u8 = 4;
     const END: u8 = 4;
+    const PART_MASK: u8 = 0b10000;
 }
 
 
@@ -1024,6 +1056,7 @@ impl RadioRegPart for RegIrqFlagsTxDone {
     const CLEARABLE: bool = true;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -1041,6 +1074,7 @@ impl RadioRegPart for RegIrqFlagsCadDone {
     const CLEARABLE: bool = true;
     const START: u8 = 2;
     const END: u8 = 2;
+    const PART_MASK: u8 = 0b100;
 }
 
 
@@ -1058,6 +1092,7 @@ impl RadioRegPart for RegIrqFlagsFhssChangeChannel {
     const CLEARABLE: bool = true;
     const START: u8 = 1;
     const END: u8 = 1;
+    const PART_MASK: u8 = 0b10;
 }
 
 
@@ -1076,6 +1111,7 @@ impl RadioRegPart for RegIrqFlagsCadDetected {
     const CLEARABLE: bool = true;
     const START: u8 = 0;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1;
 }
 
 
@@ -1101,6 +1137,7 @@ impl RadioRegPart for RegRxNbBytesFifoRxBytesNb {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1127,6 +1164,7 @@ impl RadioRegPart for RegRxHeaderCntValueMsbValidHeaderCntMsb {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1152,6 +1190,7 @@ impl RadioRegPart for RegRxHeaderCntValueLsbValidHeaderCntLsb {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1177,6 +1216,7 @@ impl RadioRegPart for RegRxPacketCntValueMsbValidPacketCntMsb {
     const CLEARABLE: bool = true;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1202,6 +1242,7 @@ impl RadioRegPart for RegRxPacketCntValueLsbValidPacketCntLsb {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1225,6 +1266,7 @@ impl RadioRegPart for RegModemStatRxCodingRate {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 5;
+    const PART_MASK: u8 = 0b11100000;
 }
 
 
@@ -1242,6 +1284,7 @@ impl RadioRegPart for RegModemStatModemClear {
     const CLEARABLE: bool = false;
     const START: u8 = 4;
     const END: u8 = 4;
+    const PART_MASK: u8 = 0b10000;
 }
 
 
@@ -1260,6 +1303,7 @@ impl RadioRegPart for RegModemStatHeaderInfoValid {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -1277,6 +1321,7 @@ impl RadioRegPart for RegModemStatRxOngoing {
     const CLEARABLE: bool = false;
     const START: u8 = 2;
     const END: u8 = 2;
+    const PART_MASK: u8 = 0b100;
 }
 
 
@@ -1294,6 +1339,7 @@ impl RadioRegPart for RegModemStatSignalSynchronized {
     const CLEARABLE: bool = false;
     const START: u8 = 1;
     const END: u8 = 1;
+    const PART_MASK: u8 = 0b10;
 }
 
 
@@ -1311,6 +1357,7 @@ impl RadioRegPart for RegModemStatSignalDetected {
     const CLEARABLE: bool = false;
     const START: u8 = 0;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1;
 }
 
 
@@ -1336,6 +1383,7 @@ impl RadioRegPart for RegPktSnrValuePacketSnr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1363,6 +1411,7 @@ impl RadioRegPart for RegPktRssiValuePacketRssi {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1390,6 +1439,7 @@ impl RadioRegPart for RegRssiValueRssi {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1417,6 +1467,7 @@ impl RadioRegPart for RegHopChannelPllTimeout {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 7;
+    const PART_MASK: u8 = 0b10000000;
 }
 
 
@@ -1456,6 +1507,7 @@ impl RadioRegPart for RegHopChannelCrcOnPayload {
     const CLEARABLE: bool = false;
     const START: u8 = 6;
     const END: u8 = 6;
+    const PART_MASK: u8 = 0b1000000;
 }
 
 
@@ -1490,6 +1542,7 @@ impl RadioRegPart for RegHopChannelFhssPresentChannel {
     const CLEARABLE: bool = false;
     const START: u8 = 5;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b111111;
 }
 
 
@@ -1516,6 +1569,7 @@ impl RadioRegPart for RegModemConfig1ImplicitHeaderModeOn {
     const CLEARABLE: bool = false;
     const START: u8 = 0;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1;
 }
 
 
@@ -1560,6 +1614,7 @@ impl RadioRegPart for RegModemConfig2TxContinuousMode {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -1602,6 +1657,7 @@ impl RadioRegPart for RegModemConfig2RxPayloadCrcOn {
     const CLEARABLE: bool = false;
     const START: u8 = 2;
     const END: u8 = 2;
+    const PART_MASK: u8 = 0b100;
 }
 
 
@@ -1636,6 +1692,7 @@ impl RadioRegPart for RegModemConfig2SymbTimeout {
     const CLEARABLE: bool = false;
     const START: u8 = 1;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11;
 }
 
 
@@ -1661,6 +1718,7 @@ impl RadioRegPart for RegSymbTimeoutLsbSymbTimeout {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1686,6 +1744,7 @@ impl RadioRegPart for RegPreambleMsbPreambleLength {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1711,6 +1770,7 @@ impl RadioRegPart for RegPreambleLsbPreambleLength {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1736,6 +1796,7 @@ impl RadioRegPart for RegPayloadLengthPayloadLength {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1761,6 +1822,7 @@ impl RadioRegPart for RegMaxPayloadLengthPayloadMaxLength {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1786,6 +1848,7 @@ impl RadioRegPart for RegHopPeriodFreqHoppingPeriod {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1811,6 +1874,7 @@ impl RadioRegPart for RegFifoRxByteAddrFifoRxByteAddrPtr {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1834,6 +1898,7 @@ impl RadioRegPart for RegModemConfig3Unused {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 4;
+    const PART_MASK: u8 = 0b11110000;
 }
 
 
@@ -1854,6 +1919,7 @@ impl RadioRegPart for RegModemConfig3LowDataRateOptimize {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 3;
+    const PART_MASK: u8 = 0b1000;
 }
 
 
@@ -1891,6 +1957,7 @@ impl RadioRegPart for RegModemConfig3AgcAutoOn {
     const CLEARABLE: bool = false;
     const START: u8 = 2;
     const END: u8 = 2;
+    const PART_MASK: u8 = 0b100;
 }
 
 
@@ -1931,6 +1998,7 @@ impl RadioRegPart for Reg0x27PpmCorrection {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -1959,6 +2027,7 @@ impl RadioRegPart for RegFeiMsbFreqError {
     const CLEARABLE: bool = false;
     const START: u8 = 3;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b1111;
 }
 
 
@@ -1983,6 +2052,7 @@ impl RadioRegPart for RegFeiMidFreqError {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -2007,6 +2077,7 @@ impl RadioRegPart for RegFeiLsbFreqError {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -2032,6 +2103,7 @@ impl RadioRegPart for RegRssiWidebandRssiWideband {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 
@@ -2055,6 +2127,7 @@ impl RadioRegPart for Reg0x2FIfFreq2 {
     const CLEARABLE: bool = false;
     const START: u8 = 7;
     const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
 }
 
 

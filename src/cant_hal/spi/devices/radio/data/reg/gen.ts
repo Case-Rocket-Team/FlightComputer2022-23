@@ -41,6 +41,8 @@ const toComment = (string: string) => (string ?? '').split('\n').map(val => {
     }
 }).join('\n');
 
+const createMask = (start: number, end: number) => (2 ** start - 1) ^ (2 ** (end + 1) - 1);
+
 const toCamelCase = (string: string) => {
     if (string.match(/^\d/)) {
         string = 'v' + string
@@ -175,6 +177,9 @@ impl RadioReg for ${val.name} {
 }` + val.sections.map(section => {
     const regPart = val.name + section.varName;
 
+    const start = section.bits[0];
+    const end = section.bits.split(/\-\s*/)[1] || section.bits[0];
+
     return `
 // Register part
 ${toComment(section.loraDesc)}
@@ -187,8 +192,9 @@ impl RadioRegPart for ${regPart} {
     const READABLE: bool = ${section.mode.includes('r')};
     const TRIGGERABLE: bool = ${section.mode.includes('t')};
     const CLEARABLE: bool = ${section.mode.includes('c')};
-    const START: u8 = ${section.bits[0]};
-    const END: u8 = ${section.bits.split(/\-\s*/)[1] || section.bits[0]};
+    const START: u8 = ${start};
+    const END: u8 = ${end};
+    const PART_MASK: u8 = 0b${createMask(+end, +start).toString(2)};
 }
 
 

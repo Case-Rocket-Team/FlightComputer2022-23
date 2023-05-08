@@ -12,6 +12,7 @@ pub trait RadioRegPart {
     const CLEARABLE: bool;
     const START: u8;
     const END: u8;
+    const PART_MASK: u8;
 }
 
 pub trait RadioRegPartValue {
