@@ -6,7 +6,7 @@ use super::{consts::{RadioMode, IRQ, PaConfig, FskDataModulationShaping, FskRamp
 use super::reg_gen::*;
 use crate::cant_hal::spi::devices::radio::radio_layout::*;
 
-const FREQUENCY: u32 = 915;
+const FREQUENCY: u32 = 433;
 
 pub enum LoRaError<I: SpiInterface> {
     Uninformative,
