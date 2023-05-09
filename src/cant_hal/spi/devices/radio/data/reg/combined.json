@@ -147,11 +147,11 @@
         ]
     },
     {
-        "name": "RegFrMsb",
+        "name": "RegFrfMsb",
         "addr": "0x06",
         "sections": [
             {
-                "name": "RegFrMsb (0x06)",
+                "name": "RegFrfMsb (0x06)",
                 "bits": "7-0",
                 "varName": "Frf",
                 "mode": "rw",
@@ -162,11 +162,11 @@
         ]
     },
     {
-        "name": "RegFrMid",
+        "name": "RegFrfMid",
         "addr": "0x07",
         "sections": [
             {
-                "name": "RegFrMid (0x07)",
+                "name": "RegFrfMid (0x07)",
                 "bits": "7-0",
                 "varName": "Frf",
                 "mode": "rw",
@@ -177,11 +177,11 @@
         ]
     },
     {
-        "name": "RegFrLsb",
+        "name": "RegFrfLsb",
         "addr": "0x08",
         "sections": [
             {
-                "name": "RegFrLsb (0x08)",
+                "name": "RegFrfLsb (0x08)",
                 "bits": "7-0",
                 "varName": "Frf",
                 "mode": "rwt",
@@ -1264,6 +1264,183 @@
                 "reset": "0x20",
                 "loraDesc": "See errata note",
                 "": ""
+            }
+        ]
+    },
+    {
+        "name": "RegDetectOptimize",
+        "addr": "0x31",
+        "sections": [
+            {
+                "name": "*RegDetectOptimize (0x31)",
+                "bits": "2-0",
+                "varName": "DetectionOptimize",
+                "mode": "rw",
+                "reset": "0x03",
+                "loraDesc": "LoRa Detection Optimize\n0x03 --> SF7 to SF12\n0x05 --> SF6",
+                "values": {
+                    "name": "DetectionOptimizeValue",
+                    "values": {
+                        "Sf7ToSf12": {
+                            "desc": "SF7 to SF12",
+                            "name": "Sf7ToSf12",
+                            "value": "0x03"
+                        },
+                        "Sf6": {
+                            "desc": "SF6",
+                            "name": "Sf6",
+                            "value": "0x05"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegInvertIQ",
+        "addr": "0x33",
+        "sections": [
+            {
+                "name": "*RegInvertIQ (0x33)",
+                "bits": "6",
+                "varName": "InvertIQ",
+                "mode": "rw",
+                "reset": "0x0",
+                "loraDesc": "Invert the LoRa I and Q signals\n0 --> normal mode\n1 --> I and Q signals are inverted",
+                "values": {
+                    "name": "InvertIQValue",
+                    "values": {
+                        "NormalMode": {
+                            "desc": "normal mode",
+                            "name": "NormalMode",
+                            "value": "0b0"
+                        },
+                        "IAndQSignalsAreInverted": {
+                            "desc": "I and Q signals are inverted",
+                            "name": "IAndQSignalsAreInverted",
+                            "value": "0b1"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegHighBWOptimize1",
+        "addr": "0x36",
+        "sections": [
+            {
+                "name": "*RegHighBWOptimize1 (0x36)",
+                "bits": "7-0",
+                "varName": "HighBWOptimize1",
+                "mode": "rw",
+                "reset": "0x20",
+                "loraDesc": "Optimization for 500 kHz bandwidth. See errata note."
+            }
+        ]
+    },
+    {
+        "name": "RegDetectionThreshold",
+        "addr": "0x37",
+        "sections": [
+            {
+                "name": "*RegDetectionThreshold (0x37)",
+                "bits": "7-0",
+                "varName": "DetectionThreshold",
+                "mode": "rw",
+                "reset": "0x0A",
+                "loraDesc": "LoRa detection threshold\n0x0A --> SF7 to SF12\n0x0C --> SF6",
+                "values": {
+                    "name": "DetectionThresholdValue",
+                    "values": {
+                        "Sf7ToSf12": {
+                            "desc": "SF7 to SF12",
+                            "name": "Sf7ToSf12",
+                            "value": "0x0A"
+                        },
+                        "Sf6": {
+                            "desc": "SF6",
+                            "name": "Sf6",
+                            "value": "0x0C"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "RegSyncWord",
+        "addr": "0x39",
+        "sections": []
+    },
+    {
+        "name": "RegHighBWOptimize2",
+        "addr": "0x3A",
+        "sections": [
+            {
+                "name": "*RegHighBWOptimize2 (0x3A)",
+                "bits": "7-0",
+                "varName": "HighBWOptimize2",
+                "mode": "rw",
+                "reset": "0x20",
+                "loraDesc": "Optimization for 500 kHz bandwidth. See errata note"
+            }
+        ]
+    },
+    {
+        "name": "RegInvertIQ2",
+        "addr": "0x3B",
+        "sections": [
+            {
+                "name": "*RegInvertIQ2 (0x3B)",
+                "bits": "7-0",
+                "varName": "InvertIQ2",
+                "mode": "rw",
+                "reset": "0x1D",
+                "loraDesc": "Set to 0x19 for inverted IQ"
+            }
+        ]
+    },
+    {
+        "name": "RegVersion",
+        "addr": "0x42",
+        "sections": [
+            {
+                "name": "*RegVersion (0x42)",
+                "bits": "7-0",
+                "varName": "Version",
+                "mode": "r",
+                "reset": "0x121",
+                "loraDesc": "Version code of the chip. Bits 7-4 give the full revision number; bits 3-0 give the metal mask revision number."
+            }
+        ]
+    },
+    {
+        "name": "RegPaDac",
+        "addr": "0x4d",
+        "sections": [
+            {
+                "name": "*RegPaDac (0x4d)",
+                "bits": "2-0",
+                "varName": "PaDac",
+                "mode": "rw",
+                "reset": "0x04",
+                "loraDesc": "Enables the +20dBm option on PA_BOOST pin\n0x04 --> Default value\n0x07 --> +20dBm on PA_BOOST when OutputPower=1111",
+                "values": {
+                    "name": "PaDacValue",
+                    "values": {
+                        "DefaultValue": {
+                            "desc": "Default value",
+                            "name": "DefaultValue",
+                            "value": "0x04"
+                        },
+                        "_20dBmOnPaBoostWhenOutputPower": {
+                            "desc": "+20dBm on PA_BOOST when OutputPower=1111",
+                            "name": "_20dBmOnPaBoostWhenOutputPower",
+                            "value": "0x07"
+                        }
+                    }
+                }
             }
         ]
     }

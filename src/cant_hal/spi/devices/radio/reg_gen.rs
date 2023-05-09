@@ -3,18 +3,17 @@
 
 use crate::cant_hal::spi::devices::radio::radio_layout::*; 
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifo --
 pub struct RegFifo;
 
 impl RadioReg for RegFifo {
     const ADDR: u8 = 0x00;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// LoRa base-band FIFO data input/output. FIFO is cleared an not
-/// accessible when device is in SLEEPmode
-pub struct RegFifoFifo;
 
-impl RadioRegPart for RegFifoFifo {
+impl RadioRegPart for RegFifo {
     type Reg = RegFifo;
     type Value = u8;
     const WRITABLE: bool = true;
@@ -26,15 +25,20 @@ impl RadioRegPart for RegFifoFifo {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Fifo --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegOpMode --
 pub struct RegOpMode;
 
 impl RadioReg for RegOpMode {
     const ADDR: u8 = 0x01;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 ///
 /// 0 --> FSK/OOK Mode
 ///
@@ -55,7 +59,7 @@ impl RadioRegPart for RegOpModeLongRangeMode {
     const PART_MASK: u8 = 0b10000000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum LongRangeModeValue {
         
@@ -74,7 +78,11 @@ impl RadioRegPartValue for LongRangeModeValue {
         }
     }
 }
+// -- End RegPart LongRangeMode --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// This bit operates when device is in Lora mode; if set it allows
 /// access to FSK registers page located in address space
 /// (0x0D:0x3F) while in LoRa mode
@@ -96,7 +104,7 @@ impl RadioRegPart for RegOpModeAccessSharedReg {
     const PART_MASK: u8 = 0b1000000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum AccessSharedRegValue {
         
@@ -115,7 +123,11 @@ impl RadioRegPartValue for AccessSharedRegValue {
         }
     }
 }
+// -- End RegPart AccessSharedReg --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Access Low Frequency Mode registers
 ///
 /// 0 --> High Frequency Mode (access to HF test registers)
@@ -135,7 +147,7 @@ impl RadioRegPart for RegOpModeLowFrequencyModeOn {
     const PART_MASK: u8 = 0b1000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum LowFrequencyModeOnValue {
         
@@ -154,7 +166,11 @@ impl RadioRegPartValue for LowFrequencyModeOnValue {
         }
     }
 }
+// -- End RegPart LowFrequencyModeOn --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Device modes
 ///
 /// 000 --> SLEEP
@@ -186,7 +202,7 @@ impl RadioRegPart for RegOpModeMode {
     const PART_MASK: u8 = 0b111;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum ModeValue {
         
@@ -229,18 +245,23 @@ impl RadioRegPartValue for ModeValue {
         }
     }
 }
-// Register
-pub struct RegFrMsb;
+// -- End RegPart Mode --
 
-impl RadioReg for RegFrMsb {
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFrfMsb --
+pub struct RegFrfMsb;
+
+impl RadioReg for RegFrfMsb {
     const ADDR: u8 = 0x06;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// MSB of RF carrier frequency
-pub struct RegFrMsbFrf;
 
-impl RadioRegPart for RegFrMsbFrf {
-    type Reg = RegFrMsb;
+/// MSB of RF carrier frequency
+pub struct RegFrfMsbFrf;
+
+impl RadioRegPart for RegFrfMsbFrf {
+    type Reg = RegFrfMsb;
     type Value = u8;
     const WRITABLE: bool = true;
     const READABLE: bool = true;
@@ -251,21 +272,26 @@ impl RadioRegPart for RegFrMsbFrf {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Frf --
 
-// Register
-pub struct RegFrMid;
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFrfMid --
+pub struct RegFrfMid;
 
-impl RadioReg for RegFrMid {
+impl RadioReg for RegFrfMid {
     const ADDR: u8 = 0x07;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// MSB of RF carrier frequency
 /// 
-pub struct RegFrMidFrf;
+pub struct RegFrfMidFrf;
 
-impl RadioRegPart for RegFrMidFrf {
-    type Reg = RegFrMid;
+impl RadioRegPart for RegFrfMidFrf {
+    type Reg = RegFrfMid;
     type Value = u8;
     const WRITABLE: bool = true;
     const READABLE: bool = true;
@@ -276,24 +302,29 @@ impl RadioRegPart for RegFrMidFrf {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Frf --
 
-// Register
-pub struct RegFrLsb;
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFrfLsb --
+pub struct RegFrfLsb;
 
-impl RadioReg for RegFrLsb {
+impl RadioReg for RegFrfLsb {
     const ADDR: u8 = 0x08;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// NEEDS FIX LSB of RF carrier frequency
 /// Resolution is 61.035 Hz if F(XOSC) = 32 MHz. Default value is
 /// 0x6c8000 = 434 MHz. Register values must be modified only when
 /// device is in SLEEP or STAND-BY mode.
 /// for RF blocks
-pub struct RegFrLsbFrf;
+pub struct RegFrfLsbFrf;
 
-impl RadioRegPart for RegFrLsbFrf {
-    type Reg = RegFrLsb;
+impl RadioRegPart for RegFrfLsbFrf {
+    type Reg = RegFrfLsb;
     type Value = u8;
     const WRITABLE: bool = true;
     const READABLE: bool = true;
@@ -304,15 +335,20 @@ impl RadioRegPart for RegFrLsbFrf {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Frf --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPaConfig --
 pub struct RegPaConfig;
 
 impl RadioReg for RegPaConfig {
     const ADDR: u8 = 0x09;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Selects PA output pin
 ///
 /// 0 --> RFO pin. Output power is limited to +14 dBm.
@@ -332,7 +368,7 @@ impl RadioRegPart for RegPaConfigPaSelect {
     const PART_MASK: u8 = 0b10000000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum PaSelectValue {
         
@@ -351,7 +387,11 @@ impl RadioRegPartValue for PaSelectValue {
         }
     }
 }
+// -- End RegPart PaSelect --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Select max output power: Pmax=10.8+0.6*MaxPower[dBm]
 pub struct RegPaConfigMaxPower;
 
@@ -367,9 +407,13 @@ impl RadioRegPart for RegPaConfigMaxPower {
     const PART_MASK: u8 = 0b1110000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart MaxPower --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Pout=Pmax-(15-OutputPower) if PaSelect = 0 (RFO pin)
 /// Pout=17-(15-OutputPower) if PaSelect = 1 (PA_BOOST pin)
 pub struct RegPaConfigOutputPower;
@@ -386,51 +430,21 @@ impl RadioRegPart for RegPaConfigOutputPower {
     const PART_MASK: u8 = 0b1111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart OutputPower --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPaRamp --
 pub struct RegPaRamp;
 
 impl RadioReg for RegPaRamp {
     const ADDR: u8 = 0x0A;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// Rise/Fall time of ramp up/down in FSK
-///
-/// 0000 --> 3.4 ms
-///
-/// 0001 --> 2 ms
-///
-/// 0010 --> 1 ms
-///
-/// 0011 --> 500 us
-///
-/// 0100 --> 250 us
-///
-/// 0101 --> 125 us
-///
-/// 0110 --> 100 us
-///
-/// 0111 --> 62 us
-///
-/// 1000 --> 50 us
-///
-/// 1001 --> 40 us
-///
-/// 1010 --> 31 us
-///
-/// 1011 --> 25 us
-///
-/// 1100 --> 20 us
-///
-/// 1101 --> 15 us
-///
-/// 1110 --> 12 us
-///
-/// 1111 --> 10 us
-pub struct RegPaRampPaRamp;
 
-impl RadioRegPart for RegPaRampPaRamp {
+impl RadioRegPart for RegPaRamp {
     type Reg = RegPaRamp;
     type Value = PaRampValue;
     const WRITABLE: bool = true;
@@ -442,7 +456,7 @@ impl RadioRegPart for RegPaRampPaRamp {
     const PART_MASK: u8 = 0b1111;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum PaRampValue {
         
@@ -517,13 +531,18 @@ impl RadioRegPartValue for PaRampValue {
         }
     }
 }
-// Register
+// -- End RegPart PaRamp --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegOcp --
 pub struct RegOcp;
 
 impl RadioReg for RegOcp {
     const ADDR: u8 = 0x0B;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Enables overload current protection (OCP) for PA:
 ///
 /// 0 --> OCP disabled
@@ -543,7 +562,7 @@ impl RadioRegPart for RegOcpOcpOn {
     const PART_MASK: u8 = 0b100000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum OcpOnValue {
         
@@ -562,7 +581,11 @@ impl RadioRegPartValue for OcpOnValue {
         }
     }
 }
+// -- End RegPart OcpOn --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Trimming of OCP current:
 /// I max = 45+5*OcpTrim [mA] if OcpTrim &lt;= 15 (120 mA) /
 /// I max = -30+10*OcpTrim [mA] if 15 &lt; OcpTrim &lt;= 27 (130 to
@@ -583,15 +606,20 @@ impl RadioRegPart for RegOcpOcpTrim {
     const PART_MASK: u8 = 0b11111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart OcpTrim --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegLna --
 pub struct RegLna;
 
 impl RadioReg for RegLna {
     const ADDR: u8 = 0x0C;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// LNA gain setting:
 ///
 /// 000 --> not used
@@ -623,7 +651,7 @@ impl RadioRegPart for RegLnaLnaGain {
     const PART_MASK: u8 = 0b11100000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum LnaGainValue {
         
@@ -662,7 +690,11 @@ impl RadioRegPartValue for LnaGainValue {
         }
     }
 }
+// -- End RegPart LnaGain --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// High Frequency (RFI_HF) LNA currentadjustment
 ///
 /// 00 --> Default LNA current
@@ -683,7 +715,7 @@ impl RadioRegPart for RegLnaLnaBoostHf {
     const PART_MASK: u8 = 0b11;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum LnaBoostHfValue {
         
@@ -702,19 +734,19 @@ impl RadioRegPartValue for LnaBoostHfValue {
         }
     }
 }
-// Register
+// -- End RegPart LnaBoostHf --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifoAddrPtr --
 pub struct RegFifoAddrPtr;
 
 impl RadioReg for RegFifoAddrPtr {
     const ADDR: u8 = 0x0D;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// SPI interface address pointer in FIFO data buffer.
-/// 
-/// 
-pub struct RegFifoAddrPtrFifoAddrPtr;
 
-impl RadioRegPart for RegFifoAddrPtrFifoAddrPtr {
+impl RadioRegPart for RegFifoAddrPtr {
     type Reg = RegFifoAddrPtr;
     type Value = u8;
     const WRITABLE: bool = true;
@@ -726,21 +758,21 @@ impl RadioRegPart for RegFifoAddrPtrFifoAddrPtr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoAddrPtr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifoTxBaseAddr --
 pub struct RegFifoTxBaseAddr;
 
 impl RadioReg for RegFifoTxBaseAddr {
     const ADDR: u8 = 0x0E;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// write base address in FIFO data buffer for TX modulator
-/// 
-/// 
-pub struct RegFifoTxBaseAddrFifoTxBaseAddr;
 
-impl RadioRegPart for RegFifoTxBaseAddrFifoTxBaseAddr {
+impl RadioRegPart for RegFifoTxBaseAddr {
     type Reg = RegFifoTxBaseAddr;
     type Value = u8;
     const WRITABLE: bool = true;
@@ -752,21 +784,21 @@ impl RadioRegPart for RegFifoTxBaseAddrFifoTxBaseAddr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoTxBaseAddr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifoRxBaseAddr --
 pub struct RegFifoRxBaseAddr;
 
 impl RadioReg for RegFifoRxBaseAddr {
     const ADDR: u8 = 0x0F;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// read base address in FIFO data buffer for RX demodulator
-/// 
-/// 
-pub struct RegFifoRxBaseAddrFifoRxBaseAddr;
 
-impl RadioRegPart for RegFifoRxBaseAddrFifoRxBaseAddr {
+impl RadioRegPart for RegFifoRxBaseAddr {
     type Reg = RegFifoRxBaseAddr;
     type Value = u8;
     const WRITABLE: bool = true;
@@ -778,21 +810,21 @@ impl RadioRegPart for RegFifoRxBaseAddrFifoRxBaseAddr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoRxBaseAddr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifoRxCurrentAddr --
 pub struct RegFifoRxCurrentAddr;
 
 impl RadioReg for RegFifoRxCurrentAddr {
     const ADDR: u8 = 0x10;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// Start address (in data buffer) of last packet received
-/// 
-/// 
-pub struct RegFifoRxCurrentAddrFifoRxCurrentAddr;
 
-impl RadioRegPart for RegFifoRxCurrentAddrFifoRxCurrentAddr {
+impl RadioRegPart for RegFifoRxCurrentAddr {
     type Reg = RegFifoRxCurrentAddr;
     type Value = u8;
     const WRITABLE: bool = false;
@@ -804,15 +836,20 @@ impl RadioRegPart for RegFifoRxCurrentAddrFifoRxCurrentAddr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoRxCurrentAddr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegIrqFlagsMask --
 pub struct RegIrqFlagsMask;
 
 impl RadioReg for RegIrqFlagsMask {
     const ADDR: u8 = 0x11;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Timeout interrupt mask: setting this bit masks the corresponding
 /// IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskRxTimeoutMask;
@@ -829,9 +866,13 @@ impl RadioRegPart for RegIrqFlagsMaskRxTimeoutMask {
     const PART_MASK: u8 = 0b10000000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxTimeoutMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Packet reception complete interrupt mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskRxDoneMask;
@@ -848,9 +889,13 @@ impl RadioRegPart for RegIrqFlagsMaskRxDoneMask {
     const PART_MASK: u8 = 0b1000000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxDoneMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Payload CRC error interrupt mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskPayloadCrcErrorMask;
@@ -867,9 +912,13 @@ impl RadioRegPart for RegIrqFlagsMaskPayloadCrcErrorMask {
     const PART_MASK: u8 = 0b100000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PayloadCrcErrorMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Valid header received in Rx mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskValidHeaderMask;
@@ -886,9 +935,13 @@ impl RadioRegPart for RegIrqFlagsMaskValidHeaderMask {
     const PART_MASK: u8 = 0b10000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidHeaderMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// FIFO Payload transmission complete interrupt mask: setting this bit
 /// masks the corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskTxDoneMask;
@@ -905,9 +958,13 @@ impl RadioRegPart for RegIrqFlagsMaskTxDoneMask {
     const PART_MASK: u8 = 0b1000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart TxDoneMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// CAD complete interrupt mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskCadDoneMask;
@@ -924,9 +981,13 @@ impl RadioRegPart for RegIrqFlagsMaskCadDoneMask {
     const PART_MASK: u8 = 0b100;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart CadDoneMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// FHSS change channel interrupt mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskFhssChangeChannelMask;
@@ -943,9 +1004,13 @@ impl RadioRegPart for RegIrqFlagsMaskFhssChangeChannelMask {
     const PART_MASK: u8 = 0b10;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FhssChangeChannelMask --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Cad Detected Interrupt Mask: setting this bit masks the
 /// corresponding IRQ in RegIrqFlags
 pub struct RegIrqFlagsMaskCadDetectedMask;
@@ -962,15 +1027,20 @@ impl RadioRegPart for RegIrqFlagsMaskCadDetectedMask {
     const PART_MASK: u8 = 0b1;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart CadDetectedMask --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegIrqFlags --
 pub struct RegIrqFlags;
 
 impl RadioReg for RegIrqFlags {
     const ADDR: u8 = 0x12;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Timeout interrupt: writing a 1 clears the IRQ
 pub struct RegIrqFlagsRxTimeout;
 
@@ -986,9 +1056,13 @@ impl RadioRegPart for RegIrqFlagsRxTimeout {
     const PART_MASK: u8 = 0b10000000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxTimeout --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Packet reception complete interrupt: writing a 1 clears the IRQ
 pub struct RegIrqFlagsRxDone;
 
@@ -1004,9 +1078,13 @@ impl RadioRegPart for RegIrqFlagsRxDone {
     const PART_MASK: u8 = 0b1000000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxDone --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Payload CRC error interrupt: writing a 1 clears the IRQ
 pub struct RegIrqFlagsPayloadCrcError;
 
@@ -1022,9 +1100,13 @@ impl RadioRegPart for RegIrqFlagsPayloadCrcError {
     const PART_MASK: u8 = 0b100000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PayloadCrcError --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Valid header received in Rx: writing a 1 clears the IRQ
 pub struct RegIrqFlagsValidHeader;
 
@@ -1040,9 +1122,13 @@ impl RadioRegPart for RegIrqFlagsValidHeader {
     const PART_MASK: u8 = 0b10000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidHeader --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// FIFO Payload transmission complete interrupt: writing a 1 clears
 /// the IRQ
 pub struct RegIrqFlagsTxDone;
@@ -1059,9 +1145,13 @@ impl RadioRegPart for RegIrqFlagsTxDone {
     const PART_MASK: u8 = 0b1000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart TxDone --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// CAD complete: write to clear: writing a 1 clears the IRQ
 pub struct RegIrqFlagsCadDone;
 
@@ -1077,9 +1167,13 @@ impl RadioRegPart for RegIrqFlagsCadDone {
     const PART_MASK: u8 = 0b100;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart CadDone --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// FHSS change channel interrupt: writing a 1 clears the IRQ
 pub struct RegIrqFlagsFhssChangeChannel;
 
@@ -1095,9 +1189,13 @@ impl RadioRegPart for RegIrqFlagsFhssChangeChannel {
     const PART_MASK: u8 = 0b10;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FhssChangeChannel --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Valid Lora signal detected during CAD operation: writing a 1clears
 /// the IRQ
 pub struct RegIrqFlagsCadDetected;
@@ -1114,15 +1212,20 @@ impl RadioRegPart for RegIrqFlagsCadDetected {
     const PART_MASK: u8 = 0b1;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart CadDetected --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRxNbBytes --
 pub struct RegRxNbBytes;
 
 impl RadioReg for RegRxNbBytes {
     const ADDR: u8 = 0x13;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Number of payload bytes of latest packetreceived
 /// 
 /// 
@@ -1140,15 +1243,20 @@ impl RadioRegPart for RegRxNbBytesFifoRxBytesNb {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoRxBytesNb --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRxHeaderCntValueMsb --
 pub struct RegRxHeaderCntValueMsb;
 
 impl RadioReg for RegRxHeaderCntValueMsb {
     const ADDR: u8 = 0x14;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Number of valid headers received since last transition into Rx
 /// mode, MSB(15:8). Header and packet counters are reseted in
 /// Sleep mode.
@@ -1167,15 +1275,20 @@ impl RadioRegPart for RegRxHeaderCntValueMsbValidHeaderCntMsb {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidHeaderCntMsb --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRxHeaderCntValueLsb --
 pub struct RegRxHeaderCntValueLsb;
 
 impl RadioReg for RegRxHeaderCntValueLsb {
     const ADDR: u8 = 0x15;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Number of valid headers received since last transition into Rx
 /// mode, LSB(7:0). Header and packet counters are reseted in Sleep
 /// mode.
@@ -1193,15 +1306,20 @@ impl RadioRegPart for RegRxHeaderCntValueLsbValidHeaderCntLsb {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidHeaderCntLsb --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRxPacketCntValueMsb --
 pub struct RegRxPacketCntValueMsb;
 
 impl RadioReg for RegRxPacketCntValueMsb {
     const ADDR: u8 = 0x16;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Number of valid packets received since last transition into Rx
 /// mode, MSB(15:8). Header and packet counters are reseted in
 /// Sleep mode.
@@ -1219,15 +1337,20 @@ impl RadioRegPart for RegRxPacketCntValueMsbValidPacketCntMsb {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidPacketCntMsb --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRxPacketCntValueLsb --
 pub struct RegRxPacketCntValueLsb;
 
 impl RadioReg for RegRxPacketCntValueLsb {
     const ADDR: u8 = 0x17;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Number of valid packets received since last transition into Rx
 /// mode, LSB(7:0). Header and packet counters are reseted in Sleep
 /// mode.
@@ -1245,15 +1368,20 @@ impl RadioRegPart for RegRxPacketCntValueLsbValidPacketCntLsb {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ValidPacketCntLsb --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegModemStat --
 pub struct RegModemStat;
 
 impl RadioReg for RegModemStat {
     const ADDR: u8 = 0x18;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Coding rate of last header received
 pub struct RegModemStatRxCodingRate;
 
@@ -1269,9 +1397,13 @@ impl RadioRegPart for RegModemStatRxCodingRate {
     const PART_MASK: u8 = 0b11100000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxCodingRate --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Modem clear
 pub struct RegModemStatModemClear;
 
@@ -1287,9 +1419,13 @@ impl RadioRegPart for RegModemStatModemClear {
     const PART_MASK: u8 = 0b10000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart ModemClear --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Header info valid
 /// 
 pub struct RegModemStatHeaderInfoValid;
@@ -1306,9 +1442,13 @@ impl RadioRegPart for RegModemStatHeaderInfoValid {
     const PART_MASK: u8 = 0b1000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart HeaderInfoValid --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// RX on-going
 pub struct RegModemStatRxOngoing;
 
@@ -1324,9 +1464,13 @@ impl RadioRegPart for RegModemStatRxOngoing {
     const PART_MASK: u8 = 0b100;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RxOngoing --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Signal synchronized
 pub struct RegModemStatSignalSynchronized;
 
@@ -1342,9 +1486,13 @@ impl RadioRegPart for RegModemStatSignalSynchronized {
     const PART_MASK: u8 = 0b10;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart SignalSynchronized --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Signal detected
 pub struct RegModemStatSignalDetected;
 
@@ -1360,15 +1508,20 @@ impl RadioRegPart for RegModemStatSignalDetected {
     const PART_MASK: u8 = 0b1;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart SignalDetected --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPktSnrValue --
 pub struct RegPktSnrValue;
 
 impl RadioReg for RegPktSnrValue {
     const ADDR: u8 = 0x19;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Estimation of SNR on last packet received.In two’s compliment
 /// format mutiplied by 4.
 /// NEEDS FIXING
@@ -1386,15 +1539,20 @@ impl RadioRegPart for RegPktSnrValuePacketSnr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PacketSnr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPktRssiValue --
 pub struct RegPktRssiValue;
 
 impl RadioReg for RegPktRssiValue {
     const ADDR: u8 = 0x1A;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// RSSI of the latest packet received (dBm):
 /// RSSI[dBm] = -157 + Rssi (using HF output port, SNR &gt;= 0)
 /// or
@@ -1414,15 +1572,20 @@ impl RadioRegPart for RegPktRssiValuePacketRssi {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PacketRssi --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRssiValue --
 pub struct RegRssiValue;
 
 impl RadioReg for RegRssiValue {
     const ADDR: u8 = 0x1B;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Current RSSI value (dBm)
 /// RSSI[dBm] = -157 + Rssi (using HF output port)
 /// or
@@ -1442,15 +1605,20 @@ impl RadioRegPart for RegRssiValueRssi {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Rssi --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegHopChannel --
 pub struct RegHopChannel;
 
 impl RadioReg for RegHopChannel {
     const ADDR: u8 = 0x1C;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// PLL failed to lock while attempting a TX/RX/CAD operation
 ///
 /// 1 --> PLL did not lock
@@ -1470,7 +1638,7 @@ impl RadioRegPart for RegHopChannelPllTimeout {
     const PART_MASK: u8 = 0b10000000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum PllTimeoutValue {
         
@@ -1489,7 +1657,11 @@ impl RadioRegPartValue for PllTimeoutValue {
         }
     }
 }
+// -- End RegPart PllTimeout --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// CRC Information extracted from the received packet header
 /// (Explicit header mode only)
 ///
@@ -1510,7 +1682,7 @@ impl RadioRegPart for RegHopChannelCrcOnPayload {
     const PART_MASK: u8 = 0b1000000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum CrcOnPayloadValue {
         
@@ -1529,7 +1701,11 @@ impl RadioRegPartValue for CrcOnPayloadValue {
         }
     }
 }
+// -- End RegPart CrcOnPayload --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Current value of frequency hopping channel inuse.
 pub struct RegHopChannelFhssPresentChannel;
 
@@ -1545,15 +1721,20 @@ impl RadioRegPart for RegHopChannelFhssPresentChannel {
     const PART_MASK: u8 = 0b111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FhssPresentChannel --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegModemConfig1 --
 pub struct RegModemConfig1;
 
 impl RadioReg for RegModemConfig1 {
     const ADDR: u8 = 0x1D;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 ///
 /// 0 --> Explicit Header mode
 ///
@@ -1572,7 +1753,7 @@ impl RadioRegPart for RegModemConfig1ImplicitHeaderModeOn {
     const PART_MASK: u8 = 0b1;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum ImplicitHeaderModeOnValue {
         
@@ -1591,13 +1772,18 @@ impl RadioRegPartValue for ImplicitHeaderModeOnValue {
         }
     }
 }
-// Register
+// -- End RegPart ImplicitHeaderModeOn --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegModemConfig2 --
 pub struct RegModemConfig2;
 
 impl RadioReg for RegModemConfig2 {
     const ADDR: u8 = 0x1E;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 ///
 /// 0 --> normal mode, a single packet is sent
 ///
@@ -1617,7 +1803,7 @@ impl RadioRegPart for RegModemConfig2TxContinuousMode {
     const PART_MASK: u8 = 0b1000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum TxContinuousModeValue {
         
@@ -1636,7 +1822,11 @@ impl RadioRegPartValue for TxContinuousModeValue {
         }
     }
 }
+// -- End RegPart TxContinuousMode --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Enable CRC generation and check on payload:
 ///
 /// 0 --> CRC disable
@@ -1660,7 +1850,7 @@ impl RadioRegPart for RegModemConfig2RxPayloadCrcOn {
     const PART_MASK: u8 = 0b100;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum RxPayloadCrcOnValue {
         
@@ -1679,7 +1869,11 @@ impl RadioRegPartValue for RxPayloadCrcOnValue {
         }
     }
 }
+// -- End RegPart RxPayloadCrcOn --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// RX Time-Out MSB
 pub struct RegModemConfig2SymbTimeout;
 
@@ -1695,15 +1889,20 @@ impl RadioRegPart for RegModemConfig2SymbTimeout {
     const PART_MASK: u8 = 0b11;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart SymbTimeout --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegSymbTimeoutLsb --
 pub struct RegSymbTimeoutLsb;
 
 impl RadioReg for RegSymbTimeoutLsb {
     const ADDR: u8 = 0x1F;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// RX Time-Out LSB
 /// RX operation time-out value expressed as number of symbols:
 /// TimeOut = SymbTimeout  Ts
@@ -1721,15 +1920,20 @@ impl RadioRegPart for RegSymbTimeoutLsbSymbTimeout {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart SymbTimeout --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPreambleMsb --
 pub struct RegPreambleMsb;
 
 impl RadioReg for RegPreambleMsb {
     const ADDR: u8 = 0x20;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Preamble length MSB, = PreambleLength + 4.25Symbols
 /// See 4.1.1 for more details.
 /// 
@@ -1747,15 +1951,20 @@ impl RadioRegPart for RegPreambleMsbPreambleLength {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PreambleLength --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPreambleLsb --
 pub struct RegPreambleLsb;
 
 impl RadioReg for RegPreambleLsb {
     const ADDR: u8 = 0x21;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Preamble Length LSB
 /// 
 /// 
@@ -1773,21 +1982,21 @@ impl RadioRegPart for RegPreambleLsbPreambleLength {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PreambleLength --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPayloadLength --
 pub struct RegPayloadLength;
 
 impl RadioReg for RegPayloadLength {
     const ADDR: u8 = 0x22;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// Payload length in bytes. The register needs to be set in implicit
-/// header mode for the expected packet length. A 0 value is not
-/// permitted
-pub struct RegPayloadLengthPayloadLength;
 
-impl RadioRegPart for RegPayloadLengthPayloadLength {
+impl RadioRegPart for RegPayloadLength {
     type Reg = RegPayloadLength;
     type Value = u8;
     const WRITABLE: bool = true;
@@ -1799,15 +2008,20 @@ impl RadioRegPart for RegPayloadLengthPayloadLength {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PayloadLength --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegMaxPayloadLength --
 pub struct RegMaxPayloadLength;
 
 impl RadioReg for RegMaxPayloadLength {
     const ADDR: u8 = 0x23;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Maximum payload length; if header payload length exceeds value a
 /// header CRC error is generated. Allows filtering of packet with a bad
 /// size.
@@ -1825,15 +2039,20 @@ impl RadioRegPart for RegMaxPayloadLengthPayloadMaxLength {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PayloadMaxLength --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegHopPeriod --
 pub struct RegHopPeriod;
 
 impl RadioReg for RegHopPeriod {
     const ADDR: u8 = 0x24;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Symbol periods between frequency hops. (0 = disabled). 1st hop
 /// always happen after the 1st header symbol
 /// 
@@ -1851,15 +2070,20 @@ impl RadioRegPart for RegHopPeriodFreqHoppingPeriod {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FreqHoppingPeriod --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFifoRxByteAddr --
 pub struct RegFifoRxByteAddr;
 
 impl RadioReg for RegFifoRxByteAddr {
     const ADDR: u8 = 0x25;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Current value of RX databuffer pointer (address of last byte written
 /// by Lora receiver)
 /// 
@@ -1877,15 +2101,20 @@ impl RadioRegPart for RegFifoRxByteAddrFifoRxByteAddrPtr {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FifoRxByteAddrPtr --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegModemConfig3 --
 pub struct RegModemConfig3;
 
 impl RadioReg for RegModemConfig3 {
     const ADDR: u8 = 0x26;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// 
 pub struct RegModemConfig3Unused;
 
@@ -1901,9 +2130,13 @@ impl RadioRegPart for RegModemConfig3Unused {
     const PART_MASK: u8 = 0b11110000;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart Unused --
 
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 ///
 /// 0 --> Disabled
 ///
@@ -1922,7 +2155,7 @@ impl RadioRegPart for RegModemConfig3LowDataRateOptimize {
     const PART_MASK: u8 = 0b1000;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum LowDataRateOptimizeValue {
         
@@ -1941,7 +2174,11 @@ impl RadioRegPartValue for LowDataRateOptimizeValue {
         }
     }
 }
+// -- End RegPart LowDataRateOptimize --
+
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 ///
 /// 0 --> LNA gain set by register LnaGain
 ///
@@ -1960,7 +2197,7 @@ impl RadioRegPart for RegModemConfig3AgcAutoOn {
     const PART_MASK: u8 = 0b100;
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 // Register enum
 pub enum AgcAutoOnValue {
         
@@ -1979,13 +2216,18 @@ impl RadioRegPartValue for AgcAutoOnValue {
         }
     }
 }
-// Register
+// -- End RegPart AgcAutoOn --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register Reg0x27 --
 pub struct Reg0x27;
 
 impl RadioReg for Reg0x27 {
     const ADDR: u8 = 0x27;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Data rate offset value, used in conjunction with AFC
 pub struct Reg0x27PpmCorrection;
 
@@ -2001,15 +2243,20 @@ impl RadioRegPart for Reg0x27PpmCorrection {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart PpmCorrection --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFeiMsb --
 pub struct RegFeiMsb;
 
 impl RadioReg for RegFeiMsb {
     const ADDR: u8 = 0x28;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Estimated frequency error from modem
 /// MSB of RF Frequency Error
 /// F Error = - ---- -- --- --- ---- --- -- ---- ---- --- --2--- -- --   ----- -- --- ---- --- -------
@@ -2030,15 +2277,20 @@ impl RadioRegPart for RegFeiMsbFreqError {
     const PART_MASK: u8 = 0b1111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FreqError --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFeiMid --
 pub struct RegFeiMid;
 
 impl RadioReg for RegFeiMid {
     const ADDR: u8 = 0x29;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// Middle byte of RF Frequency Error
 /// 
 pub struct RegFeiMidFreqError;
@@ -2055,15 +2307,20 @@ impl RadioRegPart for RegFeiMidFreqError {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FreqError --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegFeiLsb --
 pub struct RegFeiLsb;
 
 impl RadioReg for RegFeiLsb {
     const ADDR: u8 = 0x2A;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// LSB of RF Frequency Error
 /// 
 pub struct RegFeiLsbFreqError;
@@ -2080,21 +2337,21 @@ impl RadioRegPart for RegFeiLsbFreqError {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart FreqError --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegRssiWideband --
 pub struct RegRssiWideband;
 
 impl RadioReg for RegRssiWideband {
     const ADDR: u8 = 0x2C;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
-/// Wideband RSSI measurement used to locally generate a random
-/// number
-/// 
-pub struct RegRssiWidebandRssiWideband;
 
-impl RadioRegPart for RegRssiWidebandRssiWideband {
+impl RadioRegPart for RegRssiWideband {
     type Reg = RegRssiWideband;
     type Value = u8;
     const WRITABLE: bool = false;
@@ -2106,15 +2363,20 @@ impl RadioRegPart for RegRssiWidebandRssiWideband {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart RssiWideband --
 
-// Register
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register Reg0x2F --
 pub struct Reg0x2F;
 
 impl RadioReg for Reg0x2F {
     const ADDR: u8 = 0x2F;
 }
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+
 /// See errata note
 pub struct Reg0x2FIfFreq2;
 
@@ -2130,4 +2392,296 @@ impl RadioRegPart for Reg0x2FIfFreq2 {
     const PART_MASK: u8 = 0b11111111;
 }
 
+// GENERATED FILE, DO NOT EDIT!
 
+// -- End RegPart IfFreq2 --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegDetectOptimize --
+pub struct RegDetectOptimize;
+
+impl RadioReg for RegDetectOptimize {
+    const ADDR: u8 = 0x31;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+/// LoRa Detection Optimize
+///
+/// 0x03 --> SF7 to SF12
+///
+/// 0x05 --> SF6
+pub struct RegDetectOptimizeDetectionOptimize;
+
+impl RadioRegPart for RegDetectOptimizeDetectionOptimize {
+    type Reg = RegDetectOptimize;
+    type Value = DetectionOptimizeValue;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 2;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+// Register enum
+pub enum DetectionOptimizeValue {
+        
+        /// SF7 to SF12
+        Sf7ToSf12,
+    
+        /// SF6
+        Sf6,
+    }
+
+impl RadioRegPartValue for DetectionOptimizeValue {
+    fn value(&self) -> u8 {
+        match self {
+           Self::Sf7ToSf12 => 0x03,
+           Self::Sf6 => 0x05
+        }
+    }
+}
+// -- End RegPart DetectionOptimize --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegInvertIQ --
+pub struct RegInvertIQ;
+
+impl RadioReg for RegInvertIQ {
+    const ADDR: u8 = 0x33;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegInvertIQ {
+    type Reg = RegInvertIQ;
+    type Value = InvertIQValue;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 6;
+    const END: u8 = 6;
+    const PART_MASK: u8 = 0b1000000;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+// Register enum
+pub enum InvertIQValue {
+        
+        /// normal mode
+        NormalMode,
+    
+        /// I and Q signals are inverted
+        IAndQSignalsAreInverted,
+    }
+
+impl RadioRegPartValue for InvertIQValue {
+    fn value(&self) -> u8 {
+        match self {
+           Self::NormalMode => 0b0,
+           Self::IAndQSignalsAreInverted => 0b1
+        }
+    }
+}
+// -- End RegPart InvertIQ --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegHighBWOptimize1 --
+pub struct RegHighBWOptimize1;
+
+impl RadioReg for RegHighBWOptimize1 {
+    const ADDR: u8 = 0x36;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegHighBWOptimize1 {
+    type Reg = RegHighBWOptimize1;
+    type Value = u8;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 7;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+
+// -- End RegPart HighBWOptimize1 --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegDetectionThreshold --
+pub struct RegDetectionThreshold;
+
+impl RadioReg for RegDetectionThreshold {
+    const ADDR: u8 = 0x37;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegDetectionThreshold {
+    type Reg = RegDetectionThreshold;
+    type Value = DetectionThresholdValue;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 7;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+// Register enum
+pub enum DetectionThresholdValue {
+        
+        /// SF7 to SF12
+        Sf7ToSf12,
+    
+        /// SF6
+        Sf6,
+    }
+
+impl RadioRegPartValue for DetectionThresholdValue {
+    fn value(&self) -> u8 {
+        match self {
+           Self::Sf7ToSf12 => 0x0A,
+           Self::Sf6 => 0x0C
+        }
+    }
+}
+// -- End RegPart DetectionThreshold --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegSyncWord --
+pub struct RegSyncWord;
+
+impl RadioReg for RegSyncWord {
+    const ADDR: u8 = 0x39;
+}
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegHighBWOptimize2 --
+pub struct RegHighBWOptimize2;
+
+impl RadioReg for RegHighBWOptimize2 {
+    const ADDR: u8 = 0x3A;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegHighBWOptimize2 {
+    type Reg = RegHighBWOptimize2;
+    type Value = u8;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 7;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+
+// -- End RegPart HighBWOptimize2 --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegInvertIQ2 --
+pub struct RegInvertIQ2;
+
+impl RadioReg for RegInvertIQ2 {
+    const ADDR: u8 = 0x3B;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegInvertIQ2 {
+    type Reg = RegInvertIQ2;
+    type Value = u8;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 7;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+
+// -- End RegPart InvertIQ2 --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegVersion --
+pub struct RegVersion;
+
+impl RadioReg for RegVersion {
+    const ADDR: u8 = 0x42;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegVersion {
+    type Reg = RegVersion;
+    type Value = u8;
+    const WRITABLE: bool = false;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 7;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b11111111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+
+// -- End RegPart Version --
+
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register RegPaDac --
+pub struct RegPaDac;
+
+impl RadioReg for RegPaDac {
+    const ADDR: u8 = 0x4d;
+}
+// GENERATED FILE, DO NOT EDIT!
+// Register part
+
+impl RadioRegPart for RegPaDac {
+    type Reg = RegPaDac;
+    type Value = PaDacValue;
+    const WRITABLE: bool = true;
+    const READABLE: bool = true;
+    const TRIGGERABLE: bool = false;
+    const CLEARABLE: bool = false;
+    const START: u8 = 2;
+    const END: u8 = 0;
+    const PART_MASK: u8 = 0b111;
+}
+
+// GENERATED FILE, DO NOT EDIT!
+// Register enum
+pub enum PaDacValue {
+        
+        /// Default value
+        DefaultValue,
+    
+        /// +20dBm on PA_BOOST when OutputPower=1111
+        _20dBmOnPaBoostWhenOutputPower,
+    }
+
+impl RadioRegPartValue for PaDacValue {
+    fn value(&self) -> u8 {
+        match self {
+           Self::DefaultValue => 0x04,
+           Self::_20dBmOnPaBoostWhenOutputPower => 0x07
+        }
+    }
+}
+// -- End RegPart PaDac --

@@ -23,10 +23,10 @@ RegOpMode (0x01),5-4,reserved,r,0x00,reserved,
 ,,,,,101 --> Receive continuous (RXCONTINUOUS),
 ,,,,,110 --> receive single (RXSINGLE),
 ,,,,,111 --> Channel activity detection (CAD),
-RegFrMsb (0x06),7-0,Frf(23:16),rw,0x6c,MSB of RF carrier frequency,
-RegFrMid (0x07),7-0,Frf(15:8),rw,0x80,MSB of RF carrier frequency,
+RegFrfMsb (0x06),7-0,Frf(23:16),rw,0x6c,MSB of RF carrier frequency,
+RegFrfMid (0x07),7-0,Frf(15:8),rw,0x80,MSB of RF carrier frequency,
 ,,,,,,
-RegFrLsb (0x08),7-0,Frf(7:0),rwt,0x00,NEEDS FIX LSB of RF carrier frequency,
+RegFrfLsb (0x08),7-0,Frf(7:0),rwt,0x00,NEEDS FIX LSB of RF carrier frequency,
 ,,,,,Resolution is 61.035 Hz if F(XOSC) = 32 MHz. Default value is,
 ,,,,,0x6c8000 = 434 MHz. Register values must be modified only when,
 ,,,,,device is in SLEEP or STAND-BY mode.,
@@ -252,3 +252,21 @@ RegRssiWid,7-0,RssiWideband(7:0),r,n/a,Wideband RSSI measurement used to locally
 e band,,,,,number,
 (0x2C),,,,,,
 (0x2F),7-0,IfFreq2,rw,0x20,See errata note,
+*RegDetectOptimize (0x31),2-0,DetectionOptimize,rw,0x03,LoRa Detection Optimize
+,,,,,0x03 --> SF7 to SF12
+,,,,,0x05 --> SF6
+*RegInvertIQ (0x33),6,InvertIQ,rw,0x0,Invert the LoRa I and Q signals
+,,,,,0 --> normal mode
+,,,,,1 --> I and Q signals are inverted
+*RegHighBWOptimize1 (0x36),7-0,HighBWOptimize1,rw,0x20,Optimization for 500 kHz bandwidth. See errata note.
+*RegDetectionThreshold (0x37),7-0,DetectionThreshold,rw,0x0A,LoRa detection threshold
+,,,,,0x0A --> SF7 to SF12
+,,,,,0x0C --> SF6
+*RegSyncWord (0x39),7-0,SyncWord,rw,0x12,LoRa Sync Word
+,,,,,Value 0x34 is reserved for LoRaWAN networks
+*RegHighBWOptimize2 (0x3A),7-0,HighBWOptimize2,rw,0x20,Optimization for 500 kHz bandwidth. See errata note
+*RegInvertIQ2 (0x3B),7-0,InvertIQ2,rw,0x1D,Set to 0x19 for inverted IQ
+*RegVersion (0x42),7-0,Version,r,0x121,Version code of the chip. Bits 7-4 give the full revision number; bits 3-0 give the metal mask revision number.
+*RegPaDac (0x4d),2-0,PaDac,rw,0x04,Enables the +20dBm option on PA_BOOST pin
+,,,,,0x04 --> Default value
+,,,,,0x07 --> +20dBm on PA_BOOST when OutputPower=1111

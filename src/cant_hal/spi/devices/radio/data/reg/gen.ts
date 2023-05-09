@@ -43,6 +43,14 @@ const toComment = (string: string) => (string ?? '').split('\n').map(val => {
 
 const createMask = (start: number, end: number) => (2 ** start - 1) ^ (2 ** (end + 1) - 1);
 
+const parseNumber = (num: string) => {
+    if (num.includes('x')) {
+        return num;
+    } else {
+        return '0b' + num;
+    }
+}
+
 const toCamelCase = (string: string) => {
     if (string.match(/^\d/)) {
         string = 'v' + string
@@ -108,7 +116,7 @@ const getValueType = (section: RegSection) => {
                     valueTypes.values[name] = {
                         desc,
                         name,
-                        value: '0b' + binaryValue
+                        value: parseNumber(binaryValue)
                     }
                 }
             });
@@ -119,9 +127,9 @@ const getValueType = (section: RegSection) => {
 let combined: Reg[] = data.reduce((arr: Reg[], curr: RegSection) => {
     const prev = arr[arr.length - 1];
     const prevSection = prev?.sections[prev?.sections.length - 1];
-    if (!prev || curr.bits[0] == '7') {
+    if (!prev || curr.bits[0] == '7' || curr.name[0] == '*') {
         arr.push({
-            name: curr.name,
+            name: curr.name.replace('*', ''),
             sections: [curr],
             addr: ''
         });
@@ -168,25 +176,33 @@ use crate::cant_hal::spi::devices::radio::radio_layout::*;
 `;
 
 const finalized = combined
-        .map(val => `
-// Register
-pub struct ${val.name};
+        .map(reg => `
+// GENERATED FILE, DO NOT EDIT!
+// -- Begin Register ${reg.name} --
+pub struct ${reg.name};
 
-impl RadioReg for ${val.name} {
-    const ADDR: u8 = ${val.addr};
-}` + val.sections.map(section => {
-    const regPart = val.name + section.varName;
+impl RadioReg for ${reg.name} {
+    const ADDR: u8 = ${reg.addr};
+}` + reg.sections.map(section => {
+    let regPart = reg.name + section.varName;
+    let sameName = false;
+    if (reg.name == 'Reg' + section.varName) {
+        sameName = true;
+        regPart = reg.name;
+    }
 
     const start = section.bits[0];
     const end = section.bits.split(/\-\s*/)[1] || section.bits[0];
 
     return `
+// GENERATED FILE, DO NOT EDIT!
 // Register part
+${sameName ? `` : `
 ${toComment(section.loraDesc)}
 pub struct ${regPart};
-
+`}
 impl RadioRegPart for ${regPart} {
-    type Reg = ${val.name};
+    type Reg = ${reg.name};
     type Value = ${section.values?.name ?? 'u8'};
     const WRITABLE: bool = ${section.mode.includes('w')};
     const READABLE: bool = ${section.mode.includes('r')};
@@ -197,7 +213,7 @@ impl RadioRegPart for ${regPart} {
     const PART_MASK: u8 = 0b${createMask(+end, +start).toString(2)};
 }
 
-
+// GENERATED FILE, DO NOT EDIT!
 ${section.values ? `// Register enum
 pub enum ${section.values.name} {
         ${Object.values(section.values.values).map((valueType: OneRegValueType) => `
@@ -212,7 +228,9 @@ ${Object.values(section.values.values).map((valueType: OneRegValueType) =>
 `           Self::${valueType.name} => ${valueType.value}`).join(',\n')}
         }
     }
-}` : ''}`}).join('')).join('').replace(/\&amp;/g, '&');
+}` : ''}
+// -- End RegPart ${section.varName} --
+`}).join('')).join('').replace(/\&amp;/g, '&');
 
 
 string += finalized;

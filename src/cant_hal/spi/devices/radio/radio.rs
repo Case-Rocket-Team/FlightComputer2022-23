@@ -2,9 +2,9 @@ use crate::{cant_hal::{spi::spi_interface::{SpiInterface, Selectable, SpiInterfa
 use bit_field::BitField;
 use embedded_hal::blocking::spi::{Transfer, Write};
 
-use super::consts::{RadioMode, IRQ, PaConfig, FskDataModulationShaping, FskRampUpRamDown};
-
-use crate::cant_hal::spi::devices::radio::register_layout::*;
+use super::{consts::{RadioMode, IRQ, PaConfig, FskDataModulationShaping, FskRampUpRamDown}, radio_layout::RadioReg};
+use super::reg_gen::*;
+use crate::cant_hal::spi::devices::radio::radio_layout::*;
 
 const FREQUENCY: u32 = 915;
 
@@ -21,7 +21,7 @@ pub enum LoRaError<I: SpiInterface> {
 
 pub enum LoRaOrWriteratorError<I: SpiInterface, E> {
     LoRa(LoRaError<I>),
-    Witerator(E)
+    Writerator(E)
 }
 
 pub struct LoRa<I: SpiInterface> {
@@ -46,23 +46,23 @@ impl<I: SpiInterface> LoRa<I> {
     pub fn init_radio(&mut self) -> Result<(), LoRaError<I>> {
         self.set_mode(RadioMode::Sleep)?;
         self.set_frequency(FREQUENCY)?;
-        self.write_register(LoRaRegFifoTxBaseAddr::ADDR, 0)?;
-        self.write_register(LoRaRegFifoRxBaseAddr::ADDR, 0)?;
-        let lna = self.read_register(LoRaRegLna::ADDR)?;
-        self.write_register(LoRaRegLna::ADDR, lna | 0x03)?;
-        //self.write_register(LoRaRegCon::ADDR, 0x04)?;
+        self.write_register(RegFifoTxBaseAddr, 0)?;
+        self.write_register(RegFifoRxBaseAddr, 0)?;
+        let lna = self.read_register(RegLna)?;
+        self.write_register(RegLna, lna | 0x03)?;
+        //self.write_register(RegCon, 0x04)?;
         self.set_mode(RadioMode::Stdby)?;
         self.set_tx_power(14, 1);
         Ok(())
     }
 
     pub fn read_version(&mut self) -> Result<u8, LoRaError<I>> {
-        self.read_register(LoRaRegVersion::ADDR)
+        self.read_register(RegVersion)
     }
 
-    pub fn set_dio0_tx_done(&mut self) -> Result<(), LoRaError<I>> {
-        self.write_register(LoRaRegDioMapping1::ADDR, 0b01_00_00_00)
-    }
+    /*pub fn set_dio0_tx_done(&mut self) -> Result<(), LoRaError<I>> {
+        self.write_register(RegDioMapping1, 0b01_00_00_00)
+    }*/
 
     /// Send a payload.
     /// NOTE: Max size is 256 bytes!!!
@@ -77,14 +77,14 @@ impl<I: SpiInterface> LoRa<I> {
                 self.set_implicit_header_mode()?;
             }
 
-            self.write_register(LoRaRegIrqFlags::ADDR, 0)?;
-            self.write_register(LoRaRegFifoAddrPtr::ADDR, 0)?;
-            self.write_register(LoRaRegPayloadLength::ADDR, 0)?;
+            self.write_register(RegIrqFlags, 0)?;
+            self.write_register(RegFifoAddrPtr, 0)?;
+            self.write_register(RegPayloadLength, 0)?;
 
             let mut len = 0;
             let mut truncated = false;
             for byte in payload {
-                self.write_register(LoRaRegFifo::ADDR, *byte)?;
+                self.write_register(RegFifo, *byte)?;
                 if len == 255 {
                     truncated = true;
                     break;
@@ -93,7 +93,7 @@ impl<I: SpiInterface> LoRa<I> {
                 len += 1;
             }
 
-            self.write_register(LoRaRegPayloadLength::ADDR, len)?;
+            self.write_register(RegPayloadLength, len)?;
             self.set_mode(RadioMode::Tx)?;
             
             if truncated {
@@ -111,7 +111,7 @@ impl<I: SpiInterface> LoRa<I> {
     }
 
     pub fn has_received_packet(&mut self) -> Result<bool, LoRaError<I>> {
-        Ok(self.read_register(LoRaRegIrqFlags::ADDR)?.get_bit(6))
+        Ok(self.read_register(RegIrqFlags)?.get_bit(6))
     }
 
     /// Blocks the current thread, returning the size of a packet if one is received or an error is the
@@ -130,35 +130,35 @@ impl<I: SpiInterface> LoRa<I> {
         let mut buffer = [0 as u8; 255];
         self.clear_irq().map_err(LoRaOrWriteratorError::LoRa)?;
         let size = self.get_ready_packet_size().map_err(LoRaOrWriteratorError::LoRa)?;
-        let fifo_addr = self.read_register(LoRaRegFifoRxCurrentAddr::ADDR)
+        let fifo_addr = self.read_register(RegFifoRxCurrentAddr)
                 .map_err(LoRaOrWriteratorError::LoRa)?;
-        self.write_register(LoRaRegFifoAddrPtr::ADDR, fifo_addr)
+        self.write_register(RegFifoAddrPtr, fifo_addr)
                 .map_err(LoRaOrWriteratorError::LoRa)?;
 
         for i in 0..size {
-            let byte = self.read_register(LoRaRegFifo::ADDR)
+            let byte = self.read_register(RegFifo)
                     .map_err(LoRaOrWriteratorError::LoRa)?;
-            writerator.push(byte).map_err(LoRaOrWriteratorError::Witerator)?;
+            writerator.push(byte).map_err(LoRaOrWriteratorError::Writerator)?;
         }
-        self.write_register(LoRaRegFifoAddrPtr::ADDR, 0).map_err(LoRaOrWriteratorError::LoRa)?;
+        self.write_register(RegFifoAddrPtr, 0).map_err(LoRaOrWriteratorError::LoRa)?;
         Ok(())
     }
 
     /// Returns size of a packet read into FIFO. This should only be called if there is a new packet
     /// ready to be read.
     pub fn get_ready_packet_size(&mut self) -> Result<u8, LoRaError<I>> {
-        self.read_register(LoRaRegRxNbBytes::ADDR)
+        self.read_register(RegRxNbBytes)
     }
 
     /// Returns true if the radio is currently transmitting a packet.
     pub fn is_transmitting(&mut self) -> Result<bool, LoRaError<I>> {
-        let op_mode = self.read_register(LoRaRegOpMode::ADDR)?;
-        if (op_mode & RadioMode::Tx::ADDR) == RadioMode::Tx::ADDR
-            || (op_mode & RadioMode::FsTx::ADDR) == RadioMode::FsTx::ADDR{
+        let op_mode = self.read_register(RegOpMode)?;
+        if (op_mode & RadioMode::Tx.addr()) == RadioMode::Tx.addr()
+            || (op_mode & RadioMode::FsTx.addr()) == RadioMode::FsTx.addr() {
             Ok(true)
         } else {
-            if (self.read_register(LoRaRegIrqFlags::ADDR)? & IRQ::IrqTxDoneMask::ADDR) == 1 {
-                self.write_register(LoRaRegIrqFlags::ADDR, IRQ::IrqTxDoneMask::ADDR)?;
+            if (self.read_register(RegIrqFlags)? & IRQ::IrqTxDoneMask.addr()) == 1 {
+                self.write_register(RegIrqFlags, IRQ::IrqTxDoneMask.addr())?;
             }
             Ok(false)
         }
@@ -166,20 +166,20 @@ impl<I: SpiInterface> LoRa<I> {
 
     /// Clears the radio's IRQ registers.
     pub fn clear_irq(&mut self) -> Result<(), LoRaError<I>> {
-        let irq_flags = self.read_register(LoRaRegIrqFlags::ADDR)?;
-        self.write_register(LoRaRegIrqFlags::ADDR, irq_flags)
+        let irq_flags = self.read_register(RegIrqFlags)?;
+        self.write_register(RegIrqFlags, irq_flags)
     }
 
     /// Sets the transmit power and pin. Levels can range from 0-14 when the output
     /// pin = 0(RFO), and form 0-20 when output pin = 1(PaBoost). Power is in dB.
     /// Default value is `17`.
     pub fn set_tx_power(&mut self, mut level: u32, output_pin: u8,) -> Result<(), LoRaError<I>> {
-        if PaConfig::PaOutputRfoPin::ADDR == output_pin {
+        if PaConfig::PaOutputRfoPin.addr() == output_pin {
             // RFO
             if level > 14 {
                 level = 14;
             }
-            self.write_register(LoRaRegPaConfig::ADDR, (0x70 | level) as u8)
+            self.write_register(RegPaConfig, (0x70 | level) as u8)
         } else {
             // PA BOOST
             if level > 17 {
@@ -190,20 +190,20 @@ impl<I: SpiInterface> LoRa<I> {
                 level -= 3;
 
                 // High Power +20 dBm Operation (Semtech SX1276/77/78/79 5.4.3.)
-                self.write_register(LoRaRegPaDac::ADDR, 0x87)?;
+                self.write_register(RegPaDac, 0x87)?;
                 self.set_ocp(140)?;
             } else {
                 if level < 2 {
                     level = 2;
                 }
                 //Default value PA_HF/LF or +17dBm
-                self.write_register(LoRaRegPaDac::ADDR, 0x84)?;
+                self.write_register(RegPaDac, 0x84)?;
                 self.set_ocp(100)?;
             }
             level -= 2;
             self.write_register(
-                LoRaRegPaConfig::ADDR,
-                PaConfig::PaBoost::ADDR | level as u8,
+                RegPaConfig,
+                PaConfig::PaBoost.addr() | level as u8,
             )
         }
     }
@@ -217,7 +217,7 @@ impl<I: SpiInterface> LoRa<I> {
         } else if ma <= 240 {
             ocp_trim = (ma + 30) / 10;
         }
-        self.write_register(LoRaRegOcp::ADDR, 0x20 | (0x1F & ocp_trim))
+        self.write_register(RegOcp, 0x20 | (0x1F & ocp_trim))
     }
 
     /// Sets the state of the radio. Default mode after initiation is `Standby`.
@@ -228,8 +228,8 @@ impl<I: SpiInterface> LoRa<I> {
             self.set_implicit_header_mode()?;
         }
         self.write_register(
-            LoRaRegOpMode::ADDR,
-            RadioMode::LongRangeMode::ADDR | mode::ADDR,
+            RegOpMode,
+            RadioMode::LongRangeMode.addr() | mode.addr(),
         )?;
 
         self.mode = mode;
@@ -244,25 +244,25 @@ impl<I: SpiInterface> LoRa<I> {
         let frf = (freq * (base << 19)) / 32;
         // write registers
         self.write_register(
-            LoRaRegFrfMsb::ADDR,
+            RegFrfMsb,
             ((frf & 0x00FF_0000) >> 16) as u8,
         )?;
-        self.write_register(LoRaRegFrfMid::ADDR, ((frf & 0x0000_FF00) >> 8) as u8)?;
-        self.write_register(LoRaRegFrfLsb::ADDR, (frf & 0x0000_00FF) as u8)
+        self.write_register(RegFrfMid, ((frf & 0x0000_FF00) >> 8) as u8)?;
+        self.write_register(RegFrfLsb, (frf & 0x0000_00FF) as u8)
     }
 
     /// Sets the radio to use an explicit header. Default state is `ON`.
     fn set_explicit_header_mode(&mut self) -> Result<(), LoRaError<I>> {
-        let reg_modem_config_1 = self.read_register(LoRaRegModemConfig1::ADDR)?;
-        self.write_register(LoRaRegModemConfig1::ADDR, reg_modem_config_1 & 0xfe)?;
+        let reg_modem_config_1 = self.read_register(RegModemConfig1)?;
+        self.write_register(RegModemConfig1, reg_modem_config_1 & 0xfe)?;
         self.explicit_header = true;
         Ok(())
     }
 
     /// Sets the radio to use an implicit header. Default state is `OFF`.
     fn set_implicit_header_mode(&mut self) -> Result<(), LoRaError<I>> {
-        let reg_modem_config_1 = self.read_register(LoRaRegModemConfig1::ADDR)?;
-        self.write_register(LoRaRegModemConfig1::ADDR, reg_modem_config_1 & 0x01)?;
+        let reg_modem_config_1 = self.read_register(RegModemConfig1)?;
+        self.write_register(RegModemConfig1, reg_modem_config_1 & 0x01)?;
         self.explicit_header = false;
         Ok(())
     }
@@ -281,15 +281,15 @@ impl<I: SpiInterface> LoRa<I> {
         }
 
         if sf == 6 {
-            self.write_register(LoRaRegDetectionOptimize::ADDR, 0xc5)?;
-            self.write_register(LoRaRegDetectionThreshold::ADDR, 0x0c)?;
+            self.write_register(RegDetectOptimize, 0xc5)?;
+            self.write_register(RegDetectionThreshold, 0x0c)?;
         } else {
-            self.write_register(LoRaRegDetectionOptimize::ADDR, 0xc3)?;
-            self.write_register(LoRaRegDetectionThreshold::ADDR, 0x0a)?;
+            self.write_register(RegDetectOptimize, 0xc3)?;
+            self.write_register(RegDetectionThreshold, 0x0a)?;
         }
-        let modem_config_2 = self.read_register(LoRaRegModemConfig2::ADDR)?;
+        let modem_config_2 = self.read_register(RegModemConfig2)?;
         self.write_register(
-            LoRaRegModemConfig2::ADDR,
+            RegModemConfig2,
             (modem_config_2 & 0x0f) | ((sf << 4) & 0xf0),
         )?;
         self.set_ldo_flag()?;
@@ -318,16 +318,16 @@ impl<I: SpiInterface> LoRa<I> {
         };
 
         if bw == 9 {
-            self.write_register(LoRaRegHighBWOptimize1::ADDR, 0x02)?;
-            self.write_register(LoRaRegHighBWOptimize2::ADDR, 0x64)?;
+            self.write_register(RegHighBWOptimize1, 0x02)?;
+            self.write_register(RegHighBWOptimize2, 0x64)?;
         } else {
-            self.write_register(LoRaRegHighBWOptimize1::ADDR, 0x03)?;
-            self.write_register(LoRaRegHighBWOptimize2::ADDR, 0x65)?;
+            self.write_register(RegHighBWOptimize1, 0x03)?;
+            self.write_register(RegHighBWOptimize2, 0x65)?;
         }
 
-        let modem_config_1 = self.read_register(LoRaRegModemConfig1::ADDR)?;
+        let modem_config_1 = self.read_register(RegModemConfig1)?;
         self.write_register(
-            LoRaRegModemConfig1::ADDR,
+            RegModemConfig1,
             (modem_config_1 & 0x0f) | ((bw << 4) as u8),
         )?;
         self.set_ldo_flag()?;
@@ -347,9 +347,9 @@ impl<I: SpiInterface> LoRa<I> {
             denominator = 8;
         }
         let cr = denominator - 4;
-        let modem_config_1 = self.read_register(LoRaRegModemConfig1::ADDR)?;
+        let modem_config_1 = self.read_register(RegModemConfig1)?;
         self.write_register(
-            LoRaRegModemConfig1::ADDR,
+            RegModemConfig1,
             (modem_config_1 & 0xf1) | (cr << 1),
         )
     }
@@ -360,39 +360,39 @@ impl<I: SpiInterface> LoRa<I> {
         &mut self,
         length: i64,
     ) -> Result<(), LoRaError<I>> {
-        self.write_register(LoRaRegPreambleMsb::ADDR, (length >> 8) as u8)?;
-        self.write_register(LoRaRegPreambleLsb::ADDR, length as u8)
+        self.write_register(RegPreambleMsb, (length >> 8) as u8)?;
+        self.write_register(RegPreambleLsb, length as u8)
     }
 
     /// Enables are disables the radio's CRC check. Default value is `false`.
     pub fn set_crc(&mut self, value: bool) -> Result<(), LoRaError<I>> {
-        let modem_config_2 = self.read_register(LoRaRegModemConfig2::ADDR)?;
+        let modem_config_2 = self.read_register(RegModemConfig2)?;
         if value {
-            self.write_register(LoRaRegModemConfig2::ADDR, modem_config_2 | 0x04)
+            self.write_register(RegModemConfig2, modem_config_2 | 0x04)
         } else {
-            self.write_register(LoRaRegModemConfig2::ADDR, modem_config_2 & 0xfb)
+            self.write_register(RegModemConfig2, modem_config_2 & 0xfb)
         }
     }
 
     /// Inverts the radio's IQ signals. Default value is `false`.
     pub fn set_invert_iq(&mut self, value: bool) -> Result<(), LoRaError<I>> {
         if value {
-            self.write_register(LoRaRegInvertiq::ADDR, 0x66)?;
-            self.write_register(LoRaRegInvertiq2::ADDR, 0x19)
+            self.write_register(RegInvertIQ, 0x66)?;
+            self.write_register(RegInvertIQ2, 0x19)
         } else {
-            self.write_register(LoRaRegInvertiq::ADDR, 0x27)?;
-            self.write_register(LoRaRegInvertiq2::ADDR, 0x1d)
+            self.write_register(RegInvertIQ, 0x27)?;
+            self.write_register(RegInvertIQ2, 0x1d)
         }
     }
 
     /// Returns the spreading factor of the radio.
     pub fn get_spreading_factor(&mut self) -> Result<u8, LoRaError<I>> {
-        Ok(self.read_register(LoRaRegModemConfig2::ADDR)? >> 4)
+        Ok(self.read_register(RegModemConfig2)? >> 4)
     }
 
     /// Returns the signal bandwidth of the radio.
     pub fn get_signal_bandwidth(&mut self) -> Result<i64, LoRaError<I>> {
-        let bw = self.read_register(LoRaRegModemConfig1::ADDR)? >> 4;
+        let bw = self.read_register(RegModemConfig1)? >> 4;
         let bw = match bw {
             0 => 7_800,
             1 => 10_400,
@@ -411,30 +411,31 @@ impl<I: SpiInterface> LoRa<I> {
 
     /// Returns the RSSI of the last received packet.
     pub fn get_packet_rssi(&mut self) -> Result<i32, LoRaError<I>> {
-        Ok(i32::from(self.read_register(LoRaRegPktRssiValue::ADDR)?) - 157)
+        Ok(i32::from(self.read_register(RegPktRssiValue)?) - 157)
     }
 
     /// Returns the signal to noise radio of the the last received packet.
     pub fn get_packet_snr(&mut self) -> Result<f64, LoRaError<I>> {
         Ok(f64::from(
-            self.read_register(LoRaRegPktSnrValue::ADDR)?,
+            self.read_register(RegPktSnrValue)?,
         ))
     }
 
+/*
     /// Returns the frequency error of the last received packet in Hz.
     pub fn get_packet_frequency_error(&mut self) -> Result<i64, LoRaError<I>> {
         let mut freq_error: i32 = 0;
-        freq_error = i32::from(self.read_register(LoRaRegFreqErrorMsb::ADDR)? & 0x7);
+        freq_error = i32::from(self.read_register(RegFreqErrorMsb)? & 0x7);
         freq_error <<= 8i64;
-        freq_error += i32::from(self.read_register(LoRaRegFreqErrorMid::ADDR)?);
+        freq_error += i32::from(self.read_register(RegFreqErrorMid)?);
         freq_error <<= 8i64;
-        freq_error += i32::from(self.read_register(LoRaRegFreqErrorLsb::ADDR)?);
+        freq_error += i32::from(self.read_register(RegFreqErrorLsb)?);
 
         let f_xtal = 32_000_000; // FXOSC: crystal oscillator (XTAL) frequency (2.5. Chip Specification, p. 14)
         let f_error = ((f64::from(freq_error) * (1i64 << 24) as f64) / f64::from(f_xtal))
             * (self.get_signal_bandwidth()? as f64 / 500_000.0f64); // p. 37
         Ok(f_error as i64)
-    }
+    }*/
 
     fn set_ldo_flag(&mut self) -> Result<(), LoRaError<I>> {
         let sw = self.get_signal_bandwidth()?;
@@ -444,26 +445,22 @@ impl<I: SpiInterface> LoRa<I> {
         // Section 4.1.1.6
         let ldo_on = symbol_duration > 16;
 
-        let mut config_3 = self.read_register(LoRaRegModemConfig3::ADDR)?;
+        let mut config_3 = self.read_register(RegModemConfig3)?;
         config_3.set_bit(3, ldo_on);
-        self.write_register(LoRaRegModemConfig3::ADDR, config_3)
+        self.write_register(RegModemConfig3, config_3)
     }
 
-    fn read_register(&mut self, reg: u8) -> Result<u8, LoRaError<I>> {
+    fn read_register<R: RadioReg>(&mut self, reg: R) -> Result<u8, LoRaError<I>> {
         self.interface.select().map_err(LoRaError::Select)?;
-        let mut buffer = [reg & 0x7f, 0];
+        let mut buffer = [R::ADDR & 0x7f, 0];
         let transfer = self.interface.transfer(&mut buffer).map_err(LoRaError::SpiTransfer)?;
         self.interface.deselect().map_err(LoRaError::Select)?;
         Ok(transfer[1])
     }
 
-    fn write_register(
-        &mut self,
-        reg: u8,
-        byte: u8,
-    ) -> Result<(), LoRaError<I>> {
+    fn write_register<R: RadioReg>(&mut self, reg: R, byte: u8) -> Result<(), LoRaError<I>> {
         self.interface.select().map_err(LoRaError::Select)?;
-        let buffer = [reg | 0x80, byte];
+        let buffer = [R::ADDR | 0x80, byte];
         self.interface.write(&buffer).map_err(LoRaError::SpiWrite)?;
         self.interface.deselect().map_err(LoRaError::Select)?;
         Ok(())
@@ -478,7 +475,7 @@ impl<I: SpiInterface> LoRa<I> {
             .set_bit(3, false) //Low freq registers
             .set_bits(0..2, 0b011); // Mode
 
-        self.write_register(LoRaRegOpMode as u8, op_mode)
+        self.write_register(RegOpMode, op_mode)
     }
 
     pub fn set_fsk_pa_ramp(
@@ -491,6 +488,6 @@ impl<I: SpiInterface> LoRa<I> {
             .set_bits(5..6, modulation_shaping as u8)
             .set_bits(0..3, ramp as u8);
 
-        self.write_register(LoRaRegPaRamp as u8, pa_ramp)
+        self.write_register(RegPaRamp, pa_ramp)
     }
 }
