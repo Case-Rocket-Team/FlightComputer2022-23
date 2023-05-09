@@ -29,19 +29,19 @@ fn main() -> ! {
 
     log::info!("Hello world!");
 
-    test_all!{
+    /*test_all!{
         flash.test_manufac_and_device_id(),
         flash.test_read_write()
-    }
+    }*/
 
     radio.init_radio();
 
     loop {
-        //log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
-        //log::info!("Sending hello world...");
-        //radio.transmit(b"Hello world!".iter());
+        log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
+        log::info!("Sending hello world...");
+        radio.transmit(b"Hello world!".iter());
 
-        log::info!("Receiving...");
+        /*log::info!("Receiving...");
         let mut res = ArrayWriterator::<255, u8>::new();
         unsafe {
             while !radio.has_received_packet().unwrap_unchecked() {
@@ -54,8 +54,8 @@ fn main() -> ! {
         match str_res {
             Ok(str) => log::info!("Received: {}", str),
             Err(_) => {}
-        }
+        }*/
 
-        //avionics.timer.block_ms(500);
+        avionics.timer.block_ms(500);
     }
 }
