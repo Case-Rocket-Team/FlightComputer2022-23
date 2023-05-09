@@ -36,6 +36,8 @@ fn main() -> ! {
 
     let mut gps = avionics.gps;
 
+    log::info!("Testing GPS...");
+
     loop {
         gps.write(b"PMTK604*6D\r\n");
 
@@ -46,5 +48,7 @@ fn main() -> ! {
             Ok(msg) => log::info!("{}", msg),
             Err(_) => log::info!("Error reading from GPS")
         }
+
+        avionics.timer.block_ms(500);
     }
 }
