@@ -1,5 +1,6 @@
 mod spi;
 mod layout_impl;
 mod dummy_pin;
-pub mod avionics;
 mod gps;
+pub mod uart;
+pub mod avionics;

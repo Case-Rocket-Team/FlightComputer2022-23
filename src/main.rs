@@ -34,7 +34,9 @@ fn main() -> ! {
         flash.test_read_write()
     }*/
 
-    radio.init_radio();
+    let mut gps = avionics.gps;
+
+    log::info!("Testing GPS...");
 
     loop {
         log::info!("Sent packet: {:x}", radio.read_version().ok().unwrap());
