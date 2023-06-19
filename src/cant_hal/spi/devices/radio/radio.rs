@@ -453,6 +453,7 @@ impl<I: SpiInterface> LoRa<I> {
     fn read_register<R: RadioReg>(&mut self, reg: R) -> Result<u8, LoRaError<I>> {
         self.interface.select().map_err(LoRaError::Select)?;
         let mut buffer = [R::ADDR & 0x7f, 0];
+        log::info!("Read reg: {:x}", buffer[0]);
         let transfer = self.interface.transfer(&mut buffer).map_err(LoRaError::SpiTransfer)?;
         self.interface.deselect().map_err(LoRaError::Select)?;
         Ok(transfer[1])

@@ -11,7 +11,7 @@ pub use crate::cant_hal::spi::devices;
 
 use self::devices::{flash::W25Q64Builder, radio::{radio::LoRa, builder::LoRaBuilder}};
 
-use super::{dummy_pin::DummyPin, spi::spi_interface::{DefaultSpiInterfaceBuilder, SpiInterfaceActiveLow}, gps::GPS};
+use super::{dummy_pin::DummyPin, spi::spi_interface::{DefaultSpiInterfaceBuilder, SpiInterfaceActiveLow}};
 
 pub type Timer<const CHAN: u8> = Blocking<Pit<CHAN>, { board::PERCLK_FREQUENCY }>;
 
@@ -36,7 +36,7 @@ pin_layout! {
 }
 
 spi_devices! {
-    flash Flash: W25Q64Builder::<FlashCS>
+    //flash Flash: W25Q64Builder::<FlashCS>
     radio Radio: LoRaBuilder::<RadioCS>
 }
 
@@ -70,16 +70,14 @@ pub fn take_avionics() -> Avionics {
         sck: pins.p13
     }, LPSPI_FREQUENCY / 16);
 
-    let mut uart2_hal = board::lpuart(lpuart2, pins.p14, pins.p15, board::UART_FREQUENCY / 2);
-
     timer.block_ms(500);
 
-    let mut flash_cs = gpio_cs!(gpio1, pins.p1);
+    //let mut flash_cs = gpio_cs!(gpio1, pins.p1);
     let mut radio_cs = gpio_cs!(gpio4, pins.p2);
 
     let spi_ptr = unsafe {
         SpiManager::new(SPI_MANAGER.as_mut_ptr(), spi_hal, SpiDeviceBuilders {
-            flash: W25Q64Builder::new(flash_cs), 
+            //flash: W25Q64Builder::new(flash_cs), 
             radio: LoRaBuilder::new(radio_cs)
         });
 
