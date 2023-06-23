@@ -36,12 +36,12 @@ fn main() -> ! {
 
     let mut gps = avionics.gps;
 
-    log::info!("Testing GPS...");
+    //log::info!("Testing GPS...");
 
     loop {
-        log::info!("Reading radio ver: {:x}", radio.read_version().ok().unwrap());
+        //log::info!("Reading radio ver: {:x}", radio.read_version().ok().unwrap());
         //log::info!("Sending hello world...");
-        //radio.transmit(b"Hello world!".iter());
+        radio.transmit(b"Hello world!".iter());
 
         /*log::info!("Receiving...");
         let mut res = ArrayWriterator::<255, u8>::new();
@@ -58,6 +58,6 @@ fn main() -> ! {
             Err(_) => {}
         }*/
 
-        avionics.timer.block_ms(500);
+        //avionics.timer.block_ms(500);
     }
 }

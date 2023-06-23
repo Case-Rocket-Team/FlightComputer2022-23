@@ -6,7 +6,8 @@ use super::{consts::{RadioMode, IRQ, PaConfig, FskDataModulationShaping, FskRamp
 use super::reg_gen::*;
 use crate::cant_hal::spi::devices::radio::radio_layout::*;
 
-const FREQUENCY: u32 = 433;
+const FREQUENCY: u32 = 433_000;
+const FRF_REG: u32 = 7_094_272;
 
 pub enum LoRaError<I: SpiInterface> {
     Uninformative,
@@ -44,7 +45,7 @@ impl<I: SpiInterface> SpiInterfaceDevice<I> for LoRa<I> {
 
 impl<I: SpiInterface> LoRa<I> {
     pub fn init_radio(&mut self) -> Result<(), LoRaError<I>> {
-        self.set_mode(RadioMode::Sleep)?;
+        /*self.set_mode(RadioMode::Sleep)?;
         self.set_frequency(FREQUENCY)?;
         self.write_register(RegFifoTxBaseAddr, 0)?;
         self.write_register(RegFifoRxBaseAddr, 0)?;
@@ -52,7 +53,20 @@ impl<I: SpiInterface> LoRa<I> {
         self.write_register(RegLna, lna | 0x03)?;
         //self.write_register(RegCon, 0x04)?;
         self.set_mode(RadioMode::Stdby)?;
-        self.set_tx_power(14, 1);
+        self.set_tx_power(14, 0);*/
+        //self.set_frequency(FREQUENCY)?;
+        self.write_register(RegFrfMsb, (FRF_REG >> 16) as u8);
+        self.write_register(RegFrfMid, (FRF_REG >> 8) as u8);
+        self.write_register(RegFrfLsb, FRF_REG as u8);
+
+        self.write_register(RegOpMode, 0b1000_1011);
+        self.write_register(RegFifoTxBaseAddr, 0)?;
+        self.write_register(RegFifoRxBaseAddr, 0)?;
+        let lna = self.read_register(RegLna)?;
+        self.write_register(RegLna, lna | 0x03)?;
+        //self.write_register(RegCon, 0x04)?;
+        self.set_mode(RadioMode::Stdby)?;
+        self.set_tx_power(14, 0);
         Ok(())
     }
 
@@ -453,7 +467,7 @@ impl<I: SpiInterface> LoRa<I> {
     fn read_register<R: RadioReg>(&mut self, reg: R) -> Result<u8, LoRaError<I>> {
         self.interface.select().map_err(LoRaError::Select)?;
         let mut buffer = [R::ADDR & 0x7f, 0];
-        log::info!("Read reg: {:x}", buffer[0]);
+        //log::info!("Read reg: {:x}", buffer[0]);
         let transfer = self.interface.transfer(&mut buffer).map_err(LoRaError::SpiTransfer)?;
         self.interface.deselect().map_err(LoRaError::Select)?;
         Ok(transfer[1])
